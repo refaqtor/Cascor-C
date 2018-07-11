@@ -1,0 +1,10 @@
+bin
+bin/*
+build
+configure
+src/changelog.txt
+src/resources/*
+*.o
+*.a
+*.src
+*.tar
