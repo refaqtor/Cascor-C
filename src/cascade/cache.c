@@ -15,6 +15,10 @@
 	caches used in Cascade-Correlation and Cascade-2 algorithms.
 */
 #include <stdlib.h>
+#include "dbg_malloc.h"
+#define malloc(X) dbg_malloc(X)
+#define realloc(X,Y) dbg_realloc(X,Y)
+#define free(X) dbg_free(X)
 #include <stdio.h>
 #include "toolkit.h"
 #include "cascade.h"
@@ -22,6 +26,10 @@
 #ifdef CONNX
 extern int connx;
 #endif
+
+void *dbg_malloc( size_t size );
+void dbg_free( void *p );
+
 
 /*	BUILD CACHE -  Allocate memory for the cache.  If not enough memory is
 	available, deallocate the partial cache and return gracefully.

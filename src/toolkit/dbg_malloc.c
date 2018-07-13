@@ -1,6 +1,9 @@
 #include "dbg_malloc.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <string.h>
+#include <signal.h>
 
 
 void *dbg_malloc(size_t size){
@@ -25,6 +28,7 @@ void dbg_free(void *p){
     void *actual_p;
     size_t size;
     int i;
+    if(!p) return;
     actual_p = p - 1000;
     *(((size_t *)p) + 1) = 0xEEEEEEEEEEEEEEEE;
     for(i = 0; i < 1000; i++){
@@ -41,5 +45,4 @@ void dbg_free(void *p){
     }
     free(actual_p);
 }
-
 

@@ -12,6 +12,10 @@
 */
 
 #include <stdlib.h>
+#include "dbg_malloc.h"
+#define malloc(X) dbg_malloc(X)
+#define realloc(X,Y) dbg_realloc(X,Y)
+#define free(X) dbg_free(X)
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -47,7 +51,7 @@ boolean      recurrent,     /*  Whether the current network is recurrent  */
              interruptPending,  /*  Is the user waiting for attention  */
              interact;      /*  If TRUE, interact with user, else don't  */
 jmp_buf      abort_trap;    /*  This jump point lets us kill a run in  */
-                            /* progress  */ 
+                            /* progress  */
 
 
 void main ( int argc, char *argv[] )
@@ -71,7 +75,7 @@ void main ( int argc, char *argv[] )
 
   /*  Process command line arguments  */
 
-  for  ( i = 1 ; i < argc ; i++ )  
+  for  ( i = 1 ; i < argc ; i++ )
     load_script( argv[i], NULL );
 
   /*  Invoke command interpreter  */
@@ -80,8 +84,8 @@ void main ( int argc, char *argv[] )
 }
 
 
-/*	TRAIN NET -  Train the network passed (net) on the data file 
-	specified (dFile).  Use the parameters specified in the parm table, 
+/*	TRAIN NET -  Train the network passed (net) on the data file
+	specified (dFile).  Use the parameters specified in the parm table,
 	'parms'.  The parameter, 'trialNum', is used to report the trial
 	number to the user.
 
@@ -89,7 +93,7 @@ void main ( int argc, char *argv[] )
 	calling this function or bad things may happen.
 */
 
-trial_result_t  train_net  ( net_t *net, train_parm_t *parms, 
+trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
 			     data_file_t *dFile, int trialNum )
 {
   train_data_t   *tData;	/*  Training data (slope, deltas, etc. )  */
@@ -146,7 +150,7 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
 	if  ( valStatus != TRAINING )
 	  break;
       }
-      
+
 
       /*  Initialize the candidates and train them either with cascor or  */
       /* cascade-2, as specified by the user                              */
@@ -157,7 +161,7 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
       else
 	status = c2_train_cand( );
       install_cand( tData->candBest, (cParms->algorithm == CASCADE2) );
-      
+
       display_traincand_results  ( net, tData, status );
     }
 
@@ -193,7 +197,7 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
   }
   result.perCorrect = (((float)(outVals-result.bits))/outVals)*100.0;
   if  (((parms->errorMeasure == BITS) && (result.bits == 0)) ||
-       ((parms->errorMeasure == INDEX) && 
+       ((parms->errorMeasure == INDEX) &&
 	(result.index < parms->indexThreshold)) )  {
     result.endStatus = WIN;
     result.Nvictories = 1;
@@ -246,7 +250,7 @@ trial_result_t  test_net    ( net_t *net, data_set_t *dSet )
 
   /*  Store results and return global pointers to their old values  */
   result.bits       = cError->bits;
-  result.index      = ERROR_INDEX( cError->sumSqDiffs, dSet->stdDev, 
+  result.index      = ERROR_INDEX( cError->sumSqDiffs, dSet->stdDev,
 				   (dSet->Npts)*Noutputs );
   result.sumSqDiffs = cError->sumSqDiffs;
   result.sumSqError = cError->sumSqError;
@@ -308,7 +312,7 @@ status_t train_outputs  ( void )
     if ( (cParms->errorMeasure == BITS) && (cError->bits == 0) )
       return WIN;
     else  if (cParms->errorMeasure == INDEX)  {
-      cError->index = ERROR_INDEX( cError->sumSqDiffs, cDSet->stdDev, 
+      cError->index = ERROR_INDEX( cError->sumSqDiffs, cDSet->stdDev,
 				   NtrainOutVals );
       if  ( cError->index <= cParms->indexThreshold )
 	return WIN;
@@ -345,9 +349,9 @@ void output_epoch  ( void )
       cNet->values   = cTData->valCache[i];
       cError->errors = cTData->errCache[i];
       compute_outputs( );
-    }  else 
+    }  else
       forward_pass( cDSet->data[i].inputs, cDSet->data[i].reset );
-    compute_error( cDSet->data[i].outputs, TRUE, TRUE, 
+    compute_error( cDSet->data[i].outputs, TRUE, TRUE,
 		   (cParms->algorithm == CASCOR), cParms->scoreThreshold );
   }
 }
@@ -366,7 +370,7 @@ void output_epoch  ( void )
 	passed since 'bestScore' was set.
 */
 
-status_t validation_epoch  ( float *bestScore, float ***bestWeights, 
+status_t validation_epoch  ( float *bestScore, float ***bestWeights,
 	  		    int *cyclesLeft, int *bestUnits, boolean init )
 {
   trial_result_t valRes;	/*  Result value to return  */
@@ -440,7 +444,7 @@ void adjust_weights  ( void )
     os = cTData->output.slopes[i];
     op = cTData->output.pSlopes[i];
     for  ( j = 0 ; j < cNet->Nunits ; j++ )
-      quickprop( ow+j, od+j, os+j, op+j, cTData->outScaledEps, 
+      quickprop( ow+j, od+j, os+j, op+j, cTData->outScaledEps,
 		 cParms->outputUpdate.decay, cParms->outputUpdate.mu,
 		 cTData->output.shrinkFactor );
   }
@@ -462,7 +466,7 @@ void  adjust_ci_weights  ( void )
         *cp;
   int   i,j;
 
-  scaledEpsilon = cParms->candInUpdate.epsilon / 
+  scaledEpsilon = cParms->candInUpdate.epsilon /
                   (float)(cDSet->Npts * cNet->Nunits);
 
   for  ( i = 0 ; i < Ncand ; i++ )  {
@@ -471,7 +475,7 @@ void  adjust_ci_weights  ( void )
     cs = cTData->candIn.slopes[i];
     cp = cTData->candIn.pSlopes[i];
     for  ( j = 0 ; j < cNet->Nunits + recurrent; j++ )
-      quickprop( cw+j, cd+j, cs+j, cp+j, scaledEpsilon, 
+      quickprop( cw+j, cd+j, cs+j, cp+j, scaledEpsilon,
 		 cParms->candInUpdate.decay, cParms->candInUpdate.mu,
 		 cTData->candIn.shrinkFactor );
   }
@@ -491,7 +495,7 @@ void  adjust_co_weights  ( void )
         *cp;
   int   i,j;
 
-  scaledEpsilon = cParms->candOutUpdate.epsilon  / 
+  scaledEpsilon = cParms->candOutUpdate.epsilon  /
                   (float)(cDSet->Npts * cNet->Nunits);
 
   for  ( i = 0 ; i < Ncand ; i++ )  {
@@ -500,7 +504,7 @@ void  adjust_co_weights  ( void )
     cs = cTData->candOut.slopes[i];
     cp = cTData->candOut.pSlopes[i];
     for  ( j = 0 ; j < Noutputs ; j++ )
-      quickprop( cw+j, cd+j, cs+j, cp+j, scaledEpsilon, 
+      quickprop( cw+j, cd+j, cs+j, cp+j, scaledEpsilon,
 		 cParms->candOutUpdate.decay, cParms->candOutUpdate.mu,
 		 cTData->candOut.shrinkFactor );
   }

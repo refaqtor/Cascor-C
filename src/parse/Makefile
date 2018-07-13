@@ -31,6 +31,9 @@ MACHDEP_CFLAGS= -ansi -DFreeBSD -g
 #  comfortable with and then type 'make' on the command line'.
 #
 
+INC=-I /afs/andrew.cmu.edu/usr1/ichiu/private/research/Cascor/src/toolkit
+
+
 
 CFLAGS = $(MACHDEP_CFLAGS) -O0 -I$(INSTALL_DIR)/include
 

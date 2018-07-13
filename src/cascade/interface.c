@@ -10,7 +10,11 @@
 */
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> 
+#include "dbg_malloc.h"
+#define malloc(X) dbg_malloc(X)
+#define realloc(X,Y) dbg_realloc(X,Y)
+#define free(X) dbg_free(X)
 #include <string.h>
 #include <signal.h>
 #include <setjmp.h>
