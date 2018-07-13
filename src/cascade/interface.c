@@ -10,11 +10,8 @@
 */
 
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 #include "dbg_malloc.h"
-#define malloc(X) dbg_malloc(X)
-#define realloc(X,Y) dbg_realloc(X,Y)
-#define free(X) dbg_free(X)
 #include <string.h>
 #include <signal.h>
 #include <setjmp.h>
@@ -103,7 +100,7 @@ parm_t parmTable [NUM_PARMS] = {
 
 /*  CLI -  Command Line Interface.  This function simply reads in command lines
     and then dispatches to another function that processes the commands.  This
-    process continues until a false response is returned from the command 
+    process continues until a false response is returned from the command
     processor.
 */
 
@@ -137,7 +134,7 @@ void cli  ( boolean runStarted )
     others done via table lookup.
 */
 
-boolean process_command  ( boolean runStarted, char *parm, char *parmVal, 
+boolean process_command  ( boolean runStarted, char *parm, char *parmVal,
 			   char *parmVal2 )
 {
   int loc;
@@ -183,7 +180,7 @@ int find_key  ( char *key )
   start    = 0;
   end      = NUM_PARMS;
   location = end/2;
-  
+
   while  ( start <= end )  {
     if  ( (dir = strcasecmp( key, parmTable[location].name )) == 0 )
       return location;
@@ -406,8 +403,8 @@ void train  ( char *netName, char *dFileName )
 
   /*  Locate or build the desired network  */
   if  ( (net = select_net( netName )) == NULL )  {
-    net = build_net( netName, dFile->NinNodes, dFile->NoutNodes, 
-		     cParms->maxNewUnits,  cParms->weightRange, 
+    net = build_net( netName, dFile->NinNodes, dFile->NoutNodes,
+		     cParms->maxNewUnits,  cParms->weightRange,
 		     cParms->sigMax, cParms->sigMin, cParms->recurrent );
     init_net( net, cParms->weightRange );
     if  ( !interact || prompt_yn( "Sync net outputs to data set", TRUE ) )
@@ -499,7 +496,7 @@ void test  ( char *netName, char *dFileName )
   results = test_net( net, dFile->test );
   outVals = dFile->test->Npts * net->Noutputs;
   results.perCorrect = (((float)(outVals-results.bits))/outVals)*100.0;
-  
+
   printf ("done!\n");
   display_test_results  ( results );
 }
@@ -564,9 +561,9 @@ void predict  ( char *netName, char *dFileName )
     return;
   }
 
-  /*  Select the network and check for appropriate inputs/outputs  */  
+  /*  Select the network and check for appropriate inputs/outputs  */
   if  ( (cNet = select_net( netName )) == NULL )  {
-    fprintf (stderr, "Network '%s' not found.  Prediction aborted.\n", 
+    fprintf (stderr, "Network '%s' not found.  Prediction aborted.\n",
 	     netName );
     return;
   } else if  ( (cNet->Ninputs != dFile->NinNodes) &&
@@ -589,7 +586,7 @@ void predict  ( char *netName, char *dFileName )
     forward_pass ( dSet->data[i].inputs, dSet->data[i].reset );
 
     /*  Compute input/output token strings  */
-    intok  = ftot ( dSet->data[i].inputs, aveSig, cNet->Ninputs, 
+    intok  = ftot ( dSet->data[i].inputs, aveSig, cNet->Ninputs,
 		    cNet->inputMap );
     outtok = ftot ( cNet->outValues, aveSig, cNet->Noutputs, cNet->outputMap );
 
@@ -658,7 +655,7 @@ void list_parms  ( char *d1, char *d2 )
   for  ( i = 0, j = 0; i < NUM_PARMS ; i++ )
     if  ( parmTable[i].type == FUNC )  {
       printf ("%c%s",(parmTable[i].modWRun)?'*':' ',parmTable[i].name);
-      if  ( (j++ % 6) == 5 ) 
+      if  ( (j++ % 6) == 5 )
 	printf ("\n");
       else
 	for  ( k = strlen( parmTable[i].name ) ; k < 12 ; k++ )
@@ -763,7 +760,7 @@ void run_trials  ( char *numTrials, char *dataFile )
   }
 
   tempNet   = build_net("Trial Net", dFile->NinNodes, dFile->NoutNodes,
-			cParms->maxNewUnits, cParms->weightRange, 
+			cParms->maxNewUnits, cParms->weightRange,
 			cParms->sigMax, cParms->sigMin, cParms->recurrent);
 
   for  ( i = 0 ; i < Ntrials ; i++ )  {
@@ -838,7 +835,7 @@ void load_script  ( char *script, char *d1 )
       parm     = strtok( input_line, " \t" );
       parmVal  = strtok( NULL,   " \t" );
       parmVal2 = strtok( NULL,   " \t" );
-      
+
       if  ( parm != NULL )
 	process_command ( FALSE, parm, parmVal, parmVal2 );
     }
@@ -863,7 +860,7 @@ void save_script  ( char *script, char *d1 )
   /*  Open script file  */
   if  ( script == NULL )
     if  ( interact )  {
-      printf ("Filename for saved script: ");    
+      printf ("Filename for saved script: ");
       scanf  ("%s",infile);
       script = infile;
     } else {
@@ -1145,7 +1142,7 @@ void load_net ( char *fname, char *d1 )
 	         net->Nunits       = Nunits;
 	         net->maxNewUnits  = 0;
 	         net->epochsTrained = eTrained;
-	         net->inputMap = (cvrt_t *)alloc_mem( Ninputs, 
+	         net->inputMap = (cvrt_t *)alloc_mem( Ninputs,
 						       sizeof( cvrt_t ), fn );
 	         net->outputMap = (cvrt_t *)alloc_mem( Noutputs,
 						        sizeof( cvrt_t ), fn );
@@ -1155,7 +1152,7 @@ void load_net ( char *fname, char *d1 )
 	         while ( tok != NULL && tok[0] != '\n' && index < Noutputs )  {
 		   net->outputTypes[index++] = aton( tok );
 		   if ( net->outputTypes[index-1] == UNDEFINED )  {
-		     fprintf ( stderr, 
+		     fprintf ( stderr,
 			      "ERROR: Output type for %d is undefined.\n",
 			      index);
 		     fprintf ( stderr, "Network not loaded.\n");
@@ -1166,7 +1163,7 @@ void load_net ( char *fname, char *d1 )
 		 }
 	         break;
 	case 5:  tok = strtok (lineIn, delim);
-	         while ( tok != NULL && tok[0] != '\n' 
+	         while ( tok != NULL && tok[0] != '\n'
 			 && index < NhiddenUnits )  {
 		   net->unitTypes[Ninputs+1+index++] = aton( tok );
 		   if ( net->unitTypes[Ninputs+index] == UNDEFINED )  {
@@ -1199,7 +1196,7 @@ void load_net ( char *fname, char *d1 )
 		   }
 		 } else {
 		   tok = strtok( lineIn, delim );
-		   while ( tok != NULL && tok[0] != '\n' && 
+		   while ( tok != NULL && tok[0] != '\n' &&
 			  index < count-2*Noutputs-5 )  {
 		     if  ( !isfloat( tok ) )  {
 		       fprintf ( stderr, "ERROR: Invalid weight value.\n" );
@@ -1340,7 +1337,7 @@ void kill_net  ( char *netName, char *d1 )
 void kill_data  ( char *filename, char *d1 )
 {
   char fname[61];
-  
+
   if  ( filename == NULL )
     if  ( interact )  {
       printf ("Data file to remove: ");
@@ -1361,7 +1358,7 @@ void kill_data  ( char *filename, char *d1 )
 
 /*  INSPECT NET -  Display the vital statistics about a network to the screen.
     This function is very similar to the save_net function with only small
-    differences in formatting (of course, this function does not print to 
+    differences in formatting (of course, this function does not print to
     disk).
 */
 
@@ -1372,7 +1369,7 @@ void inspect_net ( char *netName, char *d1 )
   int    i,j,k;
   char   name [41];
 
-  if  ( netName == NULL ) 
+  if  ( netName == NULL )
     if  ( interact )  {
       printf ("Name of network to inspect: ");
       scanf  ("%s", name);
@@ -1390,9 +1387,9 @@ void inspect_net ( char *netName, char *d1 )
   printf ( "Name: %s\n", net->name );
   printf ( "  epochsTrained: %d\trecurrent: %s\n", net->epochsTrained,
 	   btoa( YES_NO, net->recurrent ) );
-  printf ( "  Nunits: %d\tNinputs: %d\tNoutputs: %d\tNhiddenUnits: %d\n", 
+  printf ( "  Nunits: %d\tNinputs: %d\tNoutputs: %d\tNhiddenUnits: %d\n",
 	   net->Nunits, net->Ninputs, net->Noutputs, net->NhiddenUnits );
-  printf ( "  sigmoidMax: %f\tsigmoidMin: %f\n\n", net->sigmoidMax, 
+  printf ( "  sigmoidMax: %f\tsigmoidMin: %f\n\n", net->sigmoidMax,
 	   net->sigmoidMin );
 
   for  ( i = 0 ; i < net->Ninputs ; i++ )  {
@@ -1465,7 +1462,7 @@ void inspect_data ( char *dataFile, char *d1 )
   }
 
   printf ( "File: %s\n", data->filename );
-  printf ( "  Inputs:  %d\tNInput Nodes:  %d\n", data->Ninputs, 
+  printf ( "  Inputs:  %d\tNInput Nodes:  %d\n", data->Ninputs,
 	   data->NinNodes );
   printf ( "  Outputs: %d\tNOutput Nodes: %d\n", data->Noutputs,
 	   data->NoutNodes );
@@ -1492,7 +1489,7 @@ void inspect_data ( char *dataFile, char *d1 )
   for  ( i = 0 ; i < data->NdataSets ; i++ )
     printf ( "  %s\tNpts: %d  standard devation: %f  predict only: %s\n",
 	     data->dataSets[i].name, data->dataSets[i].Npts,
-	     data->dataSets[i].stdDev, 
+	     data->dataSets[i].stdDev,
 	     btoa( YES_NO, data->dataSets[i].predictOnly ) );
 }
 
@@ -1623,7 +1620,7 @@ void handle_interrupt  ( train_data_t *tData, int Npts )
   tData->outScaledEps         = cParms->outputUpdate.epsilon / Npts;
   tData->output.shrinkFactor  = cParms->outputUpdate.mu /
                                 (cParms->outputUpdate.mu + 1.0);
-  tData->candIn.shrinkFactor  = cParms->candInUpdate.mu / 
+  tData->candIn.shrinkFactor  = cParms->candInUpdate.mu /
                                 (cParms->candInUpdate.mu + 1.0);
   tData->candOut.shrinkFactor = cParms->candOutUpdate.mu /
                                 (cParms->candOutUpdate.mu + 1.0);

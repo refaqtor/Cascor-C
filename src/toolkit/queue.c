@@ -3,7 +3,7 @@
 	v2.0
 	Matt White (mwhite+@cmu.edu)
 	10/2/94
-	
+
 	Version 2.0 of this library is a much more efficient version of the
 	previous version 1.0.  This extra efficiency is gained by utilizing
 	a linked list of arrays instead of the the linked list of elements
@@ -16,7 +16,7 @@
 	process is repeated as often as necessary, or until memory runs out.
 
 	As items are removed from the queue, cells may become empty.  These
-	empty cells are deallocated and returned to the heap.  The sole 
+	empty cells are deallocated and returned to the heap.  The sole
 	exception to this is that there will always be at least one cell
 	allocated to a queue at any one time.
 
@@ -26,11 +26,8 @@
 */
 
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 #include "dbg_malloc.h"
-#define malloc(X) dbg_malloc(X)
-#define realloc(X,Y) dbg_realloc(X,Y)
-#define free(X) dbg_free(X)
 #include <string.h>
 #include "toolkit.h"
 #include "queue.h"
@@ -119,11 +116,11 @@ void enqueue ( queue_p Q, void *newData )
     Q->tail->next->prev = Q->tail;
     Q->tail             = Q->tail->next;
   }
-   
-  memcpy( ((byte *)Q->tail->data)+((Q->tail->last)*(Q->size)), newData, 
+
+  memcpy( ((byte *)Q->tail->data)+((Q->tail->last)*(Q->size)), newData,
 	  Q->size );
 
-  if  ((Q->tail->last == Q->tail->first-1) || 
+  if  ((Q->tail->last == Q->tail->first-1) ||
        ((Q->tail->last == Q->tail->Nalloc-1) && (Q->tail->first == 0)) )
     Q->tail->full = TRUE;
   if (Q->tail->last == Q->tail->Nalloc-1)
@@ -153,7 +150,7 @@ boolean dequeue ( queue_p Q, void *data )
       Q->head->prev = NULL;
     }
 
-  memcpy( data, ((byte *)Q->head->data)+((Q->head->first)*(Q->size)), 
+  memcpy( data, ((byte *)Q->head->data)+((Q->head->first)*(Q->size)),
 	  Q->size );
   if  ( Q->head->full )
     Q->head->full = FALSE;
@@ -192,7 +189,7 @@ boolean queue_append  ( queue_p dest, queue_p *source )
   dest->Nelem           += (*source)->Nelem;
 
   free( *source );
-  *source = NULL; 
+  *source = NULL;
   return TRUE;
 }
 
@@ -206,7 +203,7 @@ queue_cell_t *queue_alloc_cell ( int gran, int size )
 {
   queue_cell_t *newCell;
   char         *fn = "Queue Initialize Cell";
-  
+
   newCell = (queue_cell_t *)alloc_mem( 1, sizeof( queue_cell_t ), fn );
   newCell->data = (void *)alloc_mem  ( gran, size, fn );
 

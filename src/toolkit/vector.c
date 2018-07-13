@@ -1,8 +1,5 @@
-#include <stdlib.h> 
+#include <stdlib.h>
 #include "dbg_malloc.h"
-#define malloc(X) dbg_malloc(X)
-#define realloc(X,Y) dbg_realloc(X,Y)
-#define free(X) dbg_free(X)
 #include <stdio.h>
 #include <math.h>
 
@@ -154,7 +151,7 @@ int vector_min_index  ( double *src, int length )
   for  ( i = 1 ; i < length ; i++ )
     if  ( src[i] < src[min] )
       min = i;
-  
+
   return min;
 }
 

@@ -1,10 +1,10 @@
+#define DEBUG_ON 1
 #include "dbg_malloc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
 #include <signal.h>
-
 
 void *dbg_malloc(size_t size){
     void *p = malloc(size+2000);

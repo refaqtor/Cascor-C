@@ -4,10 +4,10 @@
     v1.0
     Matt White (mwhite+@cmu.edu)
     May 28, 1995
-    
+
     The functions contained herein allow the user to query a network on
     individual problems.  The input is read from the command linein either
-    raw or tokenized form.  A prediction is done using the network and the 
+    raw or tokenized form.  A prediction is done using the network and the
     predicted outputs are displayed in both raw and tokenized form.
 
     The function query_net is linked to the main CLI via the interface table.
@@ -16,13 +16,9 @@
 */
 
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 #include "dbg_malloc.h"
-#define malloc(X) dbg_malloc(X)
-#define realloc(X,Y) dbg_realloc(X,Y)
-#define free(X) dbg_free(X)
 #include <string.h>
-
 #include "cascade.h"
 #include "toolkit.h"
 
@@ -60,7 +56,7 @@ void query_net ( char *netName, char *d1 )
       gets(inLine);
       netName = strdup( inLine );
     } else {
-      fprintf (stderr, 
+      fprintf (stderr,
 	       "Network not specified.  Entrance to query mode aborted.\n");
       return;
     }
@@ -82,8 +78,8 @@ void query_net ( char *netName, char *d1 )
   while ( TRUE )  {
     printf ("Query %s> ",netName);
     gets(inLine);
-    
-    if  ( !strncasecmp( inLine, "exit", 4 ) || 
+
+    if  ( !strncasecmp( inLine, "exit", 4 ) ||
 	  !strncasecmp( inLine, "quit", 4 ) )
       return;
     else if  ( !strncasecmp( inLine, "rawinput", 8 ) )
