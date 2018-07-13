@@ -1,0 +1,13 @@
+cd src/toolkit
+make clean
+make
+make install
+cd ../parse
+make clean
+make
+make install
+cd ../cascade
+make clean
+make
+make install
+cd ../..
