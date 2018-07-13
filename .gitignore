@@ -4,6 +4,7 @@ configure
 src/changelog.txt
 src/resources/include/*
 src/resources/lib/*
+src/cascade/cascade
 *.o
 *.a
 *.src
