@@ -53,7 +53,7 @@ void query_net ( char *netName, char *d1 )
   if  ( netName == NULL )
     if  ( interact )  {
       printf ("Network to query: ");
-      gets(inLine);
+      fgets(inLine, 81, stdin);
       netName = strdup( inLine );
     } else {
       fprintf (stderr,
@@ -77,7 +77,7 @@ void query_net ( char *netName, char *d1 )
 
   while ( TRUE )  {
     printf ("Query %s> ",netName);
-    gets(inLine);
+    fgets(inLine, 81, stdin);
 
     if  ( !strncasecmp( inLine, "exit", 4 ) ||
 	  !strncasecmp( inLine, "quit", 4 ) )
