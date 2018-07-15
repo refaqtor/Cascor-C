@@ -1,13 +1,13 @@
 /*	Toolkit Header File
 
-	v1.0
-	Matt White (mwhite+@cmu.edu)
-	10/2/94
+    v1.0
+    Matt White (mwhite+@cmu.edu)
+    10/2/94
 
-	This file contains the declaration of some useful data types and
-	constants.  It also contains function prototypes for the smaller
-	modules in the toolkit.
-*/
+    This file contains the declaration of some useful data types and
+    constants.  It also contains function prototypes for the smaller
+    modules in the toolkit.
+    */
 
 #ifndef TOOLKIT
 #define TOOLKIT
@@ -43,7 +43,7 @@ typedef unsigned char byte;
 
 /*  memory.c  */
 void     *alloc_mem    ( int, int, char * );
-void     *realloc_mem  ( void *, int, int, char * ); 
+void     *realloc_mem  ( void *, int, int, char * );
 void     *free_mem     ( void * );
 
 /*  prompt.c  */

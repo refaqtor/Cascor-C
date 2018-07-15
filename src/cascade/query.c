@@ -13,7 +13,7 @@
     The function query_net is linked to the main CLI via the interface table.
     It is called like any other of the interface functions located on that
     table.
-*/
+    */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,11 +27,11 @@
 
 extern net_t   *cNet;
 extern int     Ninputs,
-               Noutputs;
+       Noutputs;
 extern float   sigMax,
-               sigMin;
+       sigMin;
 extern boolean recurrent,
-               interact;
+       interact;
 
 
 /*  QUERY NET -  This is the main function of the query module.  Note that
@@ -43,50 +43,50 @@ extern boolean recurrent,
     reflect that network.  After this initial setup is done, a simple command
     line interface is executed as a while loop.  The predictions are handled
     by subordinate functions.
-*/
+    */
 
 void query_net ( char *netName, char *d1 )
 {
-  char  inLine[81];
+    char  inLine[81];
 
-  /*  Determine network to query and locate that network in memory  */
-  if  ( netName == NULL )
-    if  ( interact )  {
-      printf ("Network to query: ");
-      fgets(inLine, 81, stdin);
-      netName = strdup( inLine );
-    } else {
-      fprintf (stderr,
-	       "Network not specified.  Entrance to query mode aborted.\n");
-      return;
+    /*  Determine network to query and locate that network in memory  */
+    if  ( netName == NULL )
+        if  ( interact )  {
+            printf ("Network to query: ");
+            fgets(inLine, 81, stdin);
+            netName = strdup( inLine );
+        } else {
+            fprintf (stderr,
+                    "Network not specified.  Entrance to query mode aborted.\n");
+            return;
+        }
+    if  ( (cNet = select_net( netName )) == NULL )  {
+        fprintf ( stderr, "ERROR: Unable to find network %s.\n", netName );
+        return;
     }
-  if  ( (cNet = select_net( netName )) == NULL )  {
-    fprintf ( stderr, "ERROR: Unable to find network %s.\n", netName );
-    return;
-  }
 
-  /*  Set global variables to reflect this network  */
-  Ninputs   = cNet->Ninputs;
-  Noutputs  = cNet->Noutputs;
-  sigMax    = cNet->sigmoidMax;
-  sigMin    = cNet->sigmoidMin;
-  recurrent = cNet->recurrent;
+    /*  Set global variables to reflect this network  */
+    Ninputs   = cNet->Ninputs;
+    Noutputs  = cNet->Noutputs;
+    sigMax    = cNet->sigmoidMax;
+    sigMin    = cNet->sigmoidMin;
+    recurrent = cNet->recurrent;
 
-  /*  Execute the simple CLI  */
-  printf ("Querying '%s'.  Type 'exit' to return to CLI.\n", netName );
+    /*  Execute the simple CLI  */
+    printf ("Querying '%s'.  Type 'exit' to return to CLI.\n", netName );
 
-  while ( TRUE )  {
-    printf ("Query %s> ",netName);
-    fgets(inLine, 81, stdin);
+    while ( TRUE )  {
+        printf ("Query %s> ",netName);
+        fgets(inLine, 81, stdin);
 
-    if  ( !strncasecmp( inLine, "exit", 4 ) ||
-	  !strncasecmp( inLine, "quit", 4 ) )
-      return;
-    else if  ( !strncasecmp( inLine, "rawinput", 8 ) )
-      raw_input( inLine+8 );
-    else if  ( !strncasecmp( inLine, "input", 5 ) )
-      token_input( inLine+5 );
-  }
+        if  ( !strncasecmp( inLine, "exit", 4 ) ||
+                !strncasecmp( inLine, "quit", 4 ) )
+            return;
+        else if  ( !strncasecmp( inLine, "rawinput", 8 ) )
+            raw_input( inLine+8 );
+        else if  ( !strncasecmp( inLine, "input", 5 ) )
+            token_input( inLine+5 );
+    }
 }
 
 
@@ -96,130 +96,130 @@ void query_net ( char *netName, char *d1 )
     input string and then fed into the network.  The sole exception to this is
     the token 'reset' which causes recurrent networks to reset before
     performing the prediction.
-*/
+    */
 
 void raw_input  ( char *inp )
 {
-  float   *inputs;       /*  The floating point inputs to the network  */
-  boolean reset = FALSE; /*  Network reset flag  */
-  int     i,             /*  Indexing variable  */
-          start = 0;     /*  Point on input vector to start loop  */
-  char    *tok,          /*  Character token being evaluated  */
-          **outtok;      /*  Tokenized outputs  */
+    float   *inputs;       /*  The floating point inputs to the network  */
+    boolean reset = FALSE; /*  Network reset flag  */
+    int     i,             /*  Indexing variable  */
+            start = 0;     /*  Point on input vector to start loop  */
+    char    *tok,          /*  Character token being evaluated  */
+            **outtok;      /*  Tokenized outputs  */
 
-  inputs = (float *)alloc_mem( Ninputs, sizeof( float ), "Raw Input" );
+    inputs = (float *)alloc_mem( Ninputs, sizeof( float ), "Raw Input" );
 
-  /*  Read first token.  Allow the keyword 'reset' as well as floats  */
-  if  ( (tok = strtok( inp, " \t," )) == NULL )  {
-    fprintf (stderr,"Insufficient tokens for input.\n");
-    return;
-  }
-  if  ( isfloat( tok ) )  {
-    inputs[start++] = ( isint( tok ) ) ? atoi( tok ) : atof( tok );
-  } else if ( !strncasecmp( tok, "reset", 5 ) )  {
-    reset = TRUE;
-  } else {
-    fprintf (stderr,"Invalid token '%s', a numerical value is expected.\n",
-	     tok);
-    return;
-  }
-
-  /*  Read the rest of the tokens.  From this point floats only.  */
-  for  ( i = start ; i < Ninputs ; i++ )  {
-    if  ( (tok = strtok( NULL, " \t," )) == NULL )  {
-      fprintf (stderr,"Insufficient tokens for input.\n");
-      return;
+    /*  Read first token.  Allow the keyword 'reset' as well as floats  */
+    if  ( (tok = strtok( inp, " \t," )) == NULL )  {
+        fprintf (stderr,"Insufficient tokens for input.\n");
+        return;
     }
-    if  ( !isfloat( tok ) )  {
-      fprintf (stderr,"Invalid token '%s', a numerical value is expected.\n",
-	       tok);
-      return;
+    if  ( isfloat( tok ) )  {
+        inputs[start++] = ( isint( tok ) ) ? atoi( tok ) : atof( tok );
+    } else if ( !strncasecmp( tok, "reset", 5 ) )  {
+        reset = TRUE;
+    } else {
+        fprintf (stderr,"Invalid token '%s', a numerical value is expected.\n",
+                tok);
+        return;
     }
-    inputs[i] = ( isint( tok ) ) ? atoi( tok ) : atof( tok );
-  }
 
-  /*  Perform the forward pass  */
-  cNet->values = cNet->tempValues;
-  forward_pass ( inputs, reset );
+    /*  Read the rest of the tokens.  From this point floats only.  */
+    for  ( i = start ; i < Ninputs ; i++ )  {
+        if  ( (tok = strtok( NULL, " \t," )) == NULL )  {
+            fprintf (stderr,"Insufficient tokens for input.\n");
+            return;
+        }
+        if  ( !isfloat( tok ) )  {
+            fprintf (stderr,"Invalid token '%s', a numerical value is expected.\n",
+                    tok);
+            return;
+        }
+        inputs[i] = ( isint( tok ) ) ? atoi( tok ) : atof( tok );
+    }
 
-  /*  Display the raw output  */
-  printf ("Raw output: ");
-  for  ( i = 0 ; i < Noutputs ; i++ )
-    printf ("%5.3f ",cNet->outValues[i]);
-  printf ("\n");
+    /*  Perform the forward pass  */
+    cNet->values = cNet->tempValues;
+    forward_pass ( inputs, reset );
 
-  /*  Display the tokenized output  */
-  outtok = ftot ( cNet->outValues, (cNet->sigmoidMax-cNet->sigmoidMin)/2.0,
-		 Noutputs, cNet->outputMap );
-  printf ("Tokenized output: ");
-  for  ( i = 0 ; i < Noutputs ; i++ )  {
-    printf ("%s%s",outtok[i],(i==Noutputs-1)?"\n":", ");
-    free( outtok[i] );
-  }
-  free( outtok );
-  free( inputs );
+    /*  Display the raw output  */
+    printf ("Raw output: ");
+    for  ( i = 0 ; i < Noutputs ; i++ )
+        printf ("%5.3f ",cNet->outValues[i]);
+    printf ("\n");
+
+    /*  Display the tokenized output  */
+    outtok = ftot ( cNet->outValues, (cNet->sigmoidMax-cNet->sigmoidMin)/2.0,
+            Noutputs, cNet->outputMap );
+    printf ("Tokenized output: ");
+    for  ( i = 0 ; i < Noutputs ; i++ )  {
+        printf ("%s%s",outtok[i],(i==Noutputs-1)?"\n":", ");
+        free( outtok[i] );
+    }
+    free( outtok );
+    free( inputs );
 }
 
 
 /*  TOKEN INPUT -  This function is similar to the standard raw input, but
     accepts tokenized inputs.  All other aspects of function, including the
     reset keyword, are the same as for raw input
-*/
+    */
 
 void token_input ( char *inp )
 {
-  float   *inputs;
-  boolean reset = FALSE;
-  int     i,
-          start = 0;
-  char    *tok,
-          **intok,
-          **outtok;
+    float   *inputs;
+    boolean reset = FALSE;
+    int     i,
+            start = 0;
+    char    *tok,
+            **intok,
+            **outtok;
 
-  inputs = (float *)alloc_mem( Ninputs, sizeof( float ), "Tokenized Input" );
-  intok  = (char **)alloc_mem( Ninputs, sizeof( char * ), "Tokenized Input" );
+    inputs = (float *)alloc_mem( Ninputs, sizeof( float ), "Tokenized Input" );
+    intok  = (char **)alloc_mem( Ninputs, sizeof( char * ), "Tokenized Input" );
 
-  /*  Tokenize the input string  */
-  if  ( (tok = strtok( inp, " \t," )) == NULL )  {
-    fprintf (stderr,"Insufficient tokens for input.\n");
-    return;
-  }
-  if  ( !strncasecmp( tok, "reset", 5 ) )
-    reset = TRUE;
-  else
-    intok[start++] = strdup( tok );
-
-  for  ( i = start ; i < Ninputs ; i++ )  {
-    if  ( (tok = strtok( NULL, " \t," )) == NULL )  {
-      fprintf (stderr,"Insufficient tokens for input.\n");
-      return;
+    /*  Tokenize the input string  */
+    if  ( (tok = strtok( inp, " \t," )) == NULL )  {
+        fprintf (stderr,"Insufficient tokens for input.\n");
+        return;
     }
-    intok[i] = strdup( tok );
-  }
+    if  ( !strncasecmp( tok, "reset", 5 ) )
+        reset = TRUE;
+    else
+        intok[start++] = strdup( tok );
 
-  /*  Convert tokens to floating point inputs  */
-  if  ( ttof ( inputs, intok, Ninputs, cNet->inputMap ) )  {
-    /*  Perform feedforward prediction  */
-    cNet->values = cNet->tempValues;
-    forward_pass ( inputs, reset );
-
-    /*  Display outputs  */
-    printf ("Raw output: ");
-    for  ( i = 0 ; i < Noutputs ; i++ )
-      printf ("%5.3f ",cNet->outValues[i]);
-    printf ("\n");
-
-    outtok = ftot ( cNet->outValues, (cNet->sigmoidMax-cNet->sigmoidMin)/2.0,
-		    Noutputs, cNet->outputMap );
-    printf ("Tokenized output: ");
-    for  ( i = 0 ; i < Noutputs ; i++ )  {
-      printf ("%s%s",outtok[i],(i==Noutputs-1)?"\n":", ");
-      free( outtok[i] );
+    for  ( i = start ; i < Ninputs ; i++ )  {
+        if  ( (tok = strtok( NULL, " \t," )) == NULL )  {
+            fprintf (stderr,"Insufficient tokens for input.\n");
+            return;
+        }
+        intok[i] = strdup( tok );
     }
-    free( outtok );
-  }
 
-  for  ( i = 0 ; i < Ninputs ; i++ )
-    free( intok[i] );
-  free( intok );
+    /*  Convert tokens to floating point inputs  */
+    if  ( ttof ( inputs, intok, Ninputs, cNet->inputMap ) )  {
+        /*  Perform feedforward prediction  */
+        cNet->values = cNet->tempValues;
+        forward_pass ( inputs, reset );
+
+        /*  Display outputs  */
+        printf ("Raw output: ");
+        for  ( i = 0 ; i < Noutputs ; i++ )
+            printf ("%5.3f ",cNet->outValues[i]);
+        printf ("\n");
+
+        outtok = ftot ( cNet->outValues, (cNet->sigmoidMax-cNet->sigmoidMin)/2.0,
+                Noutputs, cNet->outputMap );
+        printf ("Tokenized output: ");
+        for  ( i = 0 ; i < Noutputs ; i++ )  {
+            printf ("%s%s",outtok[i],(i==Noutputs-1)?"\n":", ");
+            free( outtok[i] );
+        }
+        free( outtok );
+    }
+
+    for  ( i = 0 ; i < Ninputs ; i++ )
+        free( intok[i] );
+    free( intok );
 }

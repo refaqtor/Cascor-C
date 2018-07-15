@@ -8,18 +8,18 @@
 #include <signal.h>
 
 /*
-void *dbg_malloc(size_t size){
-    void *p = malloc(size + 2 * PADDING);
-    return p + PADDING;
-}
+   void *dbg_malloc(size_t size){
+   void *p = malloc(size + 2 * PADDING);
+   return p + PADDING;
+   }
 
-void *dbg_realloc( void *p, size_t new_size) {
-    return realloc(p-PADDING, new_size + 2 * PADDING) + PADDING;
-}
-void dbg_free(void *p){
-    free(p-PADDING);
-}
-*/
+   void *dbg_realloc( void *p, size_t new_size) {
+   return realloc(p-PADDING, new_size + 2 * PADDING) + PADDING;
+   }
+   void dbg_free(void *p){
+   free(p-PADDING);
+   }
+   */
 
 
 void *dbg_malloc(size_t size){

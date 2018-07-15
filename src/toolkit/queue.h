@@ -1,11 +1,11 @@
 /*	Queue Library Functions
 
-	v2.0
-	Matt White (mwhite+@cmu.edu)
-	10/2/94
+    v2.0
+    Matt White (mwhite+@cmu.edu)
+    10/2/94
 
-	See 'queue.c' for details'.
-*/
+    See 'queue.c' for details'.
+    */
 
 #ifndef QUEUE
 #define QUEUE
@@ -27,21 +27,21 @@
 /*	Data Structure Definitions	*/
 
 typedef struct queue_cell_type {
-  void                   *data;
-  int                    first,
-                         last,
-                         Nalloc;
-  boolean                full;
-  struct queue_cell_type *next,
-                         *prev;
+    void                   *data;
+    int                    first,
+                           last,
+                           Nalloc;
+    boolean                full;
+    struct queue_cell_type *next,
+                           *prev;
 } queue_cell_t;
 
 typedef struct {
-  int          Nelem,
-               granularity,
-	       size;
-  queue_cell_t *head,
-               *tail;
+    int          Nelem,
+                 granularity,
+                 size;
+    queue_cell_t *head,
+                 *tail;
 } queue_t, *queue_p;
 
 
