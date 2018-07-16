@@ -2476,7 +2476,7 @@ void freePTree  ( parse_tree_t *tree )
         for  ( i = 0 ; i < parseTree->Nseries ; i++ )
             if  ( parseTree->data.series[i] != NULL )  {
                 for  ( j = 0 ; j < parseTree->Npts ; j++ )
-                    if  ( parseTree->data.series[i][j].idVal != NULL )
+                    if  ( parseTree->data.series[i][j].tok == idT && parseTree->data.series[i][j].idVal != NULL )
                         free( parseTree->data.series[i][j].idVal );
                 free( parseTree->data.series[i] );
             }
