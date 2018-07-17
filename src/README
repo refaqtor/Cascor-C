@@ -1,3 +1,3 @@
-To make the program (on gcc 7.3):
-    First go to the toolkit directory and run make, then make install. Then do the same in the parse and cascade directories.
-
+Toolkit is an implementation of a library, toolkit.h, that contains helper functions that serve as tools for the network.
+Parse is an implementation of a parser for the neural network.
+Cascade is the directory in which the cascade-correlation network is implemented

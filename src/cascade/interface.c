@@ -115,9 +115,11 @@ void cli  ( boolean runStarted )
     printf ("'?' for a list of parameters and commands.\n");
 
     do  {
-        do
-            printf ( "%s ", PROMPT );
-        while( strlen( fgets( inBuffer, MAX_INPUT, stdin ) ) <= 1 );
+        do {
+            if ( inBuffer[0] != '\n') {
+                printf ( "%s ", PROMPT );
+            }
+        } while( strlen( fgets( inBuffer, MAX_INPUT, stdin ) ) <= 1 );
         inBuffer[strlen( inBuffer )-1] = 0x00;
 
         parm     = strtok( inBuffer, " \t" );

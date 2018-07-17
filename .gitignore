@@ -5,6 +5,9 @@ src/changelog.txt
 src/resources/include/*
 src/resources/lib/*
 src/cascade/cascade
+*.bak
+*.in
+*.data
 *.o
 *.a
 *.src
