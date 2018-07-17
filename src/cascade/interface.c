@@ -1,6 +1,13 @@
 /*  CMU Cascade Neural Network Simulator (CNNS)
     User Interface Code
 
+    v1.1
+    Ian Chiu (ichiu@andrew.cmu.edu)
+    7/17/2018
+
+    Improve readability and maintainability, as well as minor tweaks in design
+    choices
+
     v1.0
     Matt White (mwhite+@cmu.edu)
     May 26, 1995
@@ -141,8 +148,10 @@ boolean process_command  ( boolean runStarted, char *parm, char *parmVal,
     int loc;
 
     /*  Check for continue and abort  */
-    if  ( runStarted && !strcasecmp( parm, "continue" ) )  return FALSE;
-    if  ( !strcasecmp( parm, "abort" ) )
+    if  ( runStarted && !strcasecmp( parm, "continue" ) ) {
+        return FALSE;
+    }
+    if  ( !strcasecmp( parm, "abort" ) ) {
         if  ( runStarted )  {
             printf ( "Aborting training of %s on %s at epoch %d.\n",
                     cNet->name, cDFile->filename, cNet->epochsTrained );
@@ -151,6 +160,7 @@ boolean process_command  ( boolean runStarted, char *parm, char *parmVal,
             printf ( "Run not started.\n" );
             return TRUE;
         }
+    }
 
     /*  Do table lookup  */
     if  ( (loc = find_key( parm )) == NOT_FOUND )  {
@@ -159,8 +169,9 @@ boolean process_command  ( boolean runStarted, char *parm, char *parmVal,
     }
 
     /*  If no value was specified for a parm, display information on it.  */
-    if  ( interact && (parmVal == NULL) && (parmTable[loc].type != FUNC) )
+    if  ( interact && (parmVal == NULL) && (parmTable[loc].type != FUNC) ) {
         display_parm( parmTable[loc] );
+    }
     set_parm( runStarted, parmTable[loc], parmVal, parmVal2 );
 
     return TRUE;
@@ -183,12 +194,14 @@ int find_key  ( char *key )
     location = end/2;
 
     while  ( start <= end )  {
-        if  ( (dir = strcasecmp( key, parmTable[location].name )) == 0 )
+        if  ( (dir = strcasecmp( key, parmTable[location].name )) == 0 ) {
             return location;
-        if  ( dir < 0 )
+        }
+        if  ( dir < 0 ) {
             end = location-1;
-        else
+        } else {
             start = location+1;
+        }
         location = (start+end)/2;
     }
 
@@ -249,7 +262,7 @@ void set_parm  ( boolean runStarted, parm_t parm, char *parmVal, char *parmVal2 
         return;
     }
 
-    if  ( parm.type != FUNC )
+    if  ( parm.type != FUNC ) {
         if ( parmVal != NULL )  {
             strcpy (val, parmVal);
         } else if ( interact ) {
@@ -261,14 +274,21 @@ void set_parm  ( boolean runStarted, parm_t parm, char *parmVal, char *parmVal2 
                     parm.name);
             return;
         }
+    }
 
     switch  ( parm.type )  {
-        case INT:      if ( isint( val ) ) *(int *)parm.ptr = atoi( val );
-                           break;
-        case FLOAT:    if ( isfloat( val ) ) *(float *)parm.ptr = atof( val );
-                           break;
-        case BOOLEAN:  if ( isboolean( val ) ) *(boolean *)parm.ptr = atob( val );
-                           break;
+        case INT:      if ( isint( val ) ) {
+                           *(int *)parm.ptr = atoi( val );
+                       }
+                       break;
+        case FLOAT:    if ( isfloat( val ) ) {
+                           *(float *)parm.ptr = atof( val );
+                       }
+                       break;
+        case BOOLEAN:  if ( isboolean( val ) ) {
+                           *(boolean *)parm.ptr = atob( val );
+                       }
+                       break;
         case NODE:     *(node_t *)parm.ptr = aton( val );
                        break;
         case ALGO:     *(algo_t *)parm.ptr = atoal( val );
@@ -362,7 +382,7 @@ void train  ( char *netName, char *dFileName )
     data_file_t *dFile;
 
     /*  Get the network name  */
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network Name: ");
             scanf  ("%s",nName);
@@ -372,9 +392,10 @@ void train  ( char *netName, char *dFileName )
             fprintf ( stderr, "Training aborted.\n");
             return;
         }
+    }
 
     /*  Get the data file name  */
-    if  ( dFileName == NULL )
+    if  ( dFileName == NULL ) {
         if  ( interact )  {
             printf ( "Data file name: " );
             scanf  ( "%s", dFName );
@@ -384,6 +405,7 @@ void train  ( char *netName, char *dFileName )
             fprintf ( stderr, "Training aborted.\n" );
             return;
         }
+    }
 
     /*  Locate the desired data set  */
     if  ( (dFile = select_data ( dFileName )) == NULL )  {
@@ -408,8 +430,9 @@ void train  ( char *netName, char *dFileName )
                 cParms->maxNewUnits,  cParms->weightRange,
                 cParms->sigMax, cParms->sigMin, cParms->recurrent );
         init_net( net, cParms->weightRange );
-        if  ( !interact || prompt_yn( "Sync net outputs to data set", TRUE ) )
+        if  ( !interact || prompt_yn( "Sync net outputs to data set", TRUE ) ) {
             sync( net, dFile );
+        }
         add_net( net );
     } else if  ( (net->Ninputs != dFile->NinNodes) &&
             (net->Noutputs != dFile->NoutNodes ) )  {
@@ -441,7 +464,7 @@ void test  ( char *netName, char *dFileName )
     int            outVals;
 
     /*  Get the name of the network  */
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network Name: ");
             scanf  ("%s",nName);
@@ -451,9 +474,10 @@ void test  ( char *netName, char *dFileName )
             fprintf ( stderr, "Testing aborted.\n");
             return;
         }
+    }
 
     /*  Get the name of the data file  */
-    if  ( dFileName == NULL )
+    if  ( dFileName == NULL ) {
         if  ( interact )  {
             printf ( "Data file name: " );
             scanf  ( "%s", dFName );
@@ -463,6 +487,7 @@ void test  ( char *netName, char *dFileName )
             fprintf ( stderr, "Testing aborted.\n" );
             return;
         }
+    }
 
     /*  Locate the data and check for testing data  */
     if  ( (dFile = select_data ( dFileName )) == NULL )  {
@@ -524,7 +549,7 @@ void predict  ( char *netName, char *dFileName )
     float          aveSig;
 
     /*  Get the name of the network to use  */
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network Name: ");
             scanf  ("%s",nName);
@@ -534,9 +559,10 @@ void predict  ( char *netName, char *dFileName )
             fprintf ( stderr, "Predicting aborted.\n");
             return;
         }
+    }
 
     /*  Get the name of the data file to use  */
-    if  ( dFileName == NULL )
+    if  ( dFileName == NULL ) {
         if  ( interact )  {
             printf ( "Data file name: " );
             scanf  ( "%s", dFName );
@@ -546,6 +572,7 @@ void predict  ( char *netName, char *dFileName )
             fprintf ( stderr, "Predicting aborted.\n" );
             return;
         }
+    }
 
     /*  Select the data file and check it for prediction data  */
     if  ( (dFile = select_data ( dFileName )) == NULL )  {
@@ -610,12 +637,14 @@ void predict  ( char *netName, char *dFileName )
 
 void quit ( char *confirm, char *d2 )
 {
-    if  ( !interact || ((confirm != NULL) && atob( confirm )) )
+    if  ( !interact || ((confirm != NULL) && atob( confirm )) ) {
         exit( 0 );
-    if  ( prompt_yesno( "Really quit" ) )
+    }
+    if  ( prompt_yesno( "Are you sure you want to quit" ) ) {
         exit( 0 );
-    else
+    } else {
         return;
+    }
 }
 
 
@@ -629,11 +658,12 @@ void list_parms  ( char *d1, char *d2 )
 
     printf ("\nParameters\n");
     printf ("~~~~~~~~~~\n");
-    for  ( i = 0 ; i < NUM_PARMS ; i++ )
+    for  ( i = 0 ; i < NUM_PARMS ; i++ ) {
         if  ( parmTable[i].type != FUNC )  {
             printf ("%c%s",(parmTable[i].modWRun)?'*':' ',parmTable[i].name);
-            for  ( j = strlen( parmTable[i].name ) ; j < 39 ; j++ )
+            for  ( j = strlen( parmTable[i].name ) ; j < 39 ; j++ ) {
                 printf (" ");
+            }
             switch( parmTable[i].type )  {
                 case INT:     printf ("%d\n",*(int *)(parmTable[i].ptr));
                               break;
@@ -650,20 +680,25 @@ void list_parms  ( char *d1, char *d2 )
                               break;
             }
         }
+    }
 
     printf ("\nFunctions\n");
     printf ("~~~~~~~~~\n");
-    for  ( i = 0, j = 0; i < NUM_PARMS ; i++ )
+    for  ( i = 0, j = 0; i < NUM_PARMS ; i++ ) {
         if  ( parmTable[i].type == FUNC )  {
             printf ("%c%s",(parmTable[i].modWRun)?'*':' ',parmTable[i].name);
-            if  ( (j++ % 6) == 5 )
+            if  ( (j++ % 6) == 5 ) {
                 printf ("\n");
-            else
-                for  ( k = strlen( parmTable[i].name ) ; k < 12 ; k++ )
+            } else {
+                for  ( k = strlen( parmTable[i].name ) ; k < 12 ; k++ ) {
                     printf (" ");
+                }
+            }
         }
-    if  ( (j % 6) != 0 )
+    }
+    if  ( (j % 6) != 0 ) {
         printf ("\n");
+    }
     printf ("\n*abort:     Abort current run.\n");
     printf ("*continue:  Continue with current run.\n");
     printf ("\n* - Can be modified while training is in progress.\n\n");
@@ -719,16 +754,19 @@ void run_trials  ( char *numTrials, char *dataFile )
     char           dFileName [41];
 
     /*  Get the number of trials to run  */
-    if  ( numTrials == NULL )
+    if  ( numTrials == NULL ) {
         if  ( interact )  {
             printf ("Number of trials to run: ");
             scanf  ("%d", &Ntrials );
         } else {
-            fprintf ( stderr, "Number of trials not specified.  Run not started.\n");
+            fprintf ( stderr, "Number of trials not specified.  "
+                              "Run not started.\n");
             return;
         }
-        else
-            Ntrials = atoi( numTrials );
+    } else {
+        Ntrials = atoi( numTrials );
+    }
+
     if ( Ntrials < 1 )  {
         fprintf ( stderr, "Number of trials should be a positive integer.\n");
         fprintf ( stderr, "Run not started.\n");
@@ -736,7 +774,7 @@ void run_trials  ( char *numTrials, char *dataFile )
     }
 
     /*  Get the data file  */
-    if  ( dataFile == NULL )
+    if  ( dataFile == NULL ) {
         if  ( interact )  {
             printf ("Data file for training: ");
             scanf ("%s", dFileName);
@@ -746,6 +784,7 @@ void run_trials  ( char *numTrials, char *dataFile )
             fprintf ( stderr, "Run not started.\n");
             return;
         }
+    }
     if  ( (dFile = select_data ( dataFile )) == NULL )  {
         if  ( !parse_data ( dataFile, DEF_SIGMAX, DEF_SIGMIN, &dFile ) )  {
             fprintf ( stderr, "Unable to parse data file '%s'.\n", dataFile );
@@ -814,7 +853,7 @@ void load_script  ( char *script, char *d1 )
     FILE *fptr;
 
     /*  Open script file  */
-    if ( script == NULL )
+    if ( script == NULL ) {
         if  ( interact )  {
             printf ("Filename of script to load: ");
             scanf  ("%s",infile);
@@ -823,6 +862,7 @@ void load_script  ( char *script, char *d1 )
             fprintf (stderr,"No script file specified.  Script not loaded.\n");
             return;
         }
+    }
     if  ((fptr = fopen( script, "r" )) == NULL)  {
         fprintf (stderr,"ERROR: Unable to open data file %s\n.", script);
         return;
@@ -837,8 +877,9 @@ void load_script  ( char *script, char *d1 )
             parmVal  = strtok( NULL,   " \t" );
             parmVal2 = strtok( NULL,   " \t" );
 
-            if  ( parm != NULL )
+            if  ( parm != NULL ) {
                 process_command ( FALSE, parm, parmVal, parmVal2 );
+            }
         }
         fgets ( input_line, 80, fptr );
     }
@@ -859,7 +900,7 @@ void save_script  ( char *script, char *d1 )
     time_t timer;
 
     /*  Open script file  */
-    if  ( script == NULL )
+    if  ( script == NULL ) {
         if  ( interact )  {
             printf ("Filename for saved script: ");
             scanf  ("%s",infile);
@@ -869,6 +910,7 @@ void save_script  ( char *script, char *d1 )
             fprintf (stderr,"Script not saved.\n");
             return;
         }
+    }
     if  ((fptr = fopen( script, "w" )) == NULL)  {
         fprintf (stderr,"ERROR: Unable to open data file %s\n.", script);
         return;
@@ -879,8 +921,9 @@ void save_script  ( char *script, char *d1 )
     fprintf (fptr,"# CNNS Ver %s script file created on %s",VER,ctime( &timer ));
 
     for  ( i = 0 ; i < NUM_PARMS ; i++ )  {
-        if  ( parmTable[i].type == FUNC )
+        if  ( parmTable[i].type == FUNC ) {
             continue;
+        }
         fprintf (fptr,"%s\t",parmTable[i].name);
         switch ( parmTable[i].type )  {
             case INT:     fprintf (fptr, "%d\n",*(int *)(parmTable[i].ptr));
@@ -920,7 +963,7 @@ void save_net ( char *netName, char *filename )
     char   name    [41];
     char   outfile [41];
 
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Name of network to save: ");
             scanf  ("%s", name );
@@ -930,8 +973,9 @@ void save_net ( char *netName, char *filename )
             fprintf ( stderr, "Network not saved.\n");
             return;
         }
+    }
 
-    if  ( filename == NULL )
+    if  ( filename == NULL ) {
         if  ( interact )  {
             printf ("File name to save '%s' to: ",name);
             scanf  ("%s",outfile);
@@ -941,6 +985,7 @@ void save_net ( char *netName, char *filename )
             fprintf (stderr,"Network not saved.\n");
             return;
         }
+    }
 
     if  ( (net = select_net( netName )) == NULL )  {
         fprintf ( stderr, "ERROR: Unable to find network %s.\n", netName );
@@ -965,11 +1010,13 @@ void save_net ( char *netName, char *filename )
     while  ( i < net->Noutputs )  {
         fprintf  ( netFile, "%s  ", ntoa( net->outputTypes[i] ) );
         i++;
-        if  (  ( i % 6 ) == 0 )
+        if  (  ( i % 6 ) == 0 ) {
             fprintf ( netFile, "\n");
+        }
     }
-    if  ( ( i % 6 ) != 0 )
+    if  ( ( i % 6 ) != 0 ) {
         fprintf  ( netFile,"\n");
+    }
     fprintf ( netFile, "\n" );
 
     fprintf (netFile,"$unitTypes\n");
@@ -977,42 +1024,49 @@ void save_net ( char *netName, char *filename )
     while  ( i < (net->Nunits - net->Ninputs - 1) )  {
         fprintf ( netFile, "%s  ", ntoa( net->unitTypes [i+net->Ninputs+1] ) );
         i++;
-        if  ( ( i % 6 ) == 0 )
+        if  ( ( i % 6 ) == 0 ) {
             fprintf ( netFile, "\n" );
+        }
     }
-    if  ( ( i % 6 ) != 0 )
+    if  ( ( i % 6 ) != 0 ) {
         fprintf ( netFile, "\n");
+    }
     fprintf ( netFile, "\n" );
 
     for  ( i = 0 ; i < net->Ninputs ; i++ )  {
         map = &(net->inputMap[i]);
         fprintf ( netFile, "$inputMap(%d)\n",i+1 );
-        fprintf ( netFile, "Nenums: %d\tNunits: %d\n", map->Nenums, map->Nunits );
+        fprintf ( netFile, "Nenums: %d\tNunits: %d\n",map->Nenums, map->Nunits);
         for  ( j = 0 ; j < map->Nenums ; j++ )  {
             fprintf ( netFile, "%s ",map->enums[j]);
-            for  ( k = 0 ; k < map->Nunits ; k++ )
+            for  ( k = 0 ; k < map->Nunits ; k++ ) {
                 fprintf ( netFile, "%f ", map->equivs[j][k]);
+            }
             fprintf ( netFile, "\n" );
         }
         fprintf ( netFile, "unknown: " );
-        for  ( j = 0 ; j < map->Nunits ; j++ )
+        for  ( j = 0 ; j < map->Nunits ; j++ ) {
             fprintf ( netFile, "%f ", map->unknown[j] );
+        }
         fprintf ( netFile, "\n\n" );
     }
 
     for  ( i = 0 ; i < net->Noutputs ; i++ )  {
         map = &(net->outputMap[i]);
         fprintf ( netFile, "$outputMap(%d)\n",i+1 );
-        fprintf ( netFile, "Nenums: %d\tNunits: %d\n", map->Nenums, map->Nunits );
+        fprintf ( netFile, "Nenums: %d\tNunits: %d\n",
+                  map->Nenums, map->Nunits );
         for  ( j = 0 ; j < map->Nenums ; j++ )  {
             fprintf ( netFile, "%s ",map->enums[j]);
-            for  ( k = 0 ; k < map->Nunits ; k++ )
+            for  ( k = 0 ; k < map->Nunits ; k++ ) {
                 fprintf ( netFile, "%f ", map->equivs[j][k]);
+            }
             fprintf ( netFile, "\n" );
         }
         fprintf ( netFile, "unknown: " );
-        for  ( j = 0 ; j < map->Nunits ; j++ )
+        for  ( j = 0 ; j < map->Nunits ; j++ ) {
             fprintf ( netFile, "%f ", map->unknown[j] );
+        }
         fprintf (netFile, "\n\n" );
     }
 
@@ -1022,11 +1076,13 @@ void save_net ( char *netName, char *filename )
         while  ( j < net->Nunits )  {
             fprintf  ( netFile, "%f  ", net->outWeights[i][j] );
             j++;
-            if  ( ( j % 6 ) == 0 )
+            if  ( ( j % 6 ) == 0 ) {
                 fprintf  ( netFile, "\n" );
+            }
         }
-        if  ( ( j % 6 ) != 0 )
+        if  ( ( j % 6 ) != 0 ) {
             fprintf  ( netFile, "\n" );
+        }
         fprintf ( netFile, "\n");
     }
 
@@ -1038,11 +1094,13 @@ void save_net ( char *netName, char *filename )
         while  ( j < i )  {
             fprintf  ( netFile, "%f  ", net->weights[i][j] );
             j++;
-            if  ( ( j % 6 ) == 0 )
+            if  ( ( j % 6 ) == 0 ) {
                 fprintf  ( netFile, "\n" );
+            }
         }
-        if  ( ( j % 6 ) != 0 )
+        if  ( ( j % 6 ) != 0 ) {
             fprintf  ( netFile, "\n" );
+        }
         fprintf ( netFile, "\n");
     }
 
@@ -1069,7 +1127,7 @@ void load_net ( char *fname, char *d1 )
             count = 0,index,i,j;
     float   sigMax, sigMin;
 
-    if  ( fname == NULL )
+    if  ( fname == NULL ) {
         if  ( interact )  {
             printf ("Network file to load: ");
             scanf  ("%s",filename);
@@ -1079,6 +1137,7 @@ void load_net ( char *fname, char *d1 )
             fprintf ( stderr, "Network not loaded.\n");
             return;
         }
+    }
 
     if  ((netFile = fopen( fname, "r" )) == NULL)  {
         fprintf (stderr, "ERROR: Unable to open network data file %s.\n",fname);
@@ -1092,53 +1151,60 @@ void load_net ( char *fname, char *d1 )
             count++;
             continue;
         }
-        if  ( lineIn[0] != '#' && lineIn[0] != '\n' )
+        if  ( lineIn[0] != '#' && lineIn[0] != '\n' ) {
             switch ( count )  {
                 case 0:  sscanf (lineIn, "Name: %s", netName);
                          if ( select_net( netName ) != NULL )  {
-                             fprintf (stderr,"ERROR: Network '%s' already in memory.\n",
-                                     netName);
+                             fprintf (stderr,"ERROR: Network '%s' "
+                                             "already in memory.\n",
+                                      netName);
                              return;
                          }
                          count++;
                          break;
-                case 1:  sscanf (lineIn, "epochsTrained: %d Nunits: %d Ninputs: %d",
+                case 1:  sscanf (lineIn, "epochsTrained: %d "
+                                         "Nunits: %d Ninputs: %d",
                                  &eTrained, &Nunits, &Ninputs );
-                         if ( (eTrained < 0) || (Nunits < 2) || (Ninputs < 1) )  {
+                         if ( (eTrained < 0) || (Nunits < 2) || (Ninputs < 1) ){
                              fprintf ( stderr, "ERROR: Illegal value for " );
-                             fprintf ( stderr, "epochsTrained, Nunits or Ninputs.\n");
-                             fprintf ( stderr, "epochsTrained= %d\tNunits= %d\t",
-                                     eTrained, Nunits );
+                             fprintf ( stderr, "epochsTrained, Nunits or "
+                                               "Ninputs.\n");
+                             fprintf ( stderr, "epochsTrained= %d\tNunits= %d\t"
+                                       ,eTrained, Nunits );
                              fprintf ( stderr, "Ninputs= %d\n", Ninputs);
                              fprintf ( stderr, "Network not loaded.\n");
                              return;
                          }
                          count++;
                          break;
-                case 2:  sscanf (lineIn, "Noutputs: %d NhiddenUnits: %d",&Noutputs,
-                                 &NhiddenUnits);
+                case 2:  sscanf (lineIn, "Noutputs: %d NhiddenUnits: %d",
+                                 &Noutputs, &NhiddenUnits);
                          if  ( (Noutputs < 1) || (NhiddenUnits < 0) )  {
                              fprintf ( stderr, "ERROR: Illegal value for " );
                              fprintf ( stderr, "Noutputs or NhiddenUnits.\n" );
-                             fprintf ( stderr, "Noutputs= %d\tNhiddenUnits= %d\n",
+                             fprintf (stderr,"Noutputs= %d\tNhiddenUnits= %d\n",
                                      Noutputs, NhiddenUnits );
                              fprintf ( stderr, "Network not loaded.\n");
                              return;
                          }
                          count++;
                          break;
-                case 3:  sscanf (lineIn,"sigmoidMax: %f sigmoidMin: %f recurrent: %s",
+                case 3:  sscanf (lineIn,"sigmoidMax: %f sigmoidMin: %f "
+                                        "recurrent: %s",
                                  &sigMax, &sigMin, recurrent);
                          if ( sigMax < sigMin )  {
-                             fprintf ( stderr, "ERROR: sigmoidMax may not be less than");
+                             fprintf ( stderr, "ERROR: sigmoidMax may not be"
+                                               " less than");
                              fprintf ( stderr, " sigmoidMin\n" );
-                             fprintf ( stderr, "sigmoidMax= %f\tsigmoidMin= %f\n",
-                                     sigMax, sigMin );
+                             fprintf ( stderr, "sigmoidMax= %f\t"
+                                               "sigmoidMin= %f\n",
+                                       sigMax, sigMin );
                              fprintf ( stderr, "Network not loaded.\n");
                              return;
                          }
-                         net = build_net ( netName, Ninputs, Noutputs, NhiddenUnits,
-                                 1.0, sigMax, sigMin, atob( recurrent ) );
+                         net = build_net ( netName, Ninputs, Noutputs,
+                                           NhiddenUnits, 1.0, sigMax, sigMin,
+                                           atob( recurrent ) );
                          net->NhiddenUnits = NhiddenUnits;
                          net->Nunits       = Nunits;
                          net->maxNewUnits  = 0;
@@ -1150,11 +1216,12 @@ void load_net ( char *fname, char *d1 )
                          add_net( net );
                          break;
                 case 4:  tok = strtok (lineIn, delim);
-                         while ( tok != NULL && tok[0] != '\n' && index < Noutputs )  {
+                         while ( tok != NULL && tok[0] != '\n'
+                                 && index < Noutputs )  {
                              net->outputTypes[index++] = aton( tok );
                              if ( net->outputTypes[index-1] == UNDEFINED )  {
-                                 fprintf ( stderr,
-                                         "ERROR: Output type for %d is undefined.\n",
+                                 fprintf ( stderr, "ERROR: Output type "
+                                                   "for %d is undefined.\n",
                                          index);
                                  fprintf ( stderr, "Network not loaded.\n");
                                  del_net ( netName );
@@ -1167,10 +1234,11 @@ void load_net ( char *fname, char *d1 )
                          while ( tok != NULL && tok[0] != '\n'
                                  && index < NhiddenUnits )  {
                              net->unitTypes[Ninputs+1+index++] = aton( tok );
-                             if ( net->unitTypes[Ninputs+index] == UNDEFINED )  {
+                             if ( net->unitTypes[Ninputs+index] == UNDEFINED ) {
                                  fprintf ( stderr,
-                                         "ERROR: Unit type for %d is undefined.\n",
-                                         Ninputs+index );
+                                           "ERROR: Unit type for %d is "
+                                           "undefined.\n",
+                                           Ninputs+index );
                                  fprintf ( stderr, "Network not loaded.\n" );
                                  del_net ( netName );
                                  return;
@@ -1178,21 +1246,24 @@ void load_net ( char *fname, char *d1 )
                              tok = strtok( NULL, delim );
                          }
                          break;
-                default: if ( count-6 < Ninputs )
-                             net->inputMap[count-6] = read_map( netFile, lineIn );
-                         else if ( count-6-Ninputs < Noutputs )
-                             net->outputMap[count-6-Ninputs] = read_map(netFile,lineIn);
-                         else if ( count-6-Ninputs-Noutputs < Noutputs )  {
+                default: if ( count-6 < Ninputs ) {
+                             net->inputMap[count-6] = read_map(netFile,lineIn );
+                         } else if ( count-6-Ninputs < Noutputs ) {
+                             net->outputMap[count-6-Ninputs] =
+                                            read_map(netFile,lineIn);
+                         } else if ( count-6-Ninputs-Noutputs < Noutputs )  {
                              tok = strtok( lineIn, delim );
-                             while ( tok != NULL && tok[0] != '\n' && index < Nunits )  {
+                             while ( tok != NULL
+                                     && tok[0] != '\n' && index < Nunits )  {
                                  if  ( !isfloat( tok ) )  {
-                                     fprintf ( stderr, "ERROR: Invalid weight value.\n" );
-                                     fprintf ( stderr, "Network not loaded.\n" );
+                                     fprintf ( stderr, "ERROR: Invalid weight "
+                                                       "value.\n" );
+                                     fprintf ( stderr, "Network not loaded.\n");
                                      del_net ( netName );
                                      return;
                                  }
-                                 net->outWeights[count-6-Ninputs-Noutputs][index++] =
-                                     atof( tok );
+                                 net->outWeights[count-6-Ninputs-Noutputs]
+                                                [index++] = atof( tok );
                                  tok = strtok( NULL, delim );
                              }
                          } else {
@@ -1200,8 +1271,9 @@ void load_net ( char *fname, char *d1 )
                              while ( tok != NULL && tok[0] != '\n' &&
                                      index < count-2*Noutputs-5 )  {
                                  if  ( !isfloat( tok ) )  {
-                                     fprintf ( stderr, "ERROR: Invalid weight value.\n" );
-                                     fprintf ( stderr, "Network not loaded.\n" );
+                                     fprintf ( stderr, "ERROR: Invalid weight"
+                                                       " value.\n" );
+                                     fprintf ( stderr, "Network not loaded.\n");
                                      del_net ( netName );
                                      return;
                                  }
@@ -1210,7 +1282,9 @@ void load_net ( char *fname, char *d1 )
                                  tok = strtok( NULL, delim );
                              }
                          }
+
             }
+        }
     }
 
     printf ("Network '%s' loaded.\n", netName );
@@ -1231,8 +1305,8 @@ cvrt_t read_map ( FILE *fptr, char *firstline )
 
     sscanf ( firstline, "Nenums: %d Nunits: %d", &temp.Nenums, &temp.Nunits );
     if ( temp.Nenums > 0 )  {
-        temp.enums = (char **)alloc_mem( temp.Nenums,sizeof( char * ),"Read Map" );
-        temp.equivs = (float **)alloc_mem(temp.Nenums,sizeof(float *),"Read Map");
+        temp.enums =(char **)alloc_mem(temp.Nenums,sizeof( char * ),"Read Map");
+        temp.equivs=(float **)alloc_mem(temp.Nenums,sizeof(float *),"Read Map");
         for ( i = 0 ; i < temp.Nenums ; i++ )  {
             fgets ( linein, 160, fptr );
             tok = strtok ( linein, " \t\n");
@@ -1260,7 +1334,7 @@ cvrt_t read_map ( FILE *fptr, char *firstline )
 /*  RESIZE NET -  This is essentially a wrapper around the realloc_net
     function.  Select the network and then give it the additional units asked
     for.
-    */
+*/
 
 void resize_net ( char *netName, char *newUnits )
 {
@@ -1268,17 +1342,19 @@ void resize_net ( char *netName, char *newUnits )
     net_t *net;
     char  name [41];
 
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Name of network to resize: ");
             scanf ("%s",name);
             netName = name;
         } else {
-            fprintf ( stderr, "No network name specified.  Network not resized.\n" );
+            fprintf ( stderr, "No network name specified.  "
+                              "Network not resized.\n" );
             return;
         }
+    }
 
-    if  ( newUnits == NULL )
+    if  ( newUnits == NULL ) {
         if  ( interact )  {
             printf ( "Number of units to add: ");
             scanf ( "%d", &nUnits );
@@ -1287,8 +1363,9 @@ void resize_net ( char *netName, char *newUnits )
             fprintf ( stderr, "Network not resized.\n" );
             return;
         }
-        else
-            nUnits = atoi( newUnits );
+    } else {
+        nUnits = atoi( newUnits );
+    }
 
     if  ( nUnits < 1 )  {
         fprintf ( stderr, "Number of units added must be positive.\n");
@@ -1313,7 +1390,7 @@ void kill_net  ( char *netName, char *d1 )
 {
     char name[61];
 
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network to remove: ");
             scanf  ("%s", name);
@@ -1323,11 +1400,13 @@ void kill_net  ( char *netName, char *d1 )
             fprintf ( stderr, "No networks removed from memory.\n" );
             return;
         }
+    }
 
-    if  ( !del_net( name ) )
+    if  ( !del_net( name ) ) {
         printf ("ERROR: Could not find network '%s'.\n",name);
-    else
+    } else {
         printf ("Network '%s' removed from memory.\n",name);
+    }
 }
 
 
@@ -1339,7 +1418,7 @@ void kill_data  ( char *filename, char *d1 )
 {
     char fname[61];
 
-    if  ( filename == NULL )
+    if  ( filename == NULL ) {
         if  ( interact )  {
             printf ("Data file to remove: ");
             scanf  ("%s",fname);
@@ -1349,11 +1428,13 @@ void kill_data  ( char *filename, char *d1 )
             fprintf ( stderr, "No data files removed from memory.\n" );
             return;
         }
+    }
 
-    if  ( !del_data_file( filename ) )
+    if  ( !del_data_file( filename ) ) {
         printf ("ERROR: Could not find data file '%s'.\n",filename);
-    else
+    } else {
         printf ("Data file '%s' removed from memory.\n",filename);
+    }
 }
 
 
@@ -1370,7 +1451,7 @@ void inspect_net ( char *netName, char *d1 )
     int    i,j,k;
     char   name [41];
 
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Name of network to inspect: ");
             scanf  ("%s", name);
@@ -1379,6 +1460,7 @@ void inspect_net ( char *netName, char *d1 )
             fprintf ( stderr, "Network to inspect not specified.\n" );
             return;
         }
+    }
 
     if  ( (net = select_net( netName )) == NULL )  {
         fprintf ( stderr, "ERROR: Unable to find network %s.\n", netName );
@@ -1410,11 +1492,13 @@ void inspect_net ( char *netName, char *d1 )
         while  ( j < net->Nunits )  {
             printf  ( "%f  ", net->outWeights[i][j] );
             j++;
-            if  ( ( j % 6 ) == 0 )
+            if  ( ( j % 6 ) == 0 ) {
                 printf  ( "\n  " );
+            }
         }
-        if  ( ( j % 6 ) != 0 )
+        if  ( ( j % 6 ) != 0 ) {
             printf  ( "\n" );
+        }
         printf ( "\n");
     }
 
@@ -1427,11 +1511,13 @@ void inspect_net ( char *netName, char *d1 )
         while  ( j < i )  {
             printf  ( "%f  ", net->weights[i][j] );
             j++;
-            if  ( ( j % 6 ) == 0 )
+            if  ( ( j % 6 ) == 0 ) {
                 printf  ( "\n  " );
+            }
         }
-        if  ( ( j % 6 ) != 0 )
+        if  ( ( j % 6 ) != 0 ) {
             printf  ( "\n" );
+        }
         printf ( "\n");
     }
 }
@@ -1447,7 +1533,7 @@ void inspect_data ( char *dataFile, char *d1 )
     data_file_t *data;
     int         i;
 
-    if  ( dataFile == NULL )
+    if  ( dataFile == NULL ) {
         if  ( interact )  {
             printf ("Data file to inspect: ");
             scanf  ("%s", dFile);
@@ -1456,6 +1542,7 @@ void inspect_data ( char *dataFile, char *d1 )
             fprintf ( stderr, "Data file to inspect not specified.\n" );
             return;
         }
+    }
 
     if  ( (data = select_data( dataFile )) == NULL )  {
         fprintf ( stderr, "ERROR: Unable to find data file %s.\n", dataFile );
@@ -1471,9 +1558,12 @@ void inspect_data ( char *dataFile, char *d1 )
             data->binNeg );
 
     printf ( "Output Types\n");
-    for  ( i = 0 ; i < data->Noutputs ; i++ )
+    for  ( i = 0 ; i < data->Noutputs ; i++ ) {
         printf ("%8s%s",otoa( data->outputType[i] ), (i%8==7)?"\n  ":"  ");
-    if  ( i%8 != 7 ) printf ("\n");
+    }
+    if  ( i%8 != 7 ) {
+        printf ("\n");
+    }
     printf ("\n");
 
     for  ( i = 0 ; i < data->Ninputs ; i++ )  {
@@ -1487,11 +1577,12 @@ void inspect_data ( char *dataFile, char *d1 )
     }
 
     printf ("Data Sets\n");
-    for  ( i = 0 ; i < data->NdataSets ; i++ )
+    for  ( i = 0 ; i < data->NdataSets ; i++ ) {
         printf ( "  %s\tNpts: %d  standard devation: %f  predict only: %s\n",
                 data->dataSets[i].name, data->dataSets[i].Npts,
                 data->dataSets[i].stdDev,
                 btoa( YES_NO, data->dataSets[i].predictOnly ) );
+    }
 }
 
 
@@ -1506,14 +1597,20 @@ void print_cvrt ( cvrt_t *map )
     printf ( "  Nenums: %d\tNunits: %d\n", map->Nenums, map->Nunits );
     for  ( j = 0 ; j < map->Nenums ; j++ )  {
         printf ( "  %s: ",map->enums[j]);
-        for  ( k = 0 ; k < map->Nunits ; k++ )
+        for  ( k = 0 ; k < map->Nunits ; k++ ) {
             printf ( "%f%s", map->equivs[j][k], (k%6==5)?"\n\t":" " );
-        if  ( k%6 != 5 ) printf ("\n");
+        }
+        if  ( k%6 != 5 ) {
+            printf ("\n");
+        }
     }
     printf ( "  unknown: " );
-    for  ( j = 0 ; j < map->Nunits ; j++ )
+    for  ( j = 0 ; j < map->Nunits ; j++ ) {
         printf ( "%f%s", map->unknown[j], (j%6==5)?"\n\t":" " );
-    if ( j%6 != 5 ) printf ("\n");
+    }
+    if ( j%6 != 5 ) {
+        printf ("\n");
+    }
     printf ( "\n" );
 }
 
@@ -1527,7 +1624,7 @@ void load_data ( char *filename, char *d1 )
     data_file_t *dFile;
 
 
-    if  ( filename == NULL )
+    if  ( filename == NULL ) {
         if  ( interact )  {
             printf ("Data file to load: ");
             scanf  ("%s",fname);
@@ -1536,6 +1633,7 @@ void load_data ( char *filename, char *d1 )
             fprintf ( stderr, "Data file to load not specified.\n");
             return;
         }
+    }
 
     if  ( (dFile = select_data ( filename )) == NULL )  {
         if  ( !parse_data ( filename, DEF_SIGMAX, DEF_SIGMIN, &dFile ) )  {
@@ -1545,7 +1643,7 @@ void load_data ( char *filename, char *d1 )
         add_data_file( dFile );
     }  else  {
         fprintf ( stderr, "Data file already in memory.\n" );
-        fprintf ( stderr, "Unload the data file using killData and try again.\n");
+        fprintf(stderr, "Unload the data file using killData and try again.\n");
         return;
     }
 }
@@ -1561,22 +1659,24 @@ void sync_net ( char *netName, char *dFileName )
     net_t       *net;
     data_file_t *dFile;
 
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Name of network to sync: ");
             scanf  ("%s",nName);
             netName = nName;
         } else {
-            fprintf ( stderr, "No network name specified.  Network not synced.\n");
+            fprintf ( stderr, "No network name specified.  "
+                              "Network not synced.\n");
             return;
         }
+    }
 
     if  ( (net = select_net( netName )) == NULL )  {
         fprintf ( stderr, "ERROR: Unable to find network %s.\n", nName );
         return;
     }
 
-    if  ( dFileName == NULL )
+    if  ( dFileName == NULL ) {
         if  ( interact )  {
             printf ("Name of data file to sync network to: ");
             scanf  ("%s", dFName);
@@ -1585,6 +1685,7 @@ void sync_net ( char *netName, char *dFileName )
             fprintf ( stderr, "No data file specified.  Network not synced.\n");
             return;
         }
+    }
 
     if  ( (dFile = select_data( dFName )) == NULL )  {
         fprintf ( stderr, "ERROR: Unable to find data file %s.\n", dFName );

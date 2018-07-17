@@ -1,10 +1,10 @@
 /*       CMU Learning Benchmark Archive
          Parse Library
 
-         v2.0
-         Matt White  (mwhite+@cmu.edu)
-         3/5/95
-         */
+         v2.2.1
+         Ian Chiu (ichiu@andrew.cmu.edu)
+         7/17/2018
+*/
 
 #ifndef PARSE
 #define PARSE

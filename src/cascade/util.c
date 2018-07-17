@@ -1,6 +1,12 @@
 /*	CMU Cascade Neural Network Simulator (CNNS)
     Network utilities
 
+    v1.1
+    Ian Chiu (ichiu@andrew.cmu.edu)
+    7/17/2018
+
+    Improving readability and maintainability
+
     v1.0
     Matt White  (mwhite+@cmu.edu)
     December 6, 1994
@@ -45,17 +51,20 @@ void forward_pass  ( float *inputs, boolean reset )
 
     cNet->values[0] = BIAS;
 
-    for  ( i = 1 ; i <= Ninputs ; i++ )
+    for  ( i = 1 ; i <= Ninputs ; i++ ) {
         cNet->values[i] = inputs[i-1];
+    }
 
     for  ( i = Ninputs+1 ; i < cNet->Nunits ; i++ )  {
         sum     = 0.0;
         weights = cNet->weights[i];
 
-        for  ( j = 0 ; j < i ; j++ )
+        for  ( j = 0 ; j < i ; j++ ) {
             sum += cNet->values[j] * weights[j];
-        if  ( cNet->recurrent && !reset )
+        }
+        if  ( cNet->recurrent && !reset ) {
             sum += cNet->values[i] * weights[i];
+        }
 
         cNet->values[i] = activation( cNet->unitTypes[i], sum );
 
@@ -81,8 +90,9 @@ void compute_outputs  ( void )
         sum     = 0.0;
         weights = cNet->outWeights[i];
 
-        for  ( j = 0 ; j < cNet->Nunits ; j++ )
+        for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
             sum += cNet->values[j] * weights[j];
+        }
         cNet->outValues[i] = activation( cNet->outputTypes[i], sum );
     }
 
@@ -109,21 +119,24 @@ void compute_error  ( float *goal, boolean alterStats, boolean alterSlopes,
     for  ( i = 0 ; i < Noutputs ; i++ )  {
         val   = cNet->outValues[i];
         dif   = val - goal [i];
-        error = (useEPrime) ? (dif*output_prime(cNet->outputTypes[i], val)) : dif;
+        error =(useEPrime) ? (dif*output_prime(cNet->outputTypes[i],val)) : dif;
 
         cError->errors[i] = error;
 
         if  ( alterStats )  {
-            if  ( fabs( dif ) > threshold )
+            if  ( fabs( dif ) > threshold ) {
                 cError->bits++;
+            }
             cError->sumSqDiffs += dif * dif;
             cError->sumSqError += error * error;
             cError->sumErr[i]  += error;
         }
 
-        if  ( alterSlopes )
-            for  ( j = 0 ; j < cNet->Nunits ; j++ )
+        if  ( alterSlopes ) {
+            for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
                 cTData->output.slopes[i][j] += error * cNet->values[j];
+            }
+        }
     }
 }
 
@@ -141,21 +154,26 @@ void quickprop ( float *w, float *d, float *s, float *p, float epsilon,
     *s += decay * *w;
 
     if  ( *d < 0.0 )  {
-        if  ( *s > 0.0 )
+        if  ( *s > 0.0 ) {
             nextStep -= epsilon * *s;
-        if  ( *s >= (shrinkFactor * *p) )
+        }
+        if  ( *s >= (shrinkFactor * *p) ) {
             nextStep += mu * *d;
-        else
+        } else {
             nextStep += *d * *s / (*p - *s);
+        }
     } else if  ( *d > 0.0 )  {
-        if  ( *s < 0.0 )
+        if  ( *s < 0.0 ) {
             nextStep -= epsilon * *s;
-        if  ( *s <= (shrinkFactor * *p) )
+        }
+        if  ( *s <= (shrinkFactor * *p) ) {
             nextStep += mu * *d;
-        else
+        } else {
             nextStep += *d * *s / (*p - *s);
-    } else
+        }
+    } else {
         nextStep -= epsilon * *s;
+    }
 
     *w += nextStep;
     *d =  nextStep;
@@ -173,28 +191,35 @@ float activation  ( node_t unitType, float sum )
     float temp;
 
     switch ( unitType )  {
-        case SIGMOID:    if ( sum < -15.0 )
+        case SIGMOID:    if ( sum < -15.0 ) {
                              return -0.5;
-                         if ( sum > 15.0 )
+                         }
+                         if ( sum > 15.0 ) {
                              return 0.5;
+                         }
                          return 1.0 / (1.0 + exp( -sum )) - 0.5;
-        case ASIGMOID:   if ( sum < -15.0 )
+        case ASIGMOID:   if ( sum < -15.0 ) {
                              return 0.0;
-                         if ( sum > 15.0 )
+                         }
+                         if ( sum > 15.0 ) {
                              return 1.0;
+                         }
                          return 1.0 / (1.0 + exp( -sum ));
         case LINEAR:     return sum;
-        case VARSIGMOID: if ( sum < -15.0 )
+        case VARSIGMOID: if ( sum < -15.0 ) {
                              return sigMin;
-                         if ( sum > 15.0 )
+                         }
+                         if ( sum > 15.0 ) {
                              return sigMax;
+                         }
                          return( (sigMax - sigMin) /
                                  (1.0 + exp( -sum )) + sigMin );
         case GAUSSIAN:   temp = -0.5 * sum * sum;
-                         if  ( temp < -75.0 )
+                         if  ( temp < -75.0 ) {
                              return 0.0;
-                         else
+                         } else {
                              return exp( temp );
+                         }
     }
 }
 
@@ -229,7 +254,7 @@ float output_prime  ( node_t outType, float value )
 {
     switch  ( outType )  {
         case SIGMOID:  return( cParms->outPrimeOffset + 0.25 - value * value );
-        case ASIGMOID: return( cParms->outPrimeOffset + value * (1.0 - value ) );
+        case ASIGMOID: return( cParms->outPrimeOffset + value * (1.0 - value ));
         case LINEAR:   return 1.0;
         case VARSIGMOID: return( cParms->outPrimeOffset +
                                  (value - sigMin) *
@@ -256,24 +281,25 @@ float random_weight ( float x )
 void sync  ( net_t *net, data_file_t *dFile )
 {
     int    i,j,k;
-    char   *fn = "Sync Net";
+    char   *fn_name = "Sync Net";
     cvrt_t *map;
 
     /*  Match the output types  */
-    for  ( i = 0 ; i < net->Noutputs ; i++ )
-        if  ( dFile->outputType[i] == CONT )
+    for  ( i = 0 ; i < net->Noutputs ; i++ ) {
+        if  ( dFile->outputType[i] == CONT ) {
             net->outputTypes[i] = LINEAR;
-        else  {
-            if  ( (dFile->binPos == 0.5) && (dFile->binNeg == -0.5) )
+        } else  {
+            if  ( (dFile->binPos == 0.5) && (dFile->binNeg == -0.5) ) {
                 net->outputTypes[i] = SIGMOID;
-            else if  ( (dFile->binPos == 1.0) && (dFile->binNeg == 0.0) )
+            } else if  ( (dFile->binPos == 1.0) && (dFile->binNeg == 0.0) ) {
                 net->outputTypes[i] = ASIGMOID;
-            else {
+            } else {
                 net->sigmoidMax = dFile->binPos;
                 net->sigmoidMin = dFile->binNeg;
                 net->outputTypes[i] = VARSIGMOID;
             }
         }
+    }
 
     /*  Free up the network's old conversions maps  */
     if  ( net->inputMap != NULL )  {
@@ -305,48 +331,62 @@ void sync  ( net_t *net, data_file_t *dFile )
     }
 
     /*  Copy the conversion map from the data file to the network  */
-    net->inputMap = (cvrt_t *) alloc_mem( net->Ninputs, sizeof( cvrt_t ), fn );
+    net->inputMap = (cvrt_t *) alloc_mem( net->Ninputs, sizeof( cvrt_t ),
+                                          fn_name );
     for  ( i = 0 ; i < net->Ninputs ; i++ )  {
         map = &(net->inputMap[i]);
         map->Nenums = dFile->inputMap[i].Nenums;
         map->Nunits = dFile->inputMap[i].Nunits;
-        map->unknown = (float *)alloc_mem( map->Nunits, sizeof( float ), fn );
+        map->unknown = (float *)alloc_mem( map->Nunits, sizeof( float ),
+                                           fn_name );
 
         if  ( map->Nenums > 0 )  {
-            map->enums  = (char **)alloc_mem( map->Nenums, sizeof( char * ), fn );
-            map->equivs = (float **)alloc_mem( map->Nenums, sizeof( float * ), fn );
+            map->enums  = (char **)alloc_mem( map->Nenums, sizeof( char * ),
+                                              fn_name );
+            map->equivs = (float **)alloc_mem( map->Nenums, sizeof( float * ),
+                                               fn_name );
 
             for  ( j = 0 ; j < map->Nenums ; j++ )  {
                 map->enums[j]  = strdup( dFile->inputMap[i].enums[j] );
-                map->equivs[j] = (float *)alloc_mem(map->Nunits, sizeof( float ), fn);
-                for  ( k = 0 ; k < map->Nunits ; k++ )
+                map->equivs[j] = (float *)alloc_mem(map->Nunits,
+                                                    sizeof( float ), fn_name);
+                for  ( k = 0 ; k < map->Nunits ; k++ ) {
                     map->equivs[j][k] = dFile->inputMap[i].equivs[j][k];
+                }
             }
         }
-        for  ( j = 0 ; j < map->Nunits ; j++ )
+        for  ( j = 0 ; j < map->Nunits ; j++ ) {
             map->unknown[j] = dFile->inputMap[i].unknown[j];
+        }
     }
 
-    net->outputMap = (cvrt_t *) alloc_mem( net->Noutputs, sizeof( cvrt_t ), fn );
+    net->outputMap = (cvrt_t *) alloc_mem( net->Noutputs, sizeof( cvrt_t ),
+                                           fn_name );
     for  ( i = 0 ; i < net->Noutputs ; i++ )  {
         map = &(net->outputMap[i]);
         map->Nenums = dFile->outputMap[i].Nenums;
         map->Nunits = dFile->outputMap[i].Nunits;
-        map->unknown = (float *)alloc_mem( map->Nunits, sizeof( float ), fn );
+        map->unknown = (float *)alloc_mem( map->Nunits, sizeof( float ),
+                                           fn_name );
 
         if  ( map->Nenums > 0 )  {
-            map->enums  = (char **)alloc_mem( map->Nenums, sizeof( char * ), fn );
-            map->equivs = (float **)alloc_mem( map->Nenums, sizeof( float * ), fn );
+            map->enums  = (char **)alloc_mem( map->Nenums, sizeof( char * ),
+                                              fn_name );
+            map->equivs = (float **)alloc_mem( map->Nenums, sizeof( float * ),
+                                               fn_name );
 
             for  ( j = 0 ; j < map->Nenums ; j++ )  {
                 map->enums[j]  = strdup( dFile->outputMap[i].enums[j] );
-                map->equivs[j] = (float *)alloc_mem(map->Nunits, sizeof( float ), fn);
-                for  ( k = 0 ; k < map->Nunits ; k++ )
+                map->equivs[j] = (float *)alloc_mem(map->Nunits,
+                                                    sizeof( float ), fn_name);
+                for  ( k = 0 ; k < map->Nunits ; k++ ) {
                     map->equivs[j][k] = dFile->outputMap[i].equivs[j][k];
+                }
             }
         }
-        for  ( j = 0 ; j < map->Nunits ; j++ )
+        for  ( j = 0 ; j < map->Nunits ; j++ ) {
             map->unknown[j] = dFile->outputMap[i].unknown[j];
+        }
     }
 }
 
@@ -361,8 +401,9 @@ net_t *select_net ( char *name )
 
     index = nets;
     while ( index != NULL )  {
-        if  ( !strcasecmp( index->name, name ) )
+        if  ( !strcasecmp( index->name, name ) ) {
             return index;
+        }
         index = index->next;
     }
 
@@ -389,20 +430,23 @@ boolean del_net ( char *netName )
 
     index  = nets;
     pindex = NULL;
-    while ( index != NULL )
+    while ( index != NULL ) {
         if  ( !strcmp( index->name, netName ) )  {
-            if ( pindex == NULL )
+            if ( pindex == NULL ) {
                 nets = index->next;
-            else
+            } else {
                 pindex->next = index->next;
+            }
             break;
         }  else  {
             pindex = index;
             index  = index->next;
         }
+    }
 
-    if ( index == NULL )
+    if ( index == NULL ) {
         return FALSE;
+    }
 
     free_net( &index );
     return TRUE;
@@ -419,8 +463,9 @@ data_file_t *select_data ( char *filename )
 
     index = dFiles;
     while ( index != NULL )  {
-        if  ( !strcmp( index->data->filename, filename ) )
+        if  ( !strcmp( index->data->filename, filename ) ) {
             return index->data;
+        }
         index = index->next;
     }
 
@@ -453,20 +498,23 @@ boolean del_data_file ( char *filename )
 
     index  = dFiles;
     pindex = NULL;
-    while ( index != NULL )
+    while ( index != NULL ) {
         if  ( !strcmp( index->data->filename, filename ) )  {
-            if ( pindex == NULL )
+            if ( pindex == NULL ) {
                 dFiles = index->next;
-            else
+            } else {
                 pindex->next = index->next;
+            }
             break;
         }  else  {
             pindex = index;
             index  = index->next;
         }
+    }
 
-    if ( index == NULL )
+    if ( index == NULL ) {
         return FALSE;
+    }
 
     free_data( &(index->data) );
     return TRUE;
@@ -539,8 +587,9 @@ char *stoa  ( status_t status )
 
 algo_t atoal  ( char *value )
 {
-    if  ( !strcasecmp( value, "cascade2" ) || !strcasecmp( value, "cascade-2" ) )
+    if(!strcasecmp( value, "cascade2" ) || !strcasecmp( value, "cascade-2" )) {
         return CASCADE2;
+    }
     return CASCOR;
 }
 
@@ -550,8 +599,9 @@ algo_t atoal  ( char *value )
 
 error_t atoe  ( char *value )
 {
-    if  ( !strcasecmp( value, "index" ) )
+    if  ( !strcasecmp( value, "index" ) ) {
         return INDEX;
+    }
     return BITS;
 }
 
@@ -561,15 +611,20 @@ error_t atoe  ( char *value )
 
 node_t aton  ( char *value )
 {
-    if  ( !strcasecmp( value, "sigmoid" ) )
+    if  ( !strcasecmp( value, "sigmoid" ) ) {
         return SIGMOID;
-    if  ( !strcasecmp( value, "asigmoid" ) )
+    }
+    if  ( !strcasecmp( value, "asigmoid" ) ) {
         return ASIGMOID;
-    if  ( !strcasecmp( value, "gaussian" ) )
+    }
+    if  ( !strcasecmp( value, "gaussian" ) ) {
         return GAUSSIAN;
-    if  ( !strcasecmp( value, "linear" ) )
+    }
+    if  ( !strcasecmp( value, "linear" ) ) {
         return LINEAR;
-    if  ( !strcasecmp( value, "varied" ) )
+    }
+    if  ( !strcasecmp( value, "varied" ) ) {
         return VARIED;
+    }
     return UNDEFINED;
 }

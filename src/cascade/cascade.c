@@ -1,15 +1,21 @@
-/*       CMU Cascade Neural Network Simulator (CNNS)
+/*   CMU Cascade Neural Network Simulator (CNNS)
 
-         v1.0
-         Matt White  (mwhite+@cmu.edu)
-         May 25, 1995
+     v1.1
+     Ian Chiu (ichiu@andrew.cmu.edu)
+     7/17/2018
 
-         This file contains the core of the Cascade Neural Network Simulator.
-         Program setup takes place here and then control is dispatched to the
-         Command Line Interface in file 'interface.c'.  Also contained within
-         this file are training routines common to both Cascade Correlation and
-         Cascade-2.
-         */
+     Improving readability and maintainability
+
+     v1.0
+     Matt White  (mwhite+@cmu.edu)
+     May 25, 1995
+
+     This file contains the core of the Cascade Neural Network Simulator.
+     Program setup takes place here and then control is dispatched to the
+     Command Line Interface in file 'interface.c'.  Also contained within
+     this file are training routines common to both Cascade Correlation and
+     Cascade-2.
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -56,8 +62,7 @@ void main ( int argc, char *argv[] )
     time_t       t;
     int          i;
 
-    display_banner( );             /*  Welcome user and then do some  */
-    /* initializations.                */
+    display_banner( );     /*  Welcome user and then do some initializations. */
     interruptPending = FALSE;
     interact         = TRUE;
     signal( SIGINT, trap_ctrl_c ); /*  Trap C-c so we can break out of a run  */
@@ -71,8 +76,9 @@ void main ( int argc, char *argv[] )
 
     /*  Process command line arguments  */
 
-    for  ( i = 1 ; i < argc ; i++ )
+    for  ( i = 1 ; i < argc ; i++ ) {
         load_script( argv[i], NULL );
+    }
 
     /*  Invoke command interpreter  */
 
@@ -124,8 +130,9 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
 
     display_begin_trial  ( trialNum, startTime );
 
-    if  ( parms->useCache )
+    if  ( parms->useCache ) {
         compute_cache( Ninputs, dFile->train, tData->valCache );
+    }
 
 
     /*  Setjmp is to mark our position in case the user aborts the run  */
@@ -137,25 +144,28 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
             display_trainout_results  ( net, error, status, parms->errorMeasure );
 
             /*  Validate and check status  */
-            if  ( status == WIN )
+            if  ( status == WIN ) {
                 break;
+            }
             if  ( parms->validate )  {
                 valStatus = validation_epoch( &valBScore, &valBWeights, &valCLeft,
                         &valBUnits, init );
                 init = FALSE;
-                if  ( valStatus != TRAINING )
+                if  ( valStatus != TRAINING ) {
                     break;
+                }
             }
 
 
-            /*  Initialize the candidates and train them either with cascor or  */
-            /* cascade-2, as specified by the user                              */
+        /*  Initialize the candidates and train them either with cascor or  */
+        /* cascade-2, as specified by the user                              */
             init_cand( tData, Ncand, Noutputs, net->Nunits, recurrent,
                     parms->weightRange, parms->candType );
-            if  (cParms->algorithm == CASCOR)
+            if  (cParms->algorithm == CASCOR) {
                 status = cascor_train_cand( );
-            else
+            } else {
                 status = c2_train_cand( );
+            }
             install_cand( tData->candBest, (cParms->algorithm == CASCADE2) );
 
             display_traincand_results  ( net, tData, status );
@@ -163,8 +173,9 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
 
         /*  If we ran out of new units, train the outputs from the last unit  */
         /* added.  Otherwise these output weights will perform badly  */
-        if ( (status != WIN) && (valStatus == TRAINING) )
+        if ( (status != WIN) && (valStatus == TRAINING) ) {
             status = train_outputs( );
+        }
     }
     time( &endTime );
 
@@ -176,8 +187,9 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
     result.connx      = connx;
 #endif
     if  ( cParms->test )  {
-        if  ( dFile->test == NULL )
+        if  ( dFile->test == NULL ) {
             dFile->test = dFile->train;
+        }
         testRes = test_net( net, dFile->test );
         result.bits       = testRes.bits;
         result.index      = testRes.index;
@@ -206,8 +218,9 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
 
     /*  Free memory allocated for training  */
     if  ( parms->validate )  {
-        for  ( i = 0 ; i < net->Noutputs ; i++ )
+        for  ( i = 0 ; i < net->Noutputs ; i++ ) {
             free( valBWeights[i] );
+        }
         free( valBWeights );
     }
     free_train_data( &tData, net, parms );
@@ -302,30 +315,34 @@ status_t train_outputs  ( void )
         init_error( cError, Noutputs );
         output_epoch( );
 
-        if  ( interruptPending ) handle_interrupt( cTData, cDSet->Npts );
+        if  ( interruptPending ) {
+            handle_interrupt( cTData, cDSet->Npts );
+        }
 
         /*  Check for WIN  */
-        if ( (cParms->errorMeasure == BITS) && (cError->bits == 0) )
+        if ( (cParms->errorMeasure == BITS) && (cError->bits == 0) ) {
             return WIN;
-        else  if (cParms->errorMeasure == INDEX)  {
+        } else  if (cParms->errorMeasure == INDEX)  {
             cError->index = ERROR_INDEX( cError->sumSqDiffs, cDSet->stdDev,
                     NtrainOutVals );
-            if  ( cError->index <= cParms->indexThreshold )
+            if  ( cError->index <= cParms->indexThreshold ) {
                 return WIN;
+            }
         }
 
         adjust_weights( );
         cNet->epochsTrained++;
 
         /*  Check for STAGNATION/Improvement  */
-        if  ( i == 0 )
+        if  ( i == 0 ) {
             lastError = cError->sumSqDiffs;
-        else if  ( fabs( cError->sumSqDiffs - lastError ) >
+        } else if  ( fabs( cError->sumSqDiffs - lastError ) >
                 ( lastError * cParms->outputParm.changeThreshold ) )  {
             lastError = cError->sumSqDiffs;
             quitEpoch = cNet->epochsTrained + cParms->outputParm.patience;
-        } else if  ( cNet->epochsTrained == quitEpoch )
+        } else if  ( cNet->epochsTrained == quitEpoch ) {
             return STAGNANT;
+        }
     }
 
     return TIMEOUT;
@@ -345,10 +362,11 @@ void output_epoch  ( void )
             cNet->values   = cTData->valCache[i];
             cError->errors = cTData->errCache[i];
             compute_outputs( );
-        }  else
+        }  else {
             forward_pass( cDSet->data[i].inputs, cDSet->data[i].reset );
+        }
         compute_error( cDSet->data[i].outputs, TRUE, TRUE,
-                (cParms->algorithm == CASCOR), cParms->scoreThreshold );
+                       (cParms->algorithm == CASCOR), cParms->scoreThreshold );
     }
 }
 
@@ -372,7 +390,7 @@ status_t validation_epoch  ( float *bestScore, float ***bestWeights,
     trial_result_t valRes;	/*  Result value to return  */
     int            maxUnits,	/*  Maximum number of units in the network  */
                    i,j;		/*  Indexing variables  */
-    char           *fn = "Validation Epoch";
+    char           *fn_name = "Validation Epoch";
 
     /*  Select the validation data and run a test epoch on it  */
     if  ( cDFile->validate == NULL )  {
@@ -385,9 +403,12 @@ status_t validation_epoch  ( float *bestScore, float ***bestWeights,
     /*  If this is the first validation epoch this run, init the data structs  */
     if  ( init )  {
         maxUnits = cNet->Nunits+cNet->maxNewUnits;
-        *bestWeights = (float **)alloc_mem( cNet->Noutputs,sizeof( float * ),fn );
-        for  ( i = 0 ; i < cNet->Noutputs ; i++ )
-            (*bestWeights)[i] = (float *)alloc_mem( maxUnits, sizeof(float), fn );
+        *bestWeights = (float **)alloc_mem( cNet->Noutputs, sizeof( float * ),
+                                            fn_name );
+        for  ( i = 0 ; i < cNet->Noutputs ; i++ ) {
+            (*bestWeights)[i] = (float *)alloc_mem( maxUnits, sizeof(float),
+                                                    fn_name );
+        }
         init = FALSE;
     }
 
@@ -397,24 +418,28 @@ status_t validation_epoch  ( float *bestScore, float ***bestWeights,
         *bestScore  = valRes.sumSqError;
         *cyclesLeft = cParms->validationPatience;
         *bestUnits  = cNet->Nunits;
-        for  ( i = 0 ; i < cNet->Noutputs ; i++ )
-            for  ( j = 0 ; j < cNet->Nunits ; j++ )
+        for  ( i = 0 ; i < cNet->Noutputs ; i++ ) {
+            for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
                 (*bestWeights)[i][j] = cNet->outWeights[i][j];
+            }
+        }
         display_validate_results( valRes, cParms->errorMeasure, *bestScore,
-                *cyclesLeft );
+                                 *cyclesLeft );
         return TRAINING;
     } else if  ( *cyclesLeft > 0 )  {
         (*cyclesLeft)--;
         display_validate_results( valRes, cParms->errorMeasure, *bestScore,
-                *cyclesLeft );
+                                  *cyclesLeft );
         return TRAINING;
     }
 
     /*  Since we stagnated, restore network to its peak performance  */
     cNet->Nunits  = *bestUnits;
-    for  ( i = 0 ; i < cNet->Noutputs ; i++ )
-        for  ( j = 0 ; j < cNet->Nunits ; j++ )
+    for  ( i = 0 ; i < cNet->Noutputs ; i++ ) {
+        for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
             cNet->outWeights[i][j] = (*bestWeights)[i][j];
+        }
+    }
     display_validate_results( valRes, cParms->errorMeasure, *bestScore,
             *cyclesLeft );
     return STAGNANT;
@@ -439,10 +464,11 @@ void adjust_weights  ( void )
         od = cTData->output.deltas[i];
         os = cTData->output.slopes[i];
         op = cTData->output.pSlopes[i];
-        for  ( j = 0 ; j < cNet->Nunits ; j++ )
+        for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
             quickprop( ow+j, od+j, os+j, op+j, cTData->outScaledEps,
                     cParms->outputUpdate.decay, cParms->outputUpdate.mu,
                     cTData->output.shrinkFactor );
+        }
     }
 }
 
@@ -470,10 +496,11 @@ void  adjust_ci_weights  ( void )
         cd = cTData->candIn.deltas[i];
         cs = cTData->candIn.slopes[i];
         cp = cTData->candIn.pSlopes[i];
-        for  ( j = 0 ; j < cNet->Nunits + recurrent; j++ )
+        for  ( j = 0 ; j < cNet->Nunits + recurrent; j++ ) {
             quickprop( cw+j, cd+j, cs+j, cp+j, scaledEpsilon,
                     cParms->candInUpdate.decay, cParms->candInUpdate.mu,
                     cTData->candIn.shrinkFactor );
+        }
     }
 }
 
@@ -499,10 +526,11 @@ void  adjust_co_weights  ( void )
         cd = cTData->candOut.deltas[i];
         cs = cTData->candOut.slopes[i];
         cp = cTData->candOut.pSlopes[i];
-        for  ( j = 0 ; j < Noutputs ; j++ )
+        for  ( j = 0 ; j < Noutputs ; j++ ) {
             quickprop( cw+j, cd+j, cs+j, cp+j, scaledEpsilon,
                     cParms->candOutUpdate.decay, cParms->candOutUpdate.mu,
                     cTData->candOut.shrinkFactor );
+        }
     }
 }
 
@@ -523,29 +551,36 @@ void install_cand  ( int candNum, boolean useOutWeights )
     /*  Copy the new unit's inputs to the network  */
     newWeights  = cNet->weights[cNet->Nunits];
     candWeights = cTData->candIn.weights[candNum];
-    for  ( i = 0 ; i < (cNet->Nunits+recurrent) ; i++ )
+    for  ( i = 0 ; i < (cNet->Nunits+recurrent) ; i++ ) {
         newWeights[i] = candWeights[i];
+    }
 
     /*  Either copy the output weights over or approximate them  */
-    if  ( useOutWeights )
-        for  ( i = 0 ; i < Noutputs ; i++ )
-            cNet->outWeights[i][cNet->Nunits] = -cTData->candOut.weights[candNum][i];
+    if  ( useOutWeights ) {
+        for  ( i = 0 ; i < Noutputs ; i++ ) {
+            cNet->outWeights[i][cNet->Nunits] =
+                   -cTData->candOut.weights[candNum][i];
+        }
+    }
     else  {
-        if  ( cParms->errorMeasure == BITS )
+        if  ( cParms->errorMeasure == BITS ) {
             weightModifier = 1.0;
-        else
+        } else {
             weightModifier = 1.0 / cNet->Nunits;
-        for  ( i = 0 ; i < Noutputs ; i++ )
-            cNet->outWeights[i][cNet->Nunits] = -cTData->candPrevCorr[candNum][i] *
-                weightModifier;
+        }
+        for  ( i = 0 ; i < Noutputs ; i++ ) {
+            cNet->outWeights[i][cNet->Nunits] =
+                   -cTData->candPrevCorr[candNum][i] * weightModifier;
+        }
     }
 
     cNet->unitTypes[cNet->Nunits] = cTData->candTypes[candNum];
 
     /*  Compute the new cache values and then increment/decrement the  */
     /* appropriate counters  */
-    if  ( cParms->useCache )
+    if  ( cParms->useCache ) {
         recompute_cache( cNet->Nunits, cNet, cDSet, cTData->valCache );
+    }
     cNet->Nunits++;
     cNet->NhiddenUnits++;
     cNet->maxNewUnits--;

@@ -1,6 +1,12 @@
 /*  CMU Cascade Neural Network Simulator (CNNS)
     Network Query Functions
 
+    v1.1
+    Ian Chiu (ichiu@andrew.cmu.edu)
+    7/17/2018
+
+    Improved readability and maintainability
+
     v1.0
     Matt White (mwhite+@cmu.edu)
     May 28, 1995
@@ -49,16 +55,17 @@ void query_net ( char *netName, char *d1 )
     char  inLine[81];
 
     /*  Determine network to query and locate that network in memory  */
-    if  ( netName == NULL )
+    if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network to query: ");
             fgets(inLine, 81, stdin);
             netName = strdup( inLine );
         } else {
-            fprintf (stderr,
-                    "Network not specified.  Entrance to query mode aborted.\n");
+            fprintf (stderr, "Network not specified.  "
+                             "Entrance to query mode aborted.\n");
             return;
         }
+    }
     if  ( (cNet = select_net( netName )) == NULL )  {
         fprintf ( stderr, "ERROR: Unable to find network %s.\n", netName );
         return;
@@ -79,12 +86,13 @@ void query_net ( char *netName, char *d1 )
         fgets(inLine, 81, stdin);
 
         if  ( !strncasecmp( inLine, "exit", 4 ) ||
-                !strncasecmp( inLine, "quit", 4 ) )
+                !strncasecmp( inLine, "quit", 4 ) ) {
             return;
-        else if  ( !strncasecmp( inLine, "rawinput", 8 ) )
+        } else if  ( !strncasecmp( inLine, "rawinput", 8 ) ) {
             raw_input( inLine+8 );
-        else if  ( !strncasecmp( inLine, "input", 5 ) )
+        } else if  ( !strncasecmp( inLine, "input", 5 ) ) {
             token_input( inLine+5 );
+        }
     }
 }
 
@@ -143,8 +151,9 @@ void raw_input  ( char *inp )
 
     /*  Display the raw output  */
     printf ("Raw output: ");
-    for  ( i = 0 ; i < Noutputs ; i++ )
+    for  ( i = 0 ; i < Noutputs ; i++ ) {
         printf ("%5.3f ",cNet->outValues[i]);
+    }
     printf ("\n");
 
     /*  Display the tokenized output  */
@@ -183,10 +192,11 @@ void token_input ( char *inp )
         fprintf (stderr,"Insufficient tokens for input.\n");
         return;
     }
-    if  ( !strncasecmp( tok, "reset", 5 ) )
+    if  ( !strncasecmp( tok, "reset", 5 ) ) {
         reset = TRUE;
-    else
+    } else {
         intok[start++] = strdup( tok );
+    }
 
     for  ( i = start ; i < Ninputs ; i++ )  {
         if  ( (tok = strtok( NULL, " \t," )) == NULL )  {
@@ -204,12 +214,13 @@ void token_input ( char *inp )
 
         /*  Display outputs  */
         printf ("Raw output: ");
-        for  ( i = 0 ; i < Noutputs ; i++ )
+        for  ( i = 0 ; i < Noutputs ; i++ ) {
             printf ("%5.3f ",cNet->outValues[i]);
+        }
         printf ("\n");
 
-        outtok = ftot ( cNet->outValues, (cNet->sigmoidMax-cNet->sigmoidMin)/2.0,
-                Noutputs, cNet->outputMap );
+        outtok = ftot( cNet->outValues, (cNet->sigmoidMax-cNet->sigmoidMin)/2.0,
+                       Noutputs, cNet->outputMap );
         printf ("Tokenized output: ");
         for  ( i = 0 ; i < Noutputs ; i++ )  {
             printf ("%s%s",outtok[i],(i==Noutputs-1)?"\n":", ");
@@ -218,7 +229,8 @@ void token_input ( char *inp )
         free( outtok );
     }
 
-    for  ( i = 0 ; i < Ninputs ; i++ )
+    for  ( i = 0 ; i < Ninputs ; i++ ){
         free( intok[i] );
+    }
     free( intok );
 }

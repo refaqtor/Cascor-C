@@ -1,5 +1,14 @@
 /*	Queue Library Functions
 
+    v2.1
+    Ian Chiu (ichiu@andrew.cmu.edu)
+    7/17/18
+
+    Changed implementation of dequeue and queue_flush. Additionally, placed
+    curly braces around code blocks to improve maintainability.
+
+    =========================================================================
+
     v2.0
     Matt White (mwhite+@cmu.edu)
     10/2/94
@@ -71,18 +80,15 @@ void queue_set_granularity ( queue_p Q, int gran )
 }
 
 
-/*	QUEUE FLUSH -  Flush the contents of queue 'Q', bit do not deallocate
+/*	QUEUE FLUSH - Empties the contents of queue 'Q', but do not deallocate
     it.
     */
 
 void queue_flush ( queue_p Q )
 {
-    void *temp;
-
-    temp = (void *)alloc_mem ( 1, Q->size, "Flush Queue" );
-    while ( !QUEUE_ISEMPTY( *Q ) )
-        dequeue( Q, temp );
-    free( temp );
+    while ( !QUEUE_ISEMPTY( *Q ) ){
+        dequeue( Q, NULL );
+    }
 }
 
 
@@ -120,17 +126,20 @@ void enqueue ( queue_p Q, void *newData )
             Q->size );
 
     if  ((Q->tail->last == Q->tail->first-1) ||
-            ((Q->tail->last == Q->tail->Nalloc-1) && (Q->tail->first == 0)) )
+            ((Q->tail->last == Q->tail->Nalloc-1) && (Q->tail->first == 0)) ){
         Q->tail->full = TRUE;
-    if (Q->tail->last == Q->tail->Nalloc-1)
+    }
+    if (Q->tail->last == Q->tail->Nalloc-1){
         Q->tail->last = 0;
-    else
+    } else {
         Q->tail->last++;
+    }
     Q->Nelem++;
 }
 
 
-/*	DEQUEUE -  Remove the first element from 'Q' and place it in 'data'.
+/*	DEQUEUE -  Remove the first element from 'Q' and place it in 'data' if
+	data != NULL. If data == NULL, then just remove the first element.
     If the current cell was already empty, deallocate it (assuming that it
     was not the last cell).  Items are taken from the 'first' element of
     the 'head' cell.  Dequeue switches off the 'full' bit if it removes an
@@ -139,7 +148,7 @@ void enqueue ( queue_p Q, void *newData )
 
 boolean dequeue ( queue_p Q, void *data )
 {
-    if  ( (Q->head->first == Q->head->last) && !Q->head->full )
+    if  ( (Q->head->first == Q->head->last) && !Q->head->full ){
         if  ( Q->head == Q->tail )  {
             data = NULL;
             return FALSE;
@@ -148,15 +157,19 @@ boolean dequeue ( queue_p Q, void *data )
             queue_free_cell( &(Q->head->prev) );
             Q->head->prev = NULL;
         }
-
-    memcpy( data, ((byte *)Q->head->data)+((Q->head->first)*(Q->size)),
-            Q->size );
-    if  ( Q->head->full )
+    }
+    if (data != NULL){
+        memcpy( data, ((byte *)Q->head->data)+((Q->head->first)*(Q->size)),
+                Q->size );
+    }
+    if  ( Q->head->full ){
         Q->head->full = FALSE;
-    if (Q->head->first == Q->head->Nalloc-1)
+    }
+    if (Q->head->first == Q->head->Nalloc-1) {
         Q->head->first = 0;
-    else
+    } else {
         Q->head->first++;
+    }
     Q->Nelem--;
 
     return TRUE;
@@ -166,22 +179,23 @@ void *queue_peek ( queue_p Q )
 {
     queue_cell_t *head;
 
-    if  ( (Q->head->first == Q->head->last) && !Q->head->full )
-        if  ( Q->head == Q->tail )
+    if  ( (Q->head->first == Q->head->last) && !Q->head->full ) {
+        if  ( Q->head == Q->tail ) {
             return NULL;
-        else
+        } else {
             head       = Q->head->next;
-    else
+        }
+    } else {
         head = Q->head;
-
+    }
     return &(((byte *)(head->data))[head->first*Q->size]);
 }
 
 boolean queue_append  ( queue_p dest, queue_p *source )
 {
-    if  ( dest->size != (*source)->size )
+    if  ( dest->size != (*source)->size ) {
         return FALSE;
-
+    }
     dest->tail->next      =  (*source)->head;
     (*source)->head->prev =  dest->tail;
     dest->tail            =  (*source)->tail;

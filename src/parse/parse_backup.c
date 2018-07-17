@@ -1,93 +1,94 @@
-/*  CMU Learning Benchmark Archive
-    Parse Library
+/*      CMU Learning Benchmark Archive
+        Parse Library
 
-    v2.2.1
-    Ian Chiu    (ichiu@andrew.cmu.edu)
-    7/17/2018
+        v2.1
+        Ian Chiu    (ichiu@andrew.cmu.edu)
+        6/10/2018
 
-    QUESTIONS/COMMENTS: neural-bench@cs.cmu.edu
+        v2.0
+        Matt White  (mwhite+@cmu.edu)
+        3/5/95
 
-    This code has been placed in public domain by it author.
-    As a matter of simple courtesy, anyone using or adapting this code is
-    expected to acknowledge the source.
-    The author would like to hear about any attempts to use this system,
-    successful or not.
+        QUESTIONS/COMMENTS: neural-bench@cs.cmu.edu
 
-    The code is currently being maintained by the site contact listed above.  If
-    you find a bug, add a useful feature, or discover a hack that will increase
-    system performance, please contact the person at the address listed above so
-    that the distribution source may be modified accordingly.
+        This code has been placed in public domain by it author.  As a matter of simple
+        courtesy, anyone using or adapting this code is expected to acknowledge the
+        source.  The author would like to hear about any attempts to use this system,
+        successful or not.
 
-    This is a library of functions for the parsing of data in the CMU Learning
-    Benchmark format.  Given the name of the data file, floating point numbers
-    to represent binary values, the parse_data function will build a
-    data structure describing the data file and the data sets that it contains.
-    A function is also provided to free the memory associated with this
-    data structure.
+        The code is currently being maintained by the site contact listed above.  If
+        you find a bug, add a useful feature, or discover a hack that will increase
+        system performance, please contact the person at the address listed above so
+        that the distribution source may be modified accordingly.
 
-    Below is a description of the use of this library.  A seperate file,
-    DATA-FORMAT, describes the data file format we use in detail.  If anything
-    seems unclear, feel free to contact us at the address above.
+        This is a library of functions for the parsing of data in the CMU Learning
+        Benchmark format.  Given the name of the data file, floating point numbers to
+        represent binary values, the parse_data function will build a data structure
+        describing the data file and the data sets that it contains.  A function is
+        also provided to free the memory associated with this data structure.
 
-
-    Compiling the library:
-
-    After unpacking the shell archive, which you have clearly done, you
-    should have the following files:
-
-    DATA-FORMAT:   Description of the CMU Learning Benchmark data format
-    parse.c:       Code for the parser
-    parse.h:       External declarations for the parser
-    queue.c:       Code for queue routines
-    queue.h:       External declarations for queue routines
-    memory.c:      Memory management routines
-    xor.data:      Example data file for the XOR benchmark
-
-    Compile 'parse.c' using your favorite compiler.  The command should look
-    something like:
-
-    % cc -c parse.c
-
-    In the source files where you make the call to any library functions, or
-    access the resulting data structures, you need to include the file
-    "parse.h".
-    Then, when you compile your program, be sure to link in the object file
-    'parse.o' by including that on the compile command line.
+        Below is a description of the use of this library.  A seperate file,
+        DATA-FORMAT, describes the data file format we use in detail.  If anything
+        seems unclear, feel free to contact us at the address above.
 
 
-    Using the library functions:
+        Compiling the library:
 
-boolean parse_data  ( char *filename, float binPos, float binNeg,
-data_file_t **dFile );
+        After unpacking the shell archive, which you have clearly done, you should have
+        the following files:
 
-    DESCRIPTION:  Parses a data file and returns the allocated data structure
-    to the calling function.  The function exits gracefully if an invalid
-    data file is given to it.
+        DATA-FORMAT:   Description of the CMU Learning Benchmark data format
+        parse.c:       Code for the parser
+        parse.h:       External declarations for the parser
+        queue.c:       Code for queue routines
+        queue.h:       External declarations for queue routines
+        memory.c:      Memory management routines
+        xor.data:      Example data file for the XOR benchmark
 
-    filename:  The name of the data file you wish to parse.  This does NOT
-    add any extension to the filename.  However, for your
-    information, the most common extension in use is '.data'.
-    binPos/ :  Binary and enumerated series are broken down into their binary
-    binNeg     componants.  These two numbers indicate the values that should
-    be assigned to binary positive and negative values,
-    respectively.  Most commonly, this corresponds to the upper
-    and lower limits of your activation function, although other
-    variations exist.
-    dFile   :  A the address of a pointer to a data file structure.  This
-    pointer should NOT have any memory allocated to it.  Any
-    memory that is allocated to that pointer will be leaked into
-    the abyss.
+        Compile 'parse.c' using your favorite compiler.  The command should look
+        something like:
+
+        % cc -c parse.c
+
+        In the source files where you make the call to any library functions, or access
+        the resulting data structures, you need to include the file "parse.h".  Then,
+        when you compile your program, be sure to link in the object file 'parse.o' by
+        including that on the compile command line.
+
+
+        Using the library functions:
+
+        boolean parse_data  ( char *filename, float binPos, float binNeg,
+        data_file_t **dFile );
+
+DESCRIPTION:  Parses a data file and returns the allocated data structure
+to the calling function.  The function exits gracefully if an invalid
+data file is given to it.
+
+filename:  The name of the data file you wish to parse.  This does NOT
+add any extension to the filename.  However, for your
+information, the most common extension in use is '.data'.
+binPos/ :  Binary and enumerated series are broken down into their binary
+binNeg     componants.  These two numbers indicate the values that should
+be assigned to binary positive and negative values,
+   respectively.  Most commonly, this corresponds to the upper
+   and lower limits of your activation function, although other
+   variations exist.
+   dFile   :  A the address of a pointer to a data file structure.  This
+   pointer should NOT have any memory allocated to it.  Any
+   memory that is allocated to that pointer will be leaked into
+   the abyss.
 
    RETURNS:  TRUE if parsing was successful, FALSE otherwise.
 
 
-void free_data  ( data_file_t *dFile );
+   void free_data  ( data_file_t *dFile );
 
-    DESCRIPTION:  Frees the memory associated to a data file structure.
-    Assumes that the structure is a valid data file type and has memory
-    allocated to it.  No guarantees if this is not the case.
+DESCRIPTION:  Frees the memory associated to a data file structure.
+Assumes that the structure is a valid data file type and has memory
+allocated to it.  No guarantees if this is not the case.
 
-    dFile   :  A pointer to the structure to free.
+dFile   :  A pointer to the structure to free.
 
 
 boolean ttof  ( float *retval, char **tokens, int Ntokens, cvrt_t *map )
@@ -225,13 +226,9 @@ char **ftot  ( float *vals, float range, int Ntokens, cvrt_t *map )
     Revision History
     ~~~~~~~~ ~~~~~~~
 (Ian Chiu)
-    7/17/2018       2.2.1   Added curly braces and changed variable names to
-    improve readibility and maintainability
-    7/16/2018       2.2     Fixed a bug where parse frees non-allocated data
-    and double frees an address.
     6/11/2018       2.1     Added new forward declaration for function
     strdup as its return type has changed since the
-    original code was written.
+    original code was written
 (Matt White)
     3/5/95          2.0     A completely rewritten version for handling our revised
     data file format.  See the DATA-FORMAT file.
@@ -261,12 +258,12 @@ char **ftot  ( float *vals, float range, int Ntokens, cvrt_t *map )
 #include <queue.h>
 #include "parse.h"
 
-#define  VERSION "2.2.1"
-#define  RELDATE "7/17/2018"
+#define  VERSION "2.1"
+#define  RELDATE "6/11/2018"
 #define  EMLEN   81
 
 
-/************************** Lexer Declarations *******************************/
+    /************************** Lexer Declarations *******************************/
 
 
     /*	Constant Definitions	*/
@@ -278,15 +275,15 @@ char **ftot  ( float *vals, float range, int Ntokens, cvrt_t *map )
 #define NOT_FOUND          -1	/*  Item not found                        */
 
 
-typedef enum { dataT, setupT, LparenT, RparenT, commaT, rangeT, colonT,
-    semiColonT, segMarkT, blockT, equalT, arrowT, questionT,
-    LbracketT, RbracketT, binaryT, binEnumT, contT, enumT, forT,
-    NseriesT, seriesT, specEnumT, stepT, toT, LbraceT, RbraceT,
-    eofT, idT, numT } tok_t;
+    typedef enum { dataT, setupT, LparenT, RparenT, commaT, rangeT, colonT,
+        semiColonT, segMarkT, blockT, equalT, arrowT, questionT,
+        LbracketT, RbracketT, binaryT, binEnumT, contT, enumT, forT,
+        NseriesT, seriesT, specEnumT, stepT, toT, LbraceT, RbraceT,
+        eofT, idT, numT } tok_t;
 
 typedef struct token_type {
-    tok_t             tok;  	/*  Token type                     */
-    int               line;	    /*  Line the token occured on      */
+    tok_t             tok;	/*  Token type                     */
+    int               line;	/*  Line the token occured on      */
     float             numVal;	/*  Numerical value for type numT  */
     char              *idVal;	/*  String value for type idT      */
 } token_t;
@@ -508,9 +505,8 @@ char    *strdup         ( const char * S );
 boolean parse_data  ( char *filename, float binPos, float binNeg,
         data_file_t **data )
 {
-    if  ( setjmp( error_trap ) != 0 ) {
+    if  ( setjmp( error_trap ) != 0 )
         return FALSE;
-    }
 
     binaryPos = binPos;
     binaryNeg = binNeg;
@@ -533,15 +529,12 @@ void free_data  ( data_file_t **data )
 {
     int  i;
 
-    if ( *data == NULL ) {
+    if ( *data == NULL )
         return;
-    }
-    if ( (*data)->filename != NULL ) {
+    if ( (*data)->filename != NULL )
         free( (*data)->filename );
-    }
-    if ( (*data)->outputType != NULL ) {
+    if ( (*data)->outputType != NULL )
         free( (*data)->outputType );
-    }
 
     if  ( (*data)->inputMap != NULL )  {
         for  ( i = 0 ; i < (*data)->Ninputs ; i++ )
@@ -580,12 +573,11 @@ boolean ttof ( float *retval, char **tokens, int Ntokens, cvrt_t *map )
 
     for ( i = 0 ; i < Ntokens ; i++ )  {
         if  ( map[i].Nenums == 0 )  {
-            if  ( isfloat( tokens[i] ) ) {
+            if  ( isfloat( tokens[i] ) )
                 retval[node++] = ( isint( tokens[i] ) ) ? atoi( tokens[i] ) :
                     atof( tokens[i] );
-            } else  {
-                fprintf (stderr,
-                        "\nERROR:  Was expecting a floating point number");
+            else  {
+                fprintf (stderr, "\nERROR:  Was expecting a floating point number");
                 fprintf (stderr, " and found %s.\n", tokens[i]);
                 return FALSE;
             }
@@ -599,21 +591,19 @@ boolean ttof ( float *retval, char **tokens, int Ntokens, cvrt_t *map )
         }
 
         found = FALSE;
-        for  ( j = 0 ; j < map[i].Nenums ; j++ ) {
+        for  ( j = 0 ; j < map[i].Nenums ; j++ )
             if  ( !strcmp( tokens[i], map[i].enums[j] ) )  {
                 val   = map[i].equivs[j];
                 found = TRUE;
                 break;
             }
-        }
         if  ( !found )  {
             fprintf (stderr, "\nERROR:  Unknown identifier %s\n", tokens[i] );
             return FALSE;
         }
 
-        for  ( j = 0 ; j < map[i].Nunits ; j++ ) {
+        for  ( j = 0 ; j < map[i].Nunits ; j++ )
             retval[node++] = val[j];
-        }
     }
 
     return TRUE;
@@ -632,14 +622,13 @@ char **ftot ( float *vals, float range, int Ntokens, cvrt_t *map )
             i,j,k;
     boolean found;
     char    **temp,
-            *fn_name = "Float to token";
+            *fn = "Float to token";
 
-    temp = (char **)alloc_mem(Ntokens, sizeof( char * ), fn_name);
+    temp = (char **)alloc_mem(Ntokens, sizeof( char * ), fn);
 
     for  ( i = 0 ; i < Ntokens ; i++ )  {
         if  ( map[i].Nenums == 0 )  {
-            temp[i] = (char *)alloc_mem( MAX_TOKEN_LENGTH, sizeof( char ),
-                                         fn_name );
+            temp[i] = (char *)alloc_mem( MAX_TOKEN_LENGTH, sizeof( char ), fn );
             sprintf ( temp[i], "%f", vals[node++] );
             continue;
         }
@@ -651,13 +640,12 @@ char **ftot ( float *vals, float range, int Ntokens, cvrt_t *map )
                 break;
             } else {
                 found = TRUE;
-                for  ( k = 0, tnode = node; k < map[i].Nunits ; k++, tnode++ ) {
-                    if  ( fabs( vals[tnode] - map[i].equivs[j][k] ) > range ) {
+                for  ( k = 0, tnode = node; k < map[i].Nunits ; k++, tnode++ )
+                    if  ( fabs( vals[tnode] - map[i].equivs[j][k] ) > range )  {
                         found = FALSE;
                         j++;
                         break;
                     }
-                }
                 if  ( found )  {
                     temp[i] = strdup( map[i].enums[j] );
                     break;
@@ -699,14 +687,12 @@ void lex  ( FILE *fptr )
         /*  Get new line if the current line is NULL.  If we get a NULL line,  */
         /* then we have reached the end of the file.                           */
 
-        if  ( linePtr == NULL ) {
-            linePtr = fgets ( inputLine, MAX_LINE_LENGTH, fptr );
-            if  ( linePtr  == NULL ) {
+        if  ( linePtr == NULL )
+            if  ( (linePtr = fgets ( inputLine, MAX_LINE_LENGTH, fptr )) == NULL )
                 continue;
-            } else {
+            else
                 lineNum++;
-            }
-        }
+
         /*  Get the next character token from the line and store it in  */
         /* charToken.  linePtr is updated to the next character after   */
         /* this token.                                                  */
@@ -721,13 +707,10 @@ void lex  ( FILE *fptr )
 
         if  ( *charToken != '\0' )  {
             newToken =  lookup_token ( charToken, lineNum );
-            if  ( newToken->tok == dataT ) {
-                dataSeg = TRUE;
-            }
-            if  ( dataSeg && ((newToken->tok == semiColonT) ||
-                              (newToken->tok == segMarkT))) {
+            if  ( newToken->tok == dataT )  dataSeg = TRUE;
+            if  ( dataSeg &&
+                    ((newToken->tok == semiColonT) || (newToken->tok == segMarkT)) )
                 Ndvects++;
-            }
             enqueue( tStream, (void *)newToken );
         }
     }
@@ -769,7 +752,7 @@ char *get_char_token  ( char *line, char *token, int lineNum )
 
     /*  Check for the '=' and '=>' delimiters  */
 
-    if  (line[0] == '=') {
+    if  (line[0] == '=')
         if (line[1] == '>')  {
             strcpy ( token, "=>" );
             return line+2;
@@ -777,7 +760,6 @@ char *get_char_token  ( char *line, char *token, int lineNum )
             strcpy ( token, "=" );
             return line+1;
         }
-    }
 
     /*  Check to see if the token begins with either a plus or a minus.        */
     /* If this is not the case, first cycle through the first NUM_DELIMITERS   */
@@ -805,11 +787,10 @@ char *get_char_token  ( char *line, char *token, int lineNum )
             if  ( *line == *cptr )  {
                 *token     = *cptr;
                 *(token+1) = '\0';
-                if  ( *cptr == ';' ) {
+                if  ( *cptr == ';' )
                     return NULL;
-                } else {
+                else
                     return ++line;
-                }
             }
             cptr++;
         }
@@ -824,24 +805,21 @@ char *get_char_token  ( char *line, char *token, int lineNum )
             token[1] = line[1];
             line += 2;
             index = 2;
-        } else {
+        } else
             index = 0;
-
-        }
     }
+
     /*  This is where the majority of character tokens are discerned.  We  */
     /* simply copy characters until a seperator is encountered.  Note that */
     /* '..' is a seperator as well as those listed in the 'seperators'     */
     /* string.  Also, if we try to go over MAX_TOKEN_LENGTH, we flame out. */
 
     while  ( (line[0] != '\0') && (strspn( line, seperators ) == 0) )  {
-        if  ( (line[0] == '.') && (line[1] == '.') ) {
+        if  ( (line[0] == '.') && (line[1] == '.') )
             break;
-        }
         token [index++] = *line;
-        if  ( index == MAX_TOKEN_LENGTH ) {
+        if  ( index == MAX_TOKEN_LENGTH )
             parse_err  ( lineNum, "Token too long" );
-        }
         line++;
     }
     token [index] = '\0';
@@ -859,9 +837,9 @@ char *get_char_token  ( char *line, char *token, int lineNum )
 
 token_t *lookup_token  ( char *charTok, int lineNum )
 {
-    int        refNum;                    /*  Token's location in the lookup  */
+    int             refNum;               /*  Token's location in the lookup  */
     /* table  */
-    char       *fn_name = "Lookup Token"; /*  Function name in case we fail  */
+    char            *fn = "Lookup Token"; /*  Function name in case we flame  */
     static token_t token;                 /*  New token being created */
 
 
@@ -892,8 +870,7 @@ token_t *lookup_token  ( char *charTok, int lineNum )
 
     token.tok   = idT;
     token.line  = lineNum;
-    token.idVal = (char *)alloc_mem ( strlen( charTok )+1, sizeof( char ),
-                                      fn_name );
+    token.idVal = (char *)alloc_mem ( strlen( charTok )+1, sizeof( char ), fn );
     strcpy ( token.idVal, charTok );
     return &token;
 }
@@ -914,13 +891,12 @@ int search_table  ( char *token )
 
     while  ( begin <= end )  {
         loc = (begin+end)/2;
-        if  ( (dir = strcasecmp( token, lookupTable[loc].str )) == 0 ) {
+        if  ( (dir = strcasecmp( token, lookupTable[loc].str )) == 0 )
             return loc;
-        } else if  ( dir < 0 ) {
+        else if  ( dir < 0 )
             end = loc - 1;
-        } else {
+        else
             begin = loc + 1;
-        }
     }
 
     return NOT_FOUND;
@@ -972,13 +948,12 @@ void parse  ( void )
     /*  Discard any leading semicolons and look for the $SETUP section.  */
 
     while ( (token = head( &lineNum, NULL, NULL )) == semiColonT );
-    if ( token != setupT ) {
+    if ( token != setupT )
         parse_err ( lineNum, "No setup section found" );
-    }
 
-    /*  Get the infromation from the setup section and then look for the data */
-    /* section. After we have parsed the data section, consume the EOF token, */
-    /* which should be the last token on the list.                            */
+    /*  Get the infromation from the setup section and then look for the data  */
+    /* section.  After we have parsed the data section, consume the EOF token, */
+    /* which should be the last token on the list.                             */
 
     parse_setup( );
     consume( dataT );
@@ -995,9 +970,9 @@ void parse  ( void )
 parse_tree_t *init_pt ( void )
 {
     parse_tree_t *tree;
-    char         *fn_name = "Init Parse Tree";
+    char         *fn = "Init Parse Tree";
 
-    tree = (parse_tree_t *)alloc_mem( 1, sizeof( parse_tree_t ), fn_name );
+    tree = (parse_tree_t *)alloc_mem( 1, sizeof( parse_tree_t ), fn );
 
     tree->Nseries   = 0;
     tree->Nmappings = 0;
@@ -1027,7 +1002,7 @@ void parse_setup  ( void )
 {
     char     errMess [EMLEN];
 
-    while ( TRUE ) {
+    while ( TRUE )
         switch ( peek_tok( ) )  {
             case NseriesT:   get_Nseries ( peek_line( ), &(parseTree->Nseries),
                                      &(parseTree->series) );
@@ -1045,7 +1020,6 @@ void parse_setup  ( void )
                                      ttoa( peek_tok( ) ) );
                              parse_err ( peek_line( ), errMess );
         }
-    }
 }
 
 
@@ -1057,20 +1031,17 @@ void parse_setup  ( void )
 
 void get_Nseries ( int lineNum, int *num, ser_t **types )
 {
-    if  ( *num != 0 ) {
+    if  ( *num != 0 )
         parse_err ( lineNum, "Attempt to reset Nseries after already set" );
-    }
 
     consume( NseriesT );
     consume( colonT );
     integer( num );
     consume( semiColonT );
 
-    if  ( *num < 1 ) {
+    if  ( *num < 1 )
         parse_err ( lineNum, "Number of series must be positive" );
-    }
-    *types = (ser_t *) alloc_mem( *num , sizeof( ser_t ),
-                                  "Get Number Inputs/Outputs" );
+    *types = (ser_t *)alloc_mem(*num,sizeof( ser_t ),"Get Number Inputs/Outputs");
 }
 
 
@@ -1117,11 +1088,11 @@ void get_serdec ( int lineNum, int totalNum, ser_t *types )
         parse_err ( lineNum, errMess );
     }
 
-    num--;	/*  Indices in the data files are 1-based, while C is  0-based */
-    endNum--;
+    num--;	/*  Indices in the data files are 1-based, while C is  */
+    endNum--;	/* 0-based.                                            */
 
     /*  Get the type from the token stream.  If this is an enumerated type,  */
-    /*  parse the enumerations as well.                                      */
+    /* parse the enumerations as well.                                       */
 
     switch ( (token = head( &lineNum, NULL, NULL )) )  {
         case binaryT:
@@ -1139,16 +1110,15 @@ void get_serdec ( int lineNum, int totalNum, ser_t *types )
                                &(types[num].Nnodes),
                                &(types[num].enums), &(types[num].vals) );
                        break;
-        default:    sprintf ( errMess, "Unexpected token '%s'", ttoa( token ) );
-                    parse_err ( lineNum, errMess );
+        default:       sprintf ( errMess, "Unexpected token '%s'", ttoa( token ) );
+                       parse_err ( lineNum, errMess );
     }
 
     /*  If the same declaration holds over a number of series, copy this  */
     /* information into those series.                                     */
 
-    for  ( i = num+1 ; i <= endNum ; i++ ) {
+    for  ( i = num+1 ; i <= endNum ; i++ )
         types[i] = types[num];
-    }
 
     consume( semiColonT );
 }
@@ -1163,17 +1133,16 @@ void get_serdec ( int lineNum, int totalNum, ser_t *types )
 void get_enums  ( int lineNum, int *Nenums, char ***enums )
 {
     int     i;
-    char    *fn_name = "Get enumerations";
+    char    *fn = "Get enumerations";
 
     /*  Determine the number of enumerations and allocate memory for them.  */
 
     consume( LbraceT );
-    if  ( peek_tok( ) == RbraceT ) {
+    if  ( peek_tok( ) == RbraceT )
         parse_err ( lineNum,
                 "Enumerated values must have at least one enumeration" );
-    }
     *Nenums = count_tok( commaT, RbraceT ) + 1;
-    *enums = (char **)alloc_mem( *Nenums, sizeof( char * ), fn_name );
+    *enums = (char **)alloc_mem( *Nenums, sizeof( char * ), fn );
 
     /*  Consume the identifiers and their trailing commas.  Since the last  */
     /* identifier is followed by a brace instead of a comma, it rates a     */
@@ -1196,47 +1165,42 @@ void get_spec_enums  ( int lineNum, int *Nenums, int *Nnodes, char ***enums,
         float ***vals )
 {
     int  i,j;
-    char *fn_name = "Get Specified Enums",
+    char *fn = "Get Specified Enums",
          *ctok;
 
     consume( LbraceT );
 
     *Nenums = count_tok( equalT, RbraceT );
-    *enums  = (char **)alloc_mem( *Nenums, sizeof( char * ), fn_name );
-    *vals   = (float **)alloc_mem( *Nenums, sizeof( float * ), fn_name );
+    *enums  = (char **)alloc_mem( *Nenums, sizeof( char * ), fn );
+    *vals   = (float **)alloc_mem( *Nenums, sizeof( float * ), fn );
     *Nnodes = 0;
 
     for  ( i = 0 ; i < (*Nenums) ; i++ )  {
         identifier( (*enums)+i );
         consume( equalT );
         consume( LparenT );
-        if  ( *Nnodes == 0 ) {
+        if  ( *Nnodes == 0 )
             *Nnodes = count_tok ( commaT, RparenT )+1;
-        }
-        (*vals)[i] = (float *)alloc_mem( *Nnodes, sizeof( float ), fn_name );
+        (*vals)[i] = (float *)alloc_mem( *Nnodes, sizeof( float ), fn );
         for  ( j = 0 ; j < (*Nnodes) ; j++ )  {
             identifier( &ctok );
-            if  ( j == (*Nnodes)-1 ) {
+            if  ( j == (*Nnodes)-1 )
                 consume( RparenT );
-            } else {
+            else
                 consume( commaT );
-            }
-            if  ( !strcasecmp( ctok, "+" ) ) {
+            if  ( !strcasecmp( ctok, "+" ) )
                 (*vals)[i][j] = binaryPos;
-            } else if  ( !strcasecmp( ctok, "-" ) ) {
+            else if  ( !strcasecmp( ctok, "-" ) )
                 (*vals)[i][j] = binaryNeg;
-            } else {
-                parse_err( lineNum,
-                           "Specified enumeration values must be + or -" );
-            }
+            else
+                parse_err( lineNum, "Specified enumeration values must be + or -" );
             free( ctok );
         }
 
-        if ( i == (*Nenums)-1 ) {
+        if ( i == (*Nenums)-1 )
             consume( RbraceT );
-        } else {
+        else
             consume( commaT );
-        }
     }
 }
 
@@ -1266,18 +1230,16 @@ void get_mapping  ( int lineNum )
 
     loc = &(newMap->start);
     for ( i = 0 ; i < 2 ; i++ )  {
-        if ( peek_tok( ) == idT ) {
+        if ( peek_tok( ) == idT )
             identifier( &(loc->label) );
-        } else {
+        else
             loc->label = NULL;
-        }
 
-        if ( peek_tok( ) == numT ) {
+        if ( peek_tok( ) == numT )
             integer( &(loc->offset) );
-        } else  {
+        else  {
             if  ( loc->label == NULL )
-                parse_err ( lineNum,
-                            "Neither label nor numerical value present" );
+                parse_err ( lineNum, "Neither label nor numerical value present" );
             loc->offset = 0;
         }
 
@@ -1287,23 +1249,21 @@ void get_mapping  ( int lineNum )
         }
     }
 
-    /*  Get the step size for this mapping.  A step size can be any positive  */
-    /* integer.  If no step size is specified, assign an automatic value of 1.*/
+    /*  Get the step size for this mapping.  A step size can be any positive   */
+    /* integer.  If no step size is specified, assign an automatic value of 1. */
 
     if  ( peek_tok( ) == stepT )  {
         consume( stepT );
         integer( &(newMap->step) );
-        if  ( newMap->step <= 1 ) {
+        if  ( newMap->step <= 1 )
             parse_err ( lineNum, "Step size must be positive" );
-        }
-    } else {
+    }  else
         newMap->step = 1;
-    }
 
     /*  First get the input mapping and then the output mapping.  */
 
     get_map( arrowT, newMap->index, &(newMap->input), &(newMap->Ninputs) );
-    get_map( semiColonT, newMap->index, &(newMap->output), &(newMap->Noutputs));
+    get_map( semiColonT, newMap->index, &(newMap->output), &(newMap->Noutputs) );
 
     /*  Link the mapping to the existing mappings.  */
 
@@ -1334,46 +1294,35 @@ void link_mapping  ( map_t *newMap, int lineNum )
 
         /*  Check inputs  */
 
-        if  ( parseTree->mappings->Ninputs != newMap->Ninputs ) {
-            parse_err ( lineNum,
-                        "Ninputs must be consistant across mappings" );
-        }
-        for  ( i = 0 ; i < newMap->Ninputs ; i++ ) {
-            if  ( parseTree->mappings->input[i][0] != newMap->input[i][0] ) {
-                parse_err(lineNum,
-                          "Inputs must have consistant types across mappings");
-            }
-        }
+        if  ( parseTree->mappings->Ninputs != newMap->Ninputs )
+            parse_err ( lineNum,"Ninputs must be consistant across mappings" );
+        for  ( i = 0 ; i < newMap->Ninputs ; i++ )
+            if  ( parseTree->mappings->input[i][0] != newMap->input[i][0] )
+                parse_err(lineNum,"Inputs must have consistant types across mappings");
 
         /*  Check outputs  */
 
         if  ( parseTree->mappings->Noutputs != 0 )  {
             if  ( newMap->Noutputs != 0 )  {
-                if  ( newMap->Noutputs != parseTree->mappings->Noutputs ) {
-                    parse_err(lineNum,
-                              "Noutputs must be consistant across mappings");
-                }
-                for  ( i = 0 ; i < newMap->Noutputs ; i++ ) {
-                    if  ( parseTree->mappings->output[i][0]
-                            != newMap->output[i][0] ) {
-                        parse_err(lineNum,
-                                  "Outputs must be consistant across mappings");
-                    }
-                }
+                if  ( newMap->Noutputs != parseTree->mappings->Noutputs )
+                    parse_err(lineNum, "Noutputs must be consistant across mappings");
+                for  ( i = 0 ; i < newMap->Noutputs ; i++ )
+                    if  ( parseTree->mappings->output[i][0] != newMap->output[i][0] )
+                        parse_err(lineNum,"Outputs must be consistant across mappings");
 
                 /*  Link the new mapping to current ones  */
 
                 newMap->next              = parseTree->mappings;
                 parseTree->mappings       = newMap;
-            } else  {
+            }  else  {
                 newMap->next              = parseTree->mappings->next;
                 parseTree->mappings->next = newMap;
             }
-        } else  {
+        }  else  {
             newMap->next        = parseTree->mappings;
             parseTree->mappings = newMap;
         }
-    } else  {
+    }  else  {
         newMap->next          = NULL;
         parseTree->mappings   = newMap;
     }
@@ -1397,8 +1346,8 @@ void get_map  ( tok_t endDelim, char *index, int ***offsets,
          errMess [EMLEN];
     int  i;
 
-   /*  Get the number of elements in the mapping and allocate memory for the  */
-   /* offsets.                                                                */
+    /*  Get the number of elements in the mapping and allocate memory for the  */
+    /* offsets.                                                                */
 
     *num = count_tok (  seriesT, endDelim );
     if  (*num == 0)  {
@@ -1407,8 +1356,8 @@ void get_map  ( tok_t endDelim, char *index, int ***offsets,
     }
     *offsets = (int **)alloc_mem(*num,sizeof( int * ), "Get Map");
 
-   /*  Read in a single mapping and record its offsets.  Decrement the series */
-   /* number because array indices start at '0' in C.                         */
+    /*  Read in a single mapping and record its offsets.  Decrement the series */
+    /* number because array indices start at '0' in C.                         */
 
     for  ( i = 0 ; i < *num ; i++ )  {
         (*offsets)[i] = (int *)alloc_mem( 2, sizeof( int ), "Get Map" );
@@ -1418,8 +1367,7 @@ void get_map  ( tok_t endDelim, char *index, int ***offsets,
         consume( commaT );
         identifier( &idx );
         if  ( strcasecmp( idx, index ) )  {
-            sprintf   ( errMess,
-                        "Unknown identifier '%s' found in mapping", idx );
+            sprintf   ( errMess, "Unknown identifier '%s' found in mapping", idx );
             parse_err ( -1, errMess );
         }
         if  ( peek_tok( ) == numT )  {
@@ -1429,11 +1377,10 @@ void get_map  ( tok_t endDelim, char *index, int ***offsets,
             (*offsets)[i][1] = 0;
             consume( RbracketT );
         }
-        if  ( i != (*num - 1) ) {
+        if  ( i != (*num - 1) )
             consume( commaT );
-        } else {
+        else
             consume( endDelim );
-        }
 
         (*offsets)[i][0]--;
     }
@@ -1449,16 +1396,16 @@ void parse_data_vects  ( void )
 {
     token_t block = {blockT,0,0,NULL};
     int     i;
-    char    *fn_name = "Parse Data Vectors";
+    char    *fn = "Parse Data Vectors";
 
     Ndvects+=2;
     parseTree->data.endSeg = (boolean *)alloc_mem( Ndvects, sizeof( boolean ),
-            fn_name );
+            fn );
     parseTree->data.series = (token_t **)alloc_mem( parseTree->Nseries,
-            sizeof( token_t * ), fn_name );
+            sizeof( token_t * ), fn );
     for  ( i = 0 ; i < parseTree->Nseries ; i++ )  {
         parseTree->data.series[i] = (token_t *)alloc_mem( Ndvects,
-                sizeof( token_t ), fn_name );
+                sizeof( token_t ), fn );
         parseTree->data.series[i][0] = block;
     }
     parseTree->data.endSeg[0] = TRUE;
@@ -1472,10 +1419,8 @@ void parse_data_vects  ( void )
                              break;
             case semiColonT: consume( semiColonT );
                              break;
-            case eofT:       for  ( i = 0 ; i < parseTree->Nseries ; i++ ) {
-                                 parseTree->data.series[i][parseTree->Npts]
-                                     = block;
-                             }
+            case eofT:       for  ( i = 0 ; i < parseTree->Nseries ; i++ )
+                                 parseTree->data.series[i][parseTree->Npts] = block;
                              parseTree->data.endSeg[parseTree->Npts++] = TRUE;
                              return;
 
@@ -1517,9 +1462,8 @@ void get_segmark  ( void )
     token_t block = {blockT,0,0,NULL};
 
     parseTree->data.endSeg[parseTree->Npts] = TRUE;
-    for  ( i = 0 ; i < parseTree->Nseries ; i++ ) {
+    for  ( i = 0 ; i < parseTree->Nseries ; i++ )
         parseTree->data.series[i][parseTree->Npts] = block;
-    }
 
     parseTree->Npts++;
     consume( segMarkT );
@@ -1541,14 +1485,11 @@ void get_data_line  ( void )
     for  ( i = 0 ; i < parseTree->Nseries ; i++ )  {
         parseTree->data.endSeg[parseTree->Npts]    = FALSE;
         parseTree->data.series[i][parseTree->Npts] = first( );
-        if  ( i == parseTree->Nseries-1 ) {
+        if  ( i == parseTree->Nseries-1 )
             consume( semiColonT );
-        } else {
+        else
             consume( commaT );
-
-        }
     }
-
     parseTree->Npts++;
 }
 
@@ -1566,11 +1507,9 @@ void consume   ( tok_t constraint )
 
     token = head ( &lineNum, NULL, NULL );
 
-    if  ( token == constraint ) {
+    if  ( token == constraint )
         return;
-    }
-    sprintf   ( errMess, "Constraint = %d, token = %d.\nUnexpected token.  "
-                         "Expected %s and found %s", constraint, token,
+    sprintf   ( errMess, "Constraint = %d, token = %d.\nUnexpected token.  Expected %s and found %s", constraint, token,
             ttoa( constraint ), ttoa( token ) );
     parse_err ( lineNum, errMess );
 }
@@ -1588,8 +1527,8 @@ void integer  ( int *val )
     float numVal;
 
     if  ( (token = head ( &lineNum, &numVal, NULL )) != numT )  {
-        sprintf ( errMess, "Unexpected token.  Expected an integer and found %s"
-                         , ttoa( token ) );
+        sprintf ( errMess, "Unexpected token.  Expected an integer and found %s",
+                ttoa( token ) );
         parse_err ( lineNum, errMess );
     }
     if  ( fmod (numVal,1.0) != 0.0 )  {
@@ -1655,15 +1594,13 @@ tok_t head  ( int *line, float *numValue, char **idValue )
     *line    = temp.line;
 
     switch ( token )  {
-        case idT:  if ( idValue != NULL ) {
+        case idT:  if ( idValue != NULL )
                        *idValue = temp.idVal;
-                   } else {
+                   else
                        free( temp.idVal );
-                   }
                    break;
-        case numT: if ( numValue != NULL ) {
+        case numT: if ( numValue != NULL )
                        *numValue = temp.numVal;
-                   }
                    break;
     }
 
@@ -1725,15 +1662,13 @@ int count_tok ( tok_t cTok, tok_t endTok )
 
     temp = queue_alloc( 10, sizeof( token_t ) );
     while ( dequeue( tStream, (void *)&token ) && (token.tok != endTok) )  {
-        if  ( token.tok == cTok ) {
+        if  ( token.tok == cTok )
             count++;
-        }
         enqueue( temp, (void *)&token );
     }
 
-    if  (token.tok == endTok) {
+    if  (token.tok == endTok)
         enqueue( temp, (void *)&token );
-    }
 
     queue_append( temp, &tStream );
     queue_set_granularity( temp, 0 );
@@ -1759,9 +1694,8 @@ void unparse  ( void )
 
     for  ( i = 0 ; i < parseTree->Nseries ; i++ )  {
         printf ("  series[%d]: %s",i+1,ttoa( parseTree->series[i].type ));
-        for  ( j = 0 ; j < parseTree->series[i].Nenum ; j++ ) {
+        for  ( j = 0 ; j < parseTree->series[i].Nenum ; j++ )
             printf ("  %s",parseTree->series[i].enums[j]);
-        }
         printf ("\n");
     }
 
@@ -1777,15 +1711,13 @@ void unparse  ( void )
         printf ("    Ninputs: %d  Noutputs: %d\n", ((map_t *)index)->Ninputs,
                 ((map_t *)index)->Noutputs );
         printf ("    Mapping:  ");
-        for  ( i = 0 ; i < ((map_t *)index)->Ninputs ; i++ ) {
+        for  ( i = 0 ; i < ((map_t *)index)->Ninputs ; i++ )
             printf ("[%d,%d] ", ((map_t *)index)->input[i][0],
                     ((map_t *)index)->input[i][1] );
-        }
         printf ("=> ");
-        for  ( i = 0 ; i < ((map_t *)index)->Noutputs ; i++ ) {
+        for  ( i = 0 ; i < ((map_t *)index)->Noutputs ; i++ )
             printf ("[%d,%d] ", ((map_t *)index)->output[i][0],
                     ((map_t *)index)->output[i][1] );
-        }
         printf ("\n\n");
         index = ((map_t *)index)->next;
     }
@@ -1800,13 +1732,12 @@ void unparse  ( void )
 
     printf ("\n\n  Data\n");
     for  ( i = 0 ; i < parseTree->Npts ; i++ )  {
-        if  ( parseTree->data.endSeg[i] ) {
+        if  ( parseTree->data.endSeg[i] )
             printf  ("[reset]  ");
-        } else
+        else
             printf  ("         ");
-        for  ( j = 0 ; j < parseTree->Nseries ; j++ ) {
+        for  ( j = 0 ; j < parseTree->Nseries ; j++ )
             printf  ("%s  ", ttoa( parseTree->data.series[j][i].tok ) );
-        }
         printf ("\n");
     }
 }
@@ -1825,7 +1756,7 @@ data_file_t *interp  ( float binPos, float binNeg,
 {
     data_file_t *dSet;
     float       *means;
-    char        *fn_name = "Interpret Data File";
+    char        *fn = "Interpret Data File";
     int         i;
 
     fprintf (stderr,"Interpreting...");
@@ -1845,25 +1776,24 @@ data_file_t *interp  ( float binPos, float binNeg,
     /* the order the mappings occur in the list.                              */
 
     dSet->dataSets = (data_set_t *)alloc_mem( parseTree->Nmappings,
-            sizeof( data_set_t ), fn_name );
+            sizeof( data_set_t ), fn );
     dSet->NdataSets = parseTree->Nmappings;
     for  ( i = 0 ; i < parseTree->Nmappings ; i++ )  {
         dSet->dataSets[i] = gen_dataset( dSet, parseTree->mappings,
                 parseTree->data, parseTree->labels );
         parseTree->mappings = parseTree->mappings->next;
 
-     /*  If this data set has one of the magic names (train, validate, test,  */
-     /* predict), link it to the appropriate pointer.                         */
+        /*  If this data set has one of the magic names (train, validate, test,  */
+        /* predict), link it to the appropriate pointer.                         */
 
-        if  ( !strcasecmp( dSet->dataSets[i].name, "train" ) ) {
+        if  ( !strcasecmp( dSet->dataSets[i].name, "train" ) )
             dSet->train = (dSet->dataSets)+i;
-        } else if  ( !strcasecmp( dSet->dataSets[i].name, "validate" ) ) {
+        else if  ( !strcasecmp( dSet->dataSets[i].name, "validate" ) )
             dSet->validate = (dSet->dataSets)+i;
-        } else if  ( !strcasecmp( dSet->dataSets[i].name, "test" ) ) {
+        else if  ( !strcasecmp( dSet->dataSets[i].name, "test" ) )
             dSet->test     = (dSet->dataSets)+i;
-        } else if  ( !strcasecmp( dSet->dataSets[i].name, "predict" ) ) {
+        else if  ( !strcasecmp( dSet->dataSets[i].name, "predict" ) )
             dSet->predict  = (dSet->dataSets)+i;
-        }
     }
 
     /*  Deallocate memory for the parse tree  */
@@ -1921,12 +1851,10 @@ float *get_means  ( int Nseries, ser_t *series, dvect_t data )
 
     means = (float *)alloc_mem(Nseries, sizeof( float ), "Get Means" );
     for  ( i = 0 ; i < Nseries ; i++ )  {
-        if  ( series[i].type == contT ) {
-            for  ( j = 0 ; j < parseTree->Npts ; j++ ) {
+        if  ( series[i].type == contT )
+            for  ( j = 0 ; j < parseTree->Npts ; j++ )
                 means[i] += (parseTree->data.series[i][j].tok == numT) ?
                     parseTree->data.series[i][j].numVal : 0.0;
-            }
-        }
         means[i] /= (float)(parseTree->Npts)-2;
     }
 
@@ -1967,9 +1895,9 @@ void  get_equivs  ( int **mapping, ser_t *series, float *means, float binPos,
     ser_t ser;
     int   i,
           totNodes = 0;
-    char  *fn_name = "Get equivelances";
+    char  *fn = "Get equivelances";
 
-    *cvrtMap = (cvrt_t *)alloc_mem ( Nitems, sizeof( cvrt_t ), fn_name );
+    *cvrtMap = (cvrt_t *)alloc_mem ( Nitems, sizeof( cvrt_t ), fn );
     for  ( i = 0 ; i < Nitems ; i++ )  {
         ser = series[ mapping[i][0] ];
         switch  ( ser.type )  {
@@ -1978,17 +1906,14 @@ void  get_equivs  ( int **mapping, ser_t *series, float *means, float binPos,
                              (*cvrtMap)[i].enums  = NULL;
                              (*cvrtMap)[i].equivs = NULL;
                              (*cvrtMap)[i].unknown = (float *)alloc_mem( 1,
-                                     sizeof(float), fn_name );
+                                     sizeof(float), fn );
                              (*cvrtMap)[i].unknown[0] = means[i];
                              break;
-            case binaryT:    (*cvrtMap)[i] =
-                                    bin_equiv( binPos, binNeg );
+            case binaryT:    (*cvrtMap)[i] = bin_equiv( binPos, binNeg );
                              break;
-            case enumT:      (*cvrtMap)[i] =
-                                    enum_equiv(ser, binPos, binNeg, FALSE);
+            case enumT:      (*cvrtMap)[i] = enum_equiv(ser, binPos, binNeg, FALSE);
                              break;
-            case binEnumT:   (*cvrtMap)[i] =
-                                    enum_equiv( ser, binPos, binNeg, TRUE );
+            case binEnumT:   (*cvrtMap)[i] = enum_equiv( ser, binPos, binNeg, TRUE );
                              break;
             case specEnumT:  (*cvrtMap)[i] = senum_equiv( ser );
                              break;
@@ -2007,25 +1932,25 @@ void  get_equivs  ( int **mapping, ser_t *series, float *means, float binPos,
 
 cvrt_t bin_equiv  ( float binPos, float binNeg )
 {
-    char   *fn_name = "Binary equivelance";
+    char   *fn = "Binary equivelance";
     cvrt_t temp;
 
     temp.Nunits   = 1;
     temp.Nenums   = 2;
 
-    temp.enums    = (char **) alloc_mem( 2, sizeof( char * ), fn_name );
-    temp.enums[0] = (char *)  alloc_mem( 2, sizeof( char ), fn_name );
-    temp.enums[1] = (char *)  alloc_mem( 2, sizeof( char ), fn_name );
+    temp.enums    = (char **) alloc_mem( 2, sizeof( char * ), fn );
+    temp.enums[0] = (char *)  alloc_mem( 2, sizeof( char ), fn );
+    temp.enums[1] = (char *)  alloc_mem( 2, sizeof( char ), fn );
     strcpy( temp.enums[0], "+" );
     strcpy( temp.enums[1], "-" );
 
-    temp.equivs    = (float **) alloc_mem( 2, sizeof( float * ), fn_name );
-    temp.equivs[0] = (float *)  alloc_mem( 1, sizeof( float ), fn_name );
-    temp.equivs[1] = (float *)  alloc_mem( 1, sizeof( float ), fn_name );
+    temp.equivs    = (float **) alloc_mem( 2, sizeof( float * ), fn );
+    temp.equivs[0] = (float *)  alloc_mem( 1, sizeof( float ), fn );
+    temp.equivs[1] = (float *)  alloc_mem( 1, sizeof( float ), fn );
     temp.equivs[0][0] = binPos;
     temp.equivs[1][0] = binNeg;
 
-    temp.unknown = (float *)alloc_mem( 1, sizeof( float ), fn_name );
+    temp.unknown = (float *)alloc_mem( 1, sizeof( float ), fn );
     temp.unknown[0] = (binPos+binNeg)/2;
 
     return temp;
@@ -2042,7 +1967,7 @@ cvrt_t bin_equiv  ( float binPos, float binNeg )
 
 cvrt_t enum_equiv  ( ser_t decl, float binPos, float binNeg, boolean binary )
 {
-    char   *fn_name = "Enumerated equivelances";
+    char   *fn = "Enumerated equivelances";
     cvrt_t temp;
     int    num,
            i, j;
@@ -2050,36 +1975,31 @@ cvrt_t enum_equiv  ( ser_t decl, float binPos, float binNeg, boolean binary )
     temp.Nenums = decl.Nenum;
     temp.Nunits = ( binary ) ? num_bin( temp.Nenums ) : temp.Nenums;
 
-    temp.enums  = (char **)alloc_mem( temp.Nenums, sizeof( char * ), fn_name );
-    temp.equivs = (float **)alloc_mem( temp.Nenums, sizeof( float * ), fn_name);
-    temp.unknown = (float *)alloc_mem( temp.Nunits, sizeof( float ), fn_name );
+    temp.enums  = (char **)alloc_mem( temp.Nenums, sizeof( char * ), fn );
+    temp.equivs = (float **)alloc_mem( temp.Nenums, sizeof( float * ), fn );
+    temp.unknown = (float *)alloc_mem( temp.Nunits, sizeof( float ), fn );
 
     for  ( i = 0 ; i < temp.Nenums ; i++ )  {
-        temp.enums[i] = (char *)alloc_mem(strlen(decl.enums[i])+1,
-                                          sizeof(char), fn_name );
-        temp.equivs[i] = (float *)alloc_mem( temp.Nunits, sizeof( float ),
-                                             fn_name );
+        temp.enums[i] = (char *)alloc_mem(strlen(decl.enums[i])+1,sizeof(char),fn);
+        temp.equivs[i] = (float *)alloc_mem( temp.Nunits, sizeof( float ), fn );
         strcpy( temp.enums[i], decl.enums[i] );
 
         /*  Establish the equivelance pattern.  */
 
         num = i;
-        for  ( j = 0 ; j < temp.Nunits ; j++ ){
+        for  ( j = 0 ; j < temp.Nunits ; j++ )
             if  ( binary )  {
                 temp.equivs[i][j] = ( num & 1 ) ? binPos : binNeg;
                 num >>= 1;
-            } else {
+            } else
                 temp.equivs[i][j] = ( num == j ) ? binPos : binNeg;
-            }
-        }
     }
 
     /*  The unknown value is an array of floating point numbers, each set to  */
     /* the average between binPos and binNeg.                                 */
 
-    for  ( i = 0 ; i < temp.Nunits ; i++ ) {
+    for  ( i = 0 ; i < temp.Nunits ; i++ )
         temp.unknown[i] = (binPos+binNeg)/2;
-    }
 
     return temp;
 }
@@ -2110,7 +2030,7 @@ int num_bin  ( int num )
 
 cvrt_t senum_equiv  ( ser_t decl )
 {
-    char   *fn_name = "Specified enumerated equivelances";
+    char   *fn = "Specified enumerated equivelances";
     cvrt_t temp;
     int    num,
            i, j;
@@ -2118,30 +2038,26 @@ cvrt_t senum_equiv  ( ser_t decl )
     temp.Nenums = decl.Nenum;
     temp.Nunits = decl.Nnodes;
 
-    temp.enums  = (char **)alloc_mem( temp.Nenums, sizeof( char * ), fn_name );
-    temp.equivs = (float **)alloc_mem( temp.Nenums, sizeof( float * ),fn_name );
-    temp.unknown = (float *)alloc_mem( temp.Nunits, sizeof( float ), fn_name );
+    temp.enums  = (char **)alloc_mem( temp.Nenums, sizeof( char * ), fn );
+    temp.equivs = (float **)alloc_mem( temp.Nenums, sizeof( float * ), fn );
+    temp.unknown = (float *)alloc_mem( temp.Nunits, sizeof( float ), fn );
 
     for  ( i = 0 ; i < temp.Nenums ; i++ )  {
-        temp.enums[i] = (char *)alloc_mem(strlen(decl.enums[i])+1,
-                                          sizeof(char), fn_name );
-        temp.equivs[i] = (float *)alloc_mem( temp.Nunits, sizeof( float ),
-                                             fn_name );
+        temp.enums[i] = (char *)alloc_mem(strlen(decl.enums[i])+1,sizeof(char),fn);
+        temp.equivs[i] = (float *)alloc_mem( temp.Nunits, sizeof( float ), fn );
         strcpy( temp.enums[i], decl.enums[i] );
 
         /*  Establish the equivelance pattern.  */
 
-        for  ( j = 0 ; j < temp.Nunits ; j++ ) {
+        for  ( j = 0 ; j < temp.Nunits ; j++ )
             temp.equivs[i][j] = decl.vals[i][j];
-        }
     }
 
     /*  The unknown value is an array of floating point numbers, each set to  */
     /* the average between binPos and binNeg.                                 */
 
-    for  ( i = 0 ; i < temp.Nunits ; i++ ) {
+    for  ( i = 0 ; i < temp.Nunits ; i++ )
         temp.unknown[i] = (binaryPos+binaryNeg)/2;
-    }
 
     return temp;
 }
@@ -2158,11 +2074,9 @@ void get_types  ( int Nnodes, int Nio, cvrt_t *map, out_t **types )
 
     *types = (out_t *)alloc_mem(Nnodes,sizeof( out_t ), "Get Types");
 
-    for  ( i = 0 ; i < Nio ; i++ ) {
-        for  ( j = 0 ; j < map[i].Nunits ; j++ ) {
+    for  ( i = 0 ; i < Nio ; i++ )
+        for  ( j = 0 ; j < map[i].Nunits ; j++ )
             (*types)[k++] = ( map[i].Nenums == 0 ) ? CONT : BINARY;
-        }
-    }
 }
 
 
@@ -2199,7 +2113,7 @@ data_set_t  gen_dataset  ( data_file_t *dFile, map_t *map, dvect_t data,
                i,j,k;
     token_t    **tptrs;
     float      *temp;
-    char       *fn_name = "Generate Data Set";
+    char       *fn = "Generate Data Set";
 
     /*  Find the begin and end of the data, plus their offsets  */
 
@@ -2209,21 +2123,19 @@ data_set_t  gen_dataset  ( data_file_t *dFile, map_t *map, dvect_t data,
     end   = lookup_label( map->stop.label, labels ) + eOff;
 
     Nio = map->Ninputs+map->Noutputs;
-    tptrs = (token_t **)alloc_mem( Nio, sizeof( token_t * ), fn_name );
-    for ( i = 0 ; i < Nio ; i++ ) {
-        if  ( i < map->Ninputs ) {
+    tptrs = (token_t **)alloc_mem( Nio, sizeof( token_t * ), fn );
+    for ( i = 0 ; i < Nio ; i++ )
+        if  ( i < map->Ninputs )
             tptrs[i] = parseTree->data.series[map->input[i][0]];
-        } else {
+        else
             tptrs[i] = parseTree->data.series[map->output[i-map->Ninputs][0]];
-        }
-    }
+
     /*  Take an initial guess at the size of this data set, and begin  */
     /* initializing some fields of the data record.                    */
 
     len = (int) ceil( ((end - begin) / (map->step)) ) + 1;
-    dSet.name = (char *) alloc_mem( strlen( map->name )+1, sizeof( char ),
-                                    fn_name );
-    dSet.data = (dv_t *) alloc_mem( len, sizeof( dv_t ), fn_name );
+    dSet.name = (char *) alloc_mem( strlen( map->name )+1, sizeof( char ), fn );
+    dSet.data = (dv_t *) alloc_mem( len, sizeof( dv_t ), fn );
     strcpy( dSet.name, map->name );
     dSet.Npts        = 0;
     dSet.predictOnly = (map->Noutputs == 0);
@@ -2234,50 +2146,44 @@ data_set_t  gen_dataset  ( data_file_t *dFile, map_t *map, dvect_t data,
         dSet.data[point].reset = data.endSeg[index];
 
         dSet.data[point].inputs = (float *)alloc_mem( dFile->NinNodes,
-                sizeof( float ), fn_name );
+                sizeof( float ), fn );
         node = 0;
         for  ( i = 0 ; i < map->Ninputs ; i++ )  {
             cvrtMap = (dFile->inputMap)+i;
             j = 0;
             while ( j != map->input[i][1] )  {
-                if  ( (tptrs[i]+index+j)->tok == blockT ) {
+                if  ( (tptrs[i]+index+j)->tok == blockT )
                     break;
-                }
                 j += ( j < map->input[i][1] ) ? 1 : -1;
             }
-            if  ( cvrtMap->Nenums == 0 ) {
-                dSet.data[point].inputs[node++] =
-                        get_cont_data ( &(tptrs[i][index+j]),
-                                        cvrtMap->unknown[0] );
-            } else  {
+            if  ( cvrtMap->Nenums == 0 )
+                dSet.data[point].inputs[node++] = get_cont_data ( &(tptrs[i][index+j]),
+                        cvrtMap->unknown[0] );
+            else  {
                 temp = get_enum_data ( &(tptrs[i][index+j]), cvrtMap );
-                for  ( k = 0 ; k < cvrtMap->Nunits ; k++ ) {
+                for  ( k = 0 ; k < cvrtMap->Nunits ; k++ )
                     dSet.data[point].inputs[node++] = temp[k];
-                }
             }
         }
 
         dSet.data[point].outputs = (float *)alloc_mem( dFile->NoutNodes,
-                sizeof( float ), fn_name );
+                sizeof( float ), fn );
         node = 0;
         for  ( i = 0 ; i < map->Noutputs ; i++ )  {
             cvrtMap = (dFile->outputMap)+i;
             j = 0;
             while ( j != map->output[i][1] )  {
-                if  ( (tptrs[i+dFile->Ninputs]+index+j)->tok == blockT ) {
+                if  ( (tptrs[i+dFile->Ninputs]+index+j)->tok == blockT )
                     break;
-                }
                 j += ( j < map->output[i][1] ) ? 1 : -1;
             }
-            if  ( cvrtMap->Nenums == 0 ) {
+            if  ( cvrtMap->Nenums == 0 )
                 dSet.data[point].outputs[node++] = get_cont_data
                     (&(tptrs[map->Ninputs+i][index+j]), cvrtMap->unknown[0] );
-            } else  {
-                temp = get_enum_data ( &(tptrs[i+dFile->Ninputs][index+j]),
-                                       cvrtMap );
-                for  ( k = 0 ; k < cvrtMap->Nunits ; k++ ) {
+            else  {
+                temp = get_enum_data ( &(tptrs[i+dFile->Ninputs][index+j]), cvrtMap );
+                for  ( k = 0 ; k < cvrtMap->Nunits ; k++ )
                     dSet.data[point].outputs[node++] = temp[k];
-                }
             }
         }
     }
@@ -2286,8 +2192,7 @@ data_set_t  gen_dataset  ( data_file_t *dFile, map_t *map, dvect_t data,
 
     /*  Deallocate memory that was not used due to segment markers in the data */
 
-    dSet.data = (dv_t *)realloc_mem( dSet.data, dSet.Npts, sizeof( dv_t ),
-                                     fn_name );
+    dSet.data = (dv_t *)realloc_mem( dSet.data, dSet.Npts, sizeof( dv_t ), fn );
 
     /*  Calculate the standard deviation for data sets that have outputs  */
 
@@ -2308,9 +2213,8 @@ float get_cont_data  ( token_t *token, float def )
 {
     char errMess[EMLEN];
 
-    if  ( (token->tok == questionT) || (token->tok == blockT) ) {
+    if  ( (token->tok == questionT) || (token->tok == blockT) )
         return def;
-    }
 
     if  ( token->tok != numT )  {
         sprintf ( errMess, "Illegal token '%s'.\n", ttoa( token->tok ) );
@@ -2330,9 +2234,8 @@ float *get_enum_data ( token_t *token, cvrt_t *map )
 {
     char errMess [EMLEN];
 
-    if  ( (token->tok == blockT) || (token->tok == questionT) ) {
+    if  ( (token->tok == blockT) || (token->tok == questionT) )
         return map->unknown;
-    }
 
     if  ( token->tok != idT )  {
         sprintf ( errMess, "Illegal token '%s'.\n", ttoa( token->tok ) );
@@ -2353,9 +2256,8 @@ int lookup_label ( char *lbl, lbl_t *labels )
 {
     char errMess [EMLEN];
 
-    if  ( lbl == NULL ) {
+    if  ( lbl == NULL )
         return 0;
-    }
     while  ( labels != NULL )  {
         if  ( !strcmp( lbl, labels->label ) )  {
             return labels->location;
@@ -2378,11 +2280,9 @@ float *lookup_ident  ( char *ident, cvrt_t *cMap, int line )
     char errMess [EMLEN];
     int  i;
 
-    for  ( i = 0 ; i < cMap->Nenums ; i++ ) {
-        if  ( !strcmp( ident, cMap->enums[i] ) ) {
+    for  ( i = 0 ; i < cMap->Nenums ; i++ )
+        if  ( !strcmp( ident, cMap->enums[i] ) )
             return cMap->equivs[i];
-        }
-    }
 
     sprintf   ( errMess, "Unknown identifier '%s'", ident );
     parse_err ( line, errMess );
@@ -2404,13 +2304,12 @@ float  calc_std_dev  ( dv_t *data, int NoutNodes, int Npts )
     sum 		= 0.0;
     sumSq 	= 0.0;
 
-    for  ( i = 0 ; i < Npts ; i++ ) {
+    for  ( i = 0 ; i < Npts ; i++ )
         for  ( j = 0 ; j < NoutNodes ; j++ )  {	/*  Compute values for this  */
             cur   =  data[i].outputs[j];	        /* output		     */
             sum   += cur;
             sumSq += cur * cur;
         }
-    }
 
     /*  Return the standard deviation of this data set  */
 
@@ -2433,27 +2332,23 @@ void  uninterp  ( data_file_t *dFile )
             dFile->binNeg );
 
     printf  ("Output types:  ");
-    for  ( i = 0 ; i < dFile->NoutNodes ; i++ ) {
+    for  ( i = 0 ; i < dFile->NoutNodes ; i++ )
         printf  ("%s  ", otoa( dFile->outputType[i] ) );
-    }
     printf  ("\n\n");
 
     printf  ("Input Map\n");
-    for  ( i = 0 ; i < dFile->Ninputs ; i++ ) {
+    for  ( i = 0 ; i < dFile->Ninputs ; i++ )
         print_map  ( dFile->inputMap[i] );
-    }
     printf  ("\n\n");
 
     printf  ("Output Map\n");
-    for  ( i = 0 ; i < dFile->Noutputs ; i++ ) {
+    for  ( i = 0 ; i < dFile->Noutputs ; i++ )
         print_map  ( dFile->outputMap[i] );
-    }
     printf  ("\n\n");
 
     printf  ("Data\n");
-    for  ( i = 0 ; i < dFile->NdataSets ; i++ ) {
+    for  ( i = 0 ; i < dFile->NdataSets ; i++ )
         print_data  ( dFile->dataSets[i], dFile->NinNodes, dFile->NoutNodes );
-    }
 }
 
 void  print_map  ( cvrt_t map )
@@ -2463,19 +2358,16 @@ void  print_map  ( cvrt_t map )
     printf  ("Nenums:  %d  Nunits:  %d\n", map.Nenums, map.Nunits );
     for  ( i = 0 ; i < map.Nenums ; i++ )  {
         printf ("%s:  ", map.enums[i] );
-        for  ( j = 0 ; j < map.Nunits ; j++ ) {
+        for  ( j = 0 ; j < map.Nunits ; j++ )
             printf ("%6.4f ", map.equivs[i][j]);
-        }
         printf ("\n");
     }
     printf ("Unknown: ");
-    if  ( map.Nenums == 0 ) {
+    if  ( map.Nenums == 0 )
         printf  ("%6.4f",map.unknown[0]);
-    } else {
-        for  ( i = 0 ; i < map.Nunits ; i++ ) {
+    else
+        for  ( i = 0 ; i < map.Nunits ; i++ )
             printf  ("%6.4f ",map.unknown[i]);
-        }
-    }
     printf ("\n\n");
 }
 
@@ -2487,19 +2379,16 @@ void  print_data  ( data_set_t data, int Nin, int Nout )
     printf  ("Npts:  %d  stdDev:  %f   predictOnly:  %d\n",
             data.Npts, data.stdDev, data.predictOnly);
     for  ( i = 0 ; i < data.Npts ; i++ )  {
-        if  ( data.data[i].reset ) {
+        if  ( data.data[i].reset )
             printf ("[reset] ");
-        } else {
+        else
             printf ("        ");
-        }
-        for  ( j = 0 ; j < Nin ; j++ ) {
+        for  ( j = 0 ; j < Nin ; j++ )
             printf ("%6.4f ", data.data[i].inputs[j]);
-        }
         if  ( !data.predictOnly )  {
             printf ("=> ");
-            for  ( j = 0 ; j < Nout ; j++ ) {
+            for  ( j = 0 ; j < Nout ; j++ )
                 printf ("%6.4f ", data.data[i].outputs[j]);
-            }
         }
         printf ("\n");
     }
@@ -2548,21 +2437,17 @@ FILE *init_parse  ( char *filename )
 
 void  parse_err  ( int lineNum, char *error )
 {
-    if  ( lineNum <= 0 ) {
+    if  ( lineNum <= 0 )
         fprintf ( stderr, "\nParse Error: %s\n", error );
-    } else {
+    else
         fprintf  ( stderr, "\nParse Error (line %d): %s\n", lineNum, error );
-    }
 
-    if  ( tStream != NULL ) {
+    if  ( tStream != NULL )
         queue_free( &tStream );
-    }
-    if  ( parseTree != NULL ) {
+    if  ( parseTree != NULL )
         freePTree( parseTree );
-    }
-    if  ( dFilePtr != NULL ) {
+    if  ( dFilePtr != NULL )
         free_data( &dFilePtr );
-    }
 
     longjmp( error_trap, 1 );
 }
@@ -2577,31 +2462,23 @@ void freePTree  ( parse_tree_t *tree )
 {
     int i,j;
 
-    if  ( tree->series != NULL ) {
+    if  ( tree->series != NULL )
         freeSer( tree->series, tree->Nseries );
-    }
-    if  ( tree->mappings != NULL ) {
+    if  ( tree->mappings != NULL )
         freeMap( tree->mappings );
-    }
-    if  ( tree->labels != NULL ) {
+    if  ( tree->labels != NULL )
         freeLabels( tree->labels );
-    }
 
-    if  ( parseTree->data.endSeg != NULL ) {
+    if  ( parseTree->data.endSeg != NULL )
         free( parseTree->data.endSeg );
-    }
     if  ( parseTree->data.series != NULL )  {
-        for  ( i = 0 ; i < parseTree->Nseries ; i++ ) {
+        for  ( i = 0 ; i < parseTree->Nseries ; i++ )
             if  ( parseTree->data.series[i] != NULL )  {
-                for  ( j = 0 ; j < parseTree->Npts ; j++ ) {
-                    if  ( parseTree->data.series[i][j].tok == idT &&
-                          parseTree->data.series[i][j].idVal != NULL ) {
+                for  ( j = 0 ; j < parseTree->Npts ; j++ )
+                    if  ( parseTree->data.series[i][j].tok == idT && parseTree->data.series[i][j].idVal != NULL )
                         free( parseTree->data.series[i][j].idVal );
-                    }
-                }
                 free( parseTree->data.series[i] );
             }
-        }
         free( parseTree->data.series );
     }
 
@@ -2613,20 +2490,16 @@ void freeSer  ( ser_t *series, int num )
 {
     int i, j;
 
-    if  ( series == NULL ) {
+    if  ( series == NULL )
         return;
-    }
 
-    for  ( i = 0 ; i < num ; i++ ) {
+    for  ( i = 0 ; i < num ; i++ )
         if  ( series[i].enums != NULL )  {
-            for  ( j = 0 ; j < series[i].Nenum ; j++ ) {
-                if  ( series[i].enums[j] != NULL ) {
+            for  ( j = 0 ; j < series[i].Nenum ; j++ )
+                if  ( series[i].enums[j] != NULL )
                     free( series[i].enums[j] );
-                }
-            }
             free( series[i].enums );
         }
-    }
     free( series );
 }
 
@@ -2639,27 +2512,21 @@ void freeMap  ( map_t *map )
         temp = map;
         map  = map->next;
 
-        if  ( temp->name != NULL ) {
+        if  ( temp->name != NULL )
             free( temp->name );
-        }
-        if  ( temp->index != NULL ) {
+        if  ( temp->index != NULL )
             free( temp->index );
-        }
 
         if  ( temp->input != NULL )  {
-            for  ( i = 0 ; i < temp->Ninputs ; i++ ) {
-                if  ( temp->input[i] != NULL ) {
+            for  ( i = 0 ; i < temp->Ninputs ; i++ )
+                if  ( temp->input[i] != NULL )
                     free( temp->input[i] );
-                }
-            }
             free( temp->input );
         }
         if  ( temp->output != NULL )  {
-            for  ( i = 0 ; i < temp->Noutputs ; i++ ) {
-                if  ( temp->output[i] != NULL ) {
+            for  ( i = 0 ; i < temp->Noutputs ; i++ )
+                if  ( temp->output[i] != NULL )
                     free( temp->output[i] );
-                }
-            }
             free( temp->output );
         }
 
@@ -2675,9 +2542,8 @@ void freeLabels  ( lbl_t *labels )
         temp   = labels;
         labels = labels->next;
 
-        if  ( temp->label != NULL ) {
+        if  ( temp->label != NULL )
             free( temp->label );
-        }
         free( temp );
     }
 }
@@ -2692,22 +2558,17 @@ void  free_cmap  ( cvrt_t cmap )
     int i;
 
     for  ( i = 0 ; i < cmap.Nenums ; i++ )  {
-        if  ( cmap.enums[i] != NULL ) {
+        if  ( cmap.enums[i] != NULL )
             free( cmap.enums[i] );
-        }
-        if  ( cmap.equivs[i] != NULL ) {
+        if  ( cmap.equivs[i] != NULL )
             free( cmap.equivs[i] );
-        }
     }
-    if  ( cmap.enums != NULL ) {
+    if  ( cmap.enums != NULL )
         free( cmap.enums );
-    }
-    if  ( cmap.equivs != NULL ) {
+    if  ( cmap.equivs != NULL )
         free( cmap.equivs );
-    }
-    if  ( cmap.unknown != NULL ) {
+    if  ( cmap.unknown != NULL )
         free( cmap.unknown );
-    }
 }
 
 void  free_data_set  ( data_set_t dSet )
@@ -2716,18 +2577,15 @@ void  free_data_set  ( data_set_t dSet )
 
     if  ( dSet.data != NULL )  {
         for  ( i = 0 ; i < dSet.Npts ; i++ )  {
-            if  ( dSet.data[i].inputs != NULL ) {
+            if  ( dSet.data[i].inputs != NULL )
                 free( dSet.data[i].inputs );
-            }
-            if  ( dSet.data[i].outputs != NULL ) {
+            if  ( dSet.data[i].outputs != NULL )
                 free( dSet.data[i].outputs );
-            }
         }
         free( dSet.data );
     }
-    if  ( dSet.name != NULL ) {
+    if  ( dSet.name != NULL )
         free( dSet.name );
-    }
 }
 
 

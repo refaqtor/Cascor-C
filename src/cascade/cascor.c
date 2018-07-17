@@ -1,6 +1,11 @@
 /*	CMU Cascade Neural Network Simulator (CNNS)
     Cascade-Correlation candidate training code
 
+    v1.1
+    Ian Chiu (ichiu@andrew.cmu.edu)
+
+    Improved readability and maintainability
+
     v1.0
     Matt White  (mwhite+@cmu.edu)
     December 5, 1994
@@ -9,24 +14,24 @@
     the Cascade-Correlation algorithm developed by Scott Fahlman and
     Christian Lebiere.
 
-Note:  Ideally, after each adjustment of the candidate weights, we
-would run two epochs.  The first would just determin the correlations
-between the candidate unit outputs and the residual error.  Then in a
-second pass, we would adjust each candidate's input weights so as to
-maximize the absolute value of the correlation.  We need to know the
-direction to tune the input weights.
+    Note:  Ideally, after each adjustment of the candidate weights, we
+    would run two epochs.  The first would just determin the correlations
+    between the candidate unit outputs and the residual error.  Then in a
+    second pass, we would adjust each candidate's input weights so as to
+    maximize the absolute value of the correlation.  We need to know the
+    direction to tune the input weights.
 
-Since this training method doubles the number of epochs required for
-training the candidate, we cheat slightly and use the correlation
-values computed BEFORE the most recent weight update.  This combines
-the two epochs, saving us almost a factor of two.  To bootstrap the
-process, we begin with a single epoch that computes only the
-correlation.
+    Since this training method doubles the number of epochs required for
+    training the candidate, we cheat slightly and use the correlation
+    values computed BEFORE the most recent weight update.  This combines
+    the two epochs, saving us almost a factor of two.  To bootstrap the
+    process, we begin with a single epoch that computes only the
+    correlation.
 
-Since we look only at the sign of the correlation after the first ideal
-epoch and since that sign should change very infrequently, this is
-probably ok.  But keep a lookout for pathelogical situations in which
-this might cause oscillation.
+    Since we look only at the sign of the correlation after the first ideal
+    epoch and since that sign should change very infrequently, this is
+    probably ok.  But keep a lookout for pathelogical situations in which
+    this might cause oscillation.
 */
 
 #include <math.h>
@@ -66,8 +71,9 @@ status_t cascor_train_cand  ( void )
     int   quitEpoch = 0,
           i,j,k;
 
-    for  ( i = 0 ; i < Noutputs ; i++ )
+    for  ( i = 0 ; i < Noutputs ; i++ ) {
         cError->sumErr[i] /= cDSet->Npts;
+    }
     cascor_correlation_epoch( );
     for  ( i = 1 ; i < cParms->candidateParm.epochs ; i++ )  {
         cascor_cand_epoch( );
@@ -75,18 +81,21 @@ status_t cascor_train_cand  ( void )
 
         cascor_adjust_correlations( );
 
-        if  ( interruptPending ) handle_interrupt( cTData, cDSet->Npts );
+        if  ( interruptPending ) {
+            handle_interrupt( cTData, cDSet->Npts );
+        }
 
         cNet->epochsTrained++;
 
-        if  ( i == 1 )
+        if  ( i == 1 ) {
             lastScore = cTData->candBestScore;
-        else if  ( fabs( cTData->candBestScore - lastScore ) >
+        } else if  ( fabs( cTData->candBestScore - lastScore ) >
                 ( lastScore * cParms->candidateParm.changeThreshold ) )  {
             quitEpoch = cNet->epochsTrained + cParms->candidateParm.patience;
             lastScore = cTData->candBestScore;
-        } else if  ( cNet->epochsTrained == quitEpoch )
+        } else if  ( cNet->epochsTrained == quitEpoch ) {
             return STAGNANT;
+        }
     }
 
     return TIMEOUT;
@@ -140,11 +149,13 @@ void cascor_compute_correlations  ( boolean reset )
         cWeights   = cTData->candIn.weights[i];
         cCorr      = cTData->candCorr[i];
 
-        for  ( j = 0 ; j < cNet->Nunits ; j++ )
+        for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
             sum += cWeights[j] * cNet->values[j];
+        }
 
-        if  ( recurrent && !reset )
+        if  ( recurrent && !reset ) {
             sum += cWeights[cNet->Nunits] * cTData->candPrevValues[i];
+        }
 
 #ifdef CONNX
         connx += cNet->Nunits+recurrent;
@@ -154,8 +165,9 @@ void cascor_compute_correlations  ( boolean reset )
         cTData->candValues[i]  =  val;
         cTData->candSumVals[i] += val;
 
-        for  ( j = 0 ; j < Noutputs ; j++ )
+        for  ( j = 0 ; j < Noutputs ; j++ ) {
             cCorr[j] += val * cError->errors[j];
+        }
     }
 }
 
@@ -218,10 +230,12 @@ void cascor_compute_slopes ( boolean reset )
         cPCorr   = cTData->candPrevCorr[i];
 
         /*  Comput the unit's activation value  */
-        for  ( j = 0 ; j < cNet->Nunits ; j++ )
+        for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
             sum += cNet->values[j] * cWeights[j];
-        if  ( recurrent && !reset )
+        }
+        if  ( recurrent && !reset ) {
             sum += cWeights[cNet->Nunits] * cTData->candPrevValues[i];
+        }
 #ifdef CONNX
         connx += cNet->Nunits+recurrent;
 #endif
@@ -229,8 +243,9 @@ void cascor_compute_slopes ( boolean reset )
         actPrime        = activation_prime( cTData->candTypes[i], value, sum );
         cTData->candSumVals[i] += value;
 
-        if ( !recurrent )
+        if ( !recurrent ) {
             actPrime        /= cError->sumSqError;
+        }
 
         /*  Compute correlations  */
         for  ( j = 0 ; j < Noutputs ; j++ )  {
@@ -245,7 +260,9 @@ void cascor_compute_slopes ( boolean reset )
         /*  Compute slopes for recurrent networks  */
         if ( recurrent )  {
             for  ( j = 0 ; j < cNet->Nunits ; j++ )  {
-                if  ( reset )  cTData->candDVdW[i][j] = 0.0;
+                if  ( reset ) {
+                    cTData->candDVdW[i][j] = 0.0;
+                }
                 sum          =  actPrime * (cNet->values[j] +
                         (cTData->candIn.weights[i][cNet->Nunits] *
                          cTData->candDVdW[i][j]));
@@ -261,10 +278,12 @@ void cascor_compute_slopes ( boolean reset )
                 cTData->candDVdW[i][cNet->Nunits] =  sum;
             }
             cTData->candPrevValues[i] = value;
-        }  else
+        }  else {
             /*  Compute slopes for non-recurrent networks  */
-            for  ( j = 0 ; j < cNet->Nunits ; j++ )
+            for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
                 cSlopes[j] += change * cNet->values[j];
+            }
+        }
     }
 }
 

@@ -1,6 +1,12 @@
 /*	CMU Cascade Neural Network Simulator (CNNS)
     Console display routines
 
+    v1.1
+    Ian Chiu (ichiu@andrew.cmu.edu)
+    7/17/2018
+
+    Improve readability and maintainability
+
     v1.0
     Matt White  (mwhite+@cmu.edu)
     December 7, 1994
@@ -61,10 +67,11 @@ void display_trainout_results  ( net_t *net, error_data_t *err,
     printf  ("\n");
 #endif
 
-    if  ( measure == BITS )
+    if  ( measure == BITS ) {
         printf  ("    Error bits: %d  ", err->bits);
-    else
+    } else {
         printf  ("    Error index: %.3f  ", err->index);
+    }
     printf  ("Sum squared diffs: %.3f  Sum squared error: %.3f\n",
             err->sumSqDiffs, err->sumSqError);
 
@@ -74,10 +81,11 @@ void display_trainout_results  ( net_t *net, error_data_t *err,
         while  ( j < net->Nunits )  {
             printf  ("%8.3f  ", net->outWeights[i][j]);
             j++;
-            if  ( j == net->Nunits )
+            if  ( j == net->Nunits ) {
                 printf  ("\n");
-            else if ( (j % 6) == 0 )
+            } else if ( (j % 6) == 0 ) {
                 printf  ("\n                ");
+            }
         }
     }
     printf ("\n");
@@ -91,10 +99,11 @@ void display_validate_results  ( trial_result_t res, error_t measure,
         float bestErr, int passesLeft)
 {
     printf  ("  Validation Epoch\n");
-    if  ( measure == BITS )
+    if  ( measure == BITS ) {
         printf  ("    Error bits: %d\t", res.bits);
-    else
+    } else {
         printf  ("    Error index: %.3f\t", res.index);
+    }
     printf  ("Sum sq diffs: %.3f\tSum sq error: %.3f\n",res.sumSqDiffs,
             res.sumSqError);
     printf  ("    Best sum sq error: %.3f\tPasses until stagnation: %d\n\n",
@@ -126,10 +135,11 @@ void display_traincand_results ( net_t *net, train_data_t *tData,
     while  ( i < (net->Nunits-1+net->recurrent) )  {
         printf  ("%8.3f  ", net->weights [net->Nunits-1][i]);
         i++;
-        if  ( i == (net->Nunits-1+net->recurrent) )
+        if  ( i == (net->Nunits-1+net->recurrent) ) {
             printf ("\n");
-        else if  ( ( i % 6 ) == 0 )
+        } else if  ( ( i % 6 ) == 0 ) {
             printf ("\n              ");
+        }
     }
     printf ("\n");
 }
@@ -152,17 +162,19 @@ void display_trial_results  ( trial_result_t res, int trialNum, boolean test,
     printf ("    Total units: %d\t\t\tHidden units: %d\n", res.Nunits,
             res.Nunits - Ninputs - 1);
 
-    if  ( test )
+    if  ( test ) {
         printf ("    Test results:     ");
-    else
+    } else {
         printf ("    Training results: ");
+    }
     printf ("Sum sq diffs: %.3f\tSum sq error: %.3f\n", res.sumSqDiffs,
             res.sumSqError);
-    if  ( measure == BITS )
-        printf ("                      Error bits: %d\t\tPercent correct: %.2f\n",
-                res.bits, res.perCorrect);
-    else
+    if  ( measure == BITS ) {
+        printf("                      Error bits: %d\t\tPercent correct: %.2f\n"
+                ,res.bits, res.perCorrect);
+    } else {
         printf ("                      Error index: %.2f\n", res.index);
+    }
 
     printf ("\nTrial %d ended at %s\n\n", trialNum, ctime( &endTime ) );
 }
@@ -182,7 +194,8 @@ void display_run_results  ( trial_result_t res, int Ntrials, error_t measure )
     printf  ("  Run time: %d hrs  %d min  %d sec",
             res.time/3600, (res.time%3600)/60, res.time%60);
 #ifdef CONNX
-    printf  ("\t\t%.1f conn/sec\n",((float)res.connx)/((res.time==0?1:res.time)*Ntrials));
+    printf  ("\t\t%.1f conn/sec\n",
+            ((float)res.connx)/((res.time==0?1:res.time)*Ntrials));
 #else
     printf  ("\n");
 #endif
@@ -190,11 +203,12 @@ void display_run_results  ( trial_result_t res, int Ntrials, error_t measure )
             ((float)res.Nepochs)/Ntrials,((float)res.Nunits)/Ntrials);
     printf  ("  Ave sum sq diffs: %.3f\tAve sum sq error: %.3f\n",
             res.sumSqDiffs/Ntrials, res.sumSqError/Ntrials);
-    if  ( measure == BITS )
+    if  ( measure == BITS ) {
         printf ("  Ave bits wrong: %.1f\tAve percent correct: %.1f\n",
                 ((float)res.bits)/Ntrials, res.perCorrect/Ntrials);
-    else
+    } else {
         printf ("  Ave error index: %.2f\n", res.index/Ntrials);
+    }
     printf ("\n\n");
 }
 

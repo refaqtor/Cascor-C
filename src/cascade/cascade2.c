@@ -1,6 +1,12 @@
 /*	CMU Cascade Neural Network Simulator  (CNNS)
     Cascade-2 candidate training code
 
+    v1.0.1
+    Ian Chiu (ichiu@andrew.cmu.edu)
+    7/17/2018
+
+    Improving readability and maintability
+
     v1.0
     Matt White  (mwhite+@cmu.edu)
     May 25, 1995
@@ -114,32 +120,32 @@ void  c2_cand_epoch  ( void )
     slopes of the error for each individual candidate unit.  This will
     later be used to update the input weights to each of these candidates.
 
-Note:  This function is extremely compute-intensive.  If you want to
-spend some time optimizing, this is a good place to start.  I think
-I've done everything reasonable, but if you find something, please
-email me at 'neural-bench@cs.cmu.edu', so that I can modify the release
-version.
+    Note:  This function is extremely compute-intensive.  If you want to
+    spend some time optimizing, this is a good place to start.  I think
+    I've done everything reasonable, but if you find something, please
+    email me at 'neural-bench@cs.cmu.edu', so that I can modify the release
+    version.
 */
 
 void  c2_compute_slopes  ( float *goal, boolean reset )
 {
-    float sum,          /*  The unit's sum input  */
-          dsum,         /*  dVdW calculated for a point  */
-          dif,          /*  Difference between the unit's value and target  */
-          value,        /*  Computed activation for a unit  */
-          actPrime,     /*  Computed activation prime for a unit  */
-          errSum,       /*  The sum of the error prime collected over weights  */
-          weight,       /*  The weight in question  */
-          *cIWeights,   /*  Current In Weights  */
-          *cISlopes,    /*  Current In Slopes  */
-          *cOWeights,   /*  Current Out Weights  */
-          *cOSlopes,    /*  Current Out Slopes  */
-          goalDir,      /*  The direction the goal lies in  */
-          difDir;       /*  The direction our difference with the goal lies in */
+    float sum,         /*  The unit's sum input  */
+          dsum,        /*  dVdW calculated for a point  */
+          dif,         /*  Difference between the unit's value and target  */
+          value,       /*  Computed activation for a unit  */
+          actPrime,    /*  Computed activation prime for a unit  */
+          errSum,      /*  The sum of the error prime collected over weights  */
+          weight,      /*  The weight in question  */
+          *cIWeights,  /*  Current In Weights  */
+          *cISlopes,   /*  Current In Slopes  */
+          *cOWeights,  /*  Current Out Weights  */
+          *cOSlopes,   /*  Current Out Slopes  */
+          goalDir,     /*  The direction the goal lies in  */
+          difDir;      /*  The direction our difference with the goal lies in */
     int   i, j;
 
     for  ( i = 0 ; i < Ncand ; i++ )  {
-        sum       = 0.0;                        /*  Initialize local variables  */
+        sum       = 0.0;                      /*  Initialize local variables  */
         errSum    = 0.0;
         cOWeights = cTData->candOut.weights[i];
         cOSlopes  = cTData->candOut.slopes[i];
@@ -147,10 +153,12 @@ void  c2_compute_slopes  ( float *goal, boolean reset )
         cISlopes  = cTData->candIn.slopes[i];
 
         /*  Compute the value of the unit  */
-        for  ( j = 0 ; j < cNet->Nunits ; j++ )
+        for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
             sum += cNet->values[j] * cIWeights[j];
-        if  ( recurrent && !reset )
+        }
+        if  ( recurrent && !reset ) {
             sum += cTData->candPrevValues[i] * cIWeights[cNet->Nunits];
+        }
 #ifdef CONNX
         connx += cNet->Nunits+recurrent;
 #endif
@@ -173,14 +181,16 @@ void  c2_compute_slopes  ( float *goal, boolean reset )
         errSum *= actPrime;
 
         /*  First approximation of the slopes coming into the unit  */
-        for  ( j = 0 ; j < cNet->Nunits ; j++ )
+        for  ( j = 0 ; j < cNet->Nunits ; j++ ) {
             cISlopes[j] += errSum * cNet->values[j];
+        }
 
         /*  Compute the influences of the recurrent connection  */
         if  ( recurrent )  {
             for ( j = 0 ; j < cNet->Nunits ; j++ )  {
-                if  ( reset )
+                if  ( reset ) {
                     cTData->candDVdW[i][j] = 0.0;
+                }
                 dsum = actPrime * (cNet->values[j] +
                         (cIWeights[cNet->Nunits] * cTData->candDVdW[i][j]));
                 cISlopes[j] += errSum * dsum;
@@ -212,9 +222,10 @@ void  c2_find_best_cand  ( void )
     cTData->candBestScore = cTData->candScores[0];
     cTData->candBest      = 0;
 
-    for  ( i = 1 ; i < Ncand ; i++ )
+    for  ( i = 1 ; i < Ncand ; i++ ) {
         if  ( cTData->candScores[i] > cTData->candBestScore )  {
             cTData->candBestScore = cTData->candScores[i];
             cTData->candBest      = i;
         }
+    }
 }
