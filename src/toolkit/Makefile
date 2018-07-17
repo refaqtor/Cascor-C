@@ -22,30 +22,29 @@
 
 INSTALL_DIR = ../resources
 CC=gcc
-MACHDEP_CFLAGS= -ansi -DFreeBSD -g
+MACHDEP_CFLAGS= -ansi -DFreeBSD
 
-CFLAGS= $(MACHDEP_CFLAGS) -O0 -I$(INSTALL_DIR)/include
-OBJS= memory.o prompt.o string.o str_cvrt.o queue.o vector.o vectori.o dbg_malloc.o
+CFLAGS= $(MACHDEP_CFLAGS) -O3 -I$(INSTALL_DIR)/include
+OBJS= memory.o prompt.o string.o str_cvrt.o queue.o vector.o vectori.o
 
 libtoolkit.a:	$(OBJS)
 	        rm -f libtoolkit.a
 		ar r libtoolkit.a $(OBJS)
 		ranlib libtoolkit.a
-dbg_malloc.o: dbg_malloc.c dbg_malloc.h
-memory.o:	memory.c toolkit.h dbg_malloc.h
-prompt.o:       prompt.c toolkit.h dbg_malloc.h
-string.o:	string.c memory.c toolkit.h dbg_malloc.h
-str_cvrt.o:     str_cvrt.c toolkit.h dbg_malloc.h
+dbg_malloc.o: dbg_malloc.c
+memory.o:	memory.c toolkit.h
+prompt.o:       prompt.c toolkit.h
+string.o:	string.c memory.c toolkit.h
+str_cvrt.o:     str_cvrt.c toolkit.h
 
-queue.o:	queue.c queue.h toolkit.h dbg_malloc.h
-vector.o:	vector.c vector.h dbg_malloc.h
-vectori.o:	vectori.c vector.h dbg_malloc.h
+queue.o:	queue.c queue.h toolkit.h
+vector.o:	vector.c vector.h
+vectori.o:	vectori.c vector.h
 
 install:	libtoolkit.a toolkit.h vector.h queue.h
 		'cp' libtoolkit.a $(INSTALL_DIR)/lib/libtoolkit.a
 		'cp' toolkit.h $(INSTALL_DIR)/include/toolkit.h
 		'cp' vector.h $(INSTALL_DIR)/include/vector.h
 		'cp' queue.h $(INSTALL_DIR)/include/queue.h
-		'cp' dbg_malloc.h $(INSTALL_DIR)/include/dbg_malloc.h
 clean:
 		rm -f *.o *.u *~ core

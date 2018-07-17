@@ -5,7 +5,6 @@
  */
 
 #include <stdlib.h>
-#include "dbg_malloc.h"
 #include <stdio.h>
 #include "vector.h"
 

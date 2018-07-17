@@ -11,7 +11,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "dbg_malloc.h"
 #include <string.h>
 #include <signal.h>
 #include <setjmp.h>

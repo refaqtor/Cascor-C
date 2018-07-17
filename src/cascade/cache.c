@@ -15,7 +15,6 @@
     caches used in Cascade-Correlation and Cascade-2 algorithms.
     */
 #include <stdlib.h>
-#include "dbg_malloc.h"
 #include <stdio.h>
 #include "toolkit.h"
 #include "cascade.h"

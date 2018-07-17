@@ -27,7 +27,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "dbg_malloc.h"
 #include <string.h>
 #include "toolkit.h"
 #include "queue.h"

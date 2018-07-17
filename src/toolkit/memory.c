@@ -7,7 +7,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "dbg_malloc.h"
 
 
 /*	ALLOC MEM -  Allocates memory for 'Nitems' of 'itemSize'.  If the

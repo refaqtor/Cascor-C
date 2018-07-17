@@ -5,6 +5,7 @@ src/changelog.txt
 src/resources/include/*
 src/resources/lib/*
 src/cascade/cascade
+src/toolkit/dbg_malloc.*
 *.bak
 *.in
 *.data

@@ -5,7 +5,7 @@
 #    Configured for FreeBSD
 INSTALL_DIR = ../resources
 CC=gcc
-MACHDEP_CFLAGS= -ansi -DFreeBSD -g
+MACHDEP_CFLAGS= -ansi -DFreeBSD
 #	CMU Learning Benchmark Archive
 #	Parse Library
 #
@@ -31,11 +31,11 @@ MACHDEP_CFLAGS= -ansi -DFreeBSD -g
 #  comfortable with and then type 'make' on the command line'.
 #
 
-INC=-I /afs/andrew.cmu.edu/usr1/ichiu/private/research/Cascor/src/toolkit
+INC=-I
 
 
 
-CFLAGS = $(MACHDEP_CFLAGS) -O0 -I$(INSTALL_DIR)/include
+CFLAGS = $(MACHDEP_CFLAGS) -O3 -I$(INSTALL_DIR)/include
 
 libparse.a:	parse.o
 	'rm' -f libparse.a

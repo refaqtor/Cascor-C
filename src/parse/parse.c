@@ -249,7 +249,6 @@ char **ftot  ( float *vals, float range, int Ntokens, cvrt_t *map )
     */
 
 #include <stdlib.h>
-#include "dbg_malloc.h"
 #include <string.h>
 #include <stdio.h>
 #include <setjmp.h>
