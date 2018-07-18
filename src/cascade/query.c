@@ -89,7 +89,9 @@ void query_net ( char *netName, char *d1 )
     printf ("Querying '%s'.  Type 'exit' to return to CLI.\n", netName );
 
     while ( TRUE )  {
-        printf ("Query %s> ",netName);
+        if (*inLine != '\0'){
+            printf ("Query %s> ",netName);
+        }
         fgets(inLine, 81, stdin);
         trim_str(inLine);
         if  ( !strncasecmp( inLine, "exit", 4 ) ||

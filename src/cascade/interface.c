@@ -6,7 +6,8 @@
     7/18/2018
 
     Added limits to how much a buffer can read in to prevent buffer
-    overflow attacks
+    overflow attacks. Additionally, fixed kill_net, since it had a bug where
+    the network name was provided inline.
 
     v1.1
     Ian Chiu (ichiu@andrew.cmu.edu)
@@ -1415,10 +1416,10 @@ void kill_net  ( char *netName, char *d1 )
         }
     }
 
-    if  ( !del_net( name ) ) {
-        printf ("ERROR: Could not find network '%s'.\n",name);
+    if  ( !del_net( netName ) ) {
+        printf ("ERROR: Could not find network '%s'.\n", netName);
     } else {
-        printf ("Network '%s' removed from memory.\n",name);
+        printf ("Network '%s' removed from memory.\n", netName);
     }
 }
 
