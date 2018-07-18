@@ -6,6 +6,7 @@ src/resources/include/*
 src/resources/lib/*
 src/cascade/cascade
 src/toolkit/dbg_malloc.*
+*.h.gch
 *.swp
 *.bak
 *.in
