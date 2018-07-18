@@ -124,11 +124,11 @@ typedef struct {
     Contains training data for a single layer of the network.  Instances are
     constructed for the output, candidate input and candidate output layers. */
 typedef struct {
-    float shrinkFactor,  /*  This is related to mu.  See [1]                   */
-          **weights,     /*  Only used for candidate layers                    */
-          **deltas,      /*  The previous weight changes                       */
-          **slopes,      /*  The slope of the error function at this point     */
-          **pSlopes;     /*  The previous value of the slope at this point     */
+    float shrinkFactor,  /*  This is related to mu.  See [1]                  */
+          **weights,     /*  Only used for candidate layers                   */
+          **deltas,      /*  The previous weight changes                      */
+          **slopes,      /*  The slope of the error function at this point    */
+          **pSlopes;     /*  The previous value of the slope at this point    */
 } layer_info_t;
 
 
@@ -137,27 +137,27 @@ typedef struct {
     but is not otherwise necessary for prediction.  This structure is
     generally built as training is about to begin.                           */
 typedef struct {
-    int          candBest,        /*  The candidate with the best score        */
-                 cachePts;        /*  The number of points in the cache        */
-    float        outScaledEps,    /*  The scaled value of the output epsilon   */
-                 candBestScore,   /*  The score of the best unit               */
-                 *candScores,     /*  The scores of the candidate units        */
-                 *candValues,     /*  The activation values of the candidates  */
-                 *candSumVals,    /*  The sum of the activation values         */
-                 **candCorr,      /*  The candidates' covariance               */
-                 **candPrevCorr,  /*  The previous values of the covariance    */
-                 *candPrevValues, /*  RCC.  The previous candidate activations */
-                 **candDVdW,      /*  RCC.  Derivitive of the value with       */
+    int          candBest,        /*  The candidate with the best score       */
+                 cachePts;        /*  The number of points in the cache       */
+    float        outScaledEps,    /*  The scaled value of the output epsilon  */
+                 candBestScore,   /*  The score of the best unit              */
+                 *candScores,     /*  The scores of the candidate units       */
+                 *candValues,     /*  The activation values of the candidates */
+                 *candSumVals,    /*  The sum of the activation values        */
+                 **candCorr,      /*  The candidates' covariance              */
+                 **candPrevCorr,  /*  The previous values of the covariance   */
+                 *candPrevValues, /*  RCC.  The previous candidate activations*/
+                 **candDVdW,      /*  RCC.  Derivitive of the value with      */
                  /* respect to the weight.                    */
-                 **valCache,      /*  Cached activation values.  Speeds up     */
+                 **valCache,      /*  Cached activation values.  Speeds up    */
                  /* training considerably                     */
-                 **errCache;      /*  Cached error values.                     */
-    node_t       *candTypes;      /*  The activation types of each candidate   */
-    layer_info_t candIn,          /*  Training information on the inputs to    */
+                 **errCache;      /*  Cached error values.                    */
+    node_t       *candTypes;      /*  The activation types of each candidate  */
+    layer_info_t candIn,          /*  Training information on the inputs to   */
                  /* the candidates                            */
-                 candOut,         /*  Training information on the outputs from */
+                 candOut,         /*  Training information on the outputs from*/
                  /* the candidate units                       */
-                 output;          /*  Training information for the network     */
+                 output;          /*  Training information for the network    */
     /* outputs                                   */
 } train_data_t;
 
@@ -167,11 +167,11 @@ typedef struct {
     specific layer.  Accordingly, instances of this structure exist for the
     output, candidate in and candidate out layers.                           */
 typedef struct {
-    float epsilon,   /*  Learning rate parameter.  Higher rates can decrease   */
+    float epsilon,   /*  Learning rate parameter.  Higher rates can decrease  */
           /* training time, but may cause learning to go unstable   */
-          mu,        /*  Maximum step size parameter as described by Fahlman   */
+          mu,        /*  Maximum step size parameter as described by Fahlman  */
           /* in the Quickprop paper [1].  Usually not worth tuning  */
-          decay;     /*  Weight decay.  Causes weights to decay towards zero.  */
+          decay;     /*  Weight decay.  Causes weights to decay towards zero. */
     /* If you get monstrous weights, set this to ~0.0001 or   */
     /* less (it doesn't take much).                           */
 } update_parms_t;
@@ -182,12 +182,12 @@ typedef struct {
     Therefore, one of these structures exist for both the output training
     and candidate training phases.                                           */
 typedef struct {
-    int   epochs,          /*  The number of training epochs to perform in     */
+    int   epochs,          /*  The number of training epochs to perform in    */
           /* each phase before a TIMEOUT is declared.  In     */
           /* general, a TIMEOUT should never be declared.     */
-          patience;        /*  The number of epochs without significant change */
+          patience;       /*  The number of epochs without significant change */
     /* before the training is declared STAGNANT         */
-    float changeThreshold; /*  The relative size of change required to be      */
+    float changeThreshold; /*  The relative size of change required to be     */
     /* considered 'significant'                         */
 } cycle_parms_t;
 

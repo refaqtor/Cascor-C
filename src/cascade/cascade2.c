@@ -56,7 +56,7 @@ status_t  c2_train_cand  ( void )
     for  ( i = 0 ; i < cParms->candidateParm.epochs ; i++ )  {
         c2_cand_epoch( );      /*  Train the cands for an epoch  */
 
-        adjust_ci_weights( );  /*  Adjust all the weights and find a favorite  */
+        adjust_ci_weights( );  /*  Adjust all the weights and find a favorite */
         adjust_co_weights( );  /* unit.  */
         c2_find_best_cand( );
 

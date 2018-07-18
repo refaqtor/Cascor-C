@@ -147,8 +147,8 @@ void raw_input  ( char *inp )
             return;
         }
         if  ( !isfloat( tok ) )  {
-            fprintf (stderr,"Invalid token '%s', a numerical value is expected.\n",
-                    tok);
+            fprintf (stderr,"Invalid token '%s', "
+                            "a numerical value is expected.\n", tok);
             return;
         }
         inputs[i] = ( isint( tok ) ) ? atoi( tok ) : atof( tok );

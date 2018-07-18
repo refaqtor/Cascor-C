@@ -929,7 +929,7 @@ void save_script  ( char *script, char *d1 )
 
     /*  Print out the parameters  */
     time( &timer );
-    fprintf (fptr,"# CNNS Ver %s script file created on %s",VER,ctime( &timer ));
+    fprintf (fptr,"# CNNS Ver %s script file created on %s",VER,ctime(&timer));
 
     for  ( i = 0 ; i < NUM_PARMS ; i++ )  {
         if  ( parmTable[i].type == FUNC ) {
@@ -942,7 +942,7 @@ void save_script  ( char *script, char *d1 )
             case FLOAT:   fprintf (fptr, "%f\n",*(float *)(parmTable[i].ptr));
                           break;
             case BOOLEAN: fprintf (fptr, "%s\n",
-                                  btoa( ON_OFF, *(boolean *)(parmTable[i].ptr)));
+                                  btoa(ON_OFF, *(boolean *)(parmTable[i].ptr)));
                           break;
             case NODE:    fprintf (fptr, "%s\n",
                                   ntoa( *(node_t *)(parmTable[i].ptr) ));

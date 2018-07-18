@@ -375,7 +375,7 @@ void  free_train_data  ( train_data_t **data, net_t *net, train_parm_t *parm )
     Noutputs = net->Noutputs;
 
     if  ( parm->useCache )
-        free_cache( &((*data)->valCache),&((*data)->errCache),(*data)->cachePts );
+        free_cache(&((*data)->valCache),&((*data)->errCache),(*data)->cachePts);
 
     free_mem( (*data)->candScores );
     free_mem( (*data)->candValues );

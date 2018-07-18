@@ -233,8 +233,8 @@ char **ftot  ( float *vals, float range, int Ntokens, cvrt_t *map )
     strdup as its return type has changed since the
     original code was written.
 (Matt White)
-    3/5/95          2.0     A completely rewritten version for handling our revised
-    data file format.  See the DATA-FORMAT file.
+    3/5/95          2.0     A completely rewritten version for handling our
+    revised data file format.  See the DATA-FORMAT file.
     2/20/94         1.0.4   Fixed a bug in which if there were continuous
     inputs/outputs following an enumerated input
     or output, would cause that floating point
@@ -696,8 +696,8 @@ void lex  ( FILE *fptr )
 
     while  ( !feof( fptr ) || (linePtr != NULL) )  {
 
-        /*  Get new line if the current line is NULL.  If we get a NULL line,  */
-        /* then we have reached the end of the file.                           */
+        /*  Get new line if the current line is NULL.  If we get a NULL line, */
+        /* then we have reached the end of the file.                          */
 
         if  ( linePtr == NULL ) {
             linePtr = fgets ( inputLine, MAX_LINE_LENGTH, fptr );
@@ -779,21 +779,21 @@ char *get_char_token  ( char *line, char *token, int lineNum )
         }
     }
 
-    /*  Check to see if the token begins with either a plus or a minus.        */
-    /* If this is not the case, first cycle through the first NUM_DELIMITERS   */
-    /* of the seperators.  If any of these are the first character on the      */
-    /* line, return it as the character token.  Now check for a '..' token and */
-    /* return that if it is found.  Last we check for a leading apostrophe.  A */
-    /* leading apostrophe causes it and the next character to be copied to be  */
-    /* copied blindly to the character token.  Lexing resumes normally with    */
-    /* the next character.                                                     */
-    /*  If the first character is a +/-, then there are two things that can    */
-    /* happen:  1) it can be a boolean or enumerated value  2) it can be part  */
-    /* of a number.  If it is boolean or enumerated value, it will be folowed  */
-    /* by another delimeter.  If it is part of a number, then there can be     */
-    /* be some amount of whitespace and then the number.  In either case, we   */
-    /* can copy the +/-, ignore the following whitespace, and then start       */
-    /* looking for another delimeter.                                          */
+   /*  Check to see if the token begins with either a plus or a minus.        */
+   /* If this is not the case, first cycle through the first NUM_DELIMITERS   */
+   /* of the seperators.  If any of these are the first character on the      */
+   /* line, return it as the character token.  Now check for a '..' token and */
+   /* return that if it is found.  Last we check for a leading apostrophe.  A */
+   /* leading apostrophe causes it and the next character to be copied to be  */
+   /* copied blindly to the character token.  Lexing resumes normally with    */
+   /* the next character.                                                     */
+   /*  If the first character is a +/-, then there are two things that can    */
+   /* happen:  1) it can be a boolean or enumerated value  2) it can be part  */
+   /* of a number.  If it is boolean or enumerated value, it will be folowed  */
+   /* by another delimeter.  If it is part of a number, then there can be     */
+   /* be some amount of whitespace and then the number.  In either case, we   */
+   /* can copy the +/-, ignore the following whitespace, and then start       */
+   /* looking for another delimeter.                                          */
 
     if  ( (line[0] == '+') || (line[0] == '-') )  {
         token[0] =  line[0];
@@ -1087,10 +1087,10 @@ void get_serdec ( int lineNum, int totalNum, ser_t *types )
             i;
     char    errMess [EMLEN];
 
-    /*  Get the beginning and ending index from the token stream.  If a range  */
-    /* is present, then that is read as well.  In either case, tokens are read */
-    /* through the delimiting colon.  Both the beginning and ending indices    */
-    /* then checked to see if they are in range.                               */
+   /*  Get the beginning and ending index from the token stream.  If a range  */
+   /* is present, then that is read as well.  In either case, tokens are read */
+   /* through the delimiting colon.  Both the beginning and ending indices    */
+   /* then checked to see if they are in range.                               */
 
     consume( seriesT );
     consume( LbracketT );
@@ -1260,9 +1260,9 @@ void get_mapping  ( int lineNum )
     identifier( &(newMap->index) );
     consume( equalT );
 
-    /*  Get the beginning and ending locations from the token stream.  Form is */
-    /* is to get the label's id, if any, and then the offset, if any.  If      */
-    /* neither is present, we flame out.                                       */
+    /*  Get the beginning and ending locations from the token stream.  Form is*/
+    /* is to get the label's id, if any, and then the offset, if any.  If     */
+    /* neither is present, we flame out.                                      */
 
     loc = &(newMap->start);
     for ( i = 0 ; i < 2 ; i++ )  {
@@ -1838,8 +1838,8 @@ data_file_t *interp  ( float binPos, float binNeg,
     /*  Calculate the mean values of continuous series.  Calculate the  */
     /* floating point equivelances for binary and enumerated series     */
 
-    means = get_means  ( parseTree->Nseries, parseTree->series, parseTree->data);
-    setup_equivs       ( parseTree, dSet, means );
+    means = get_means ( parseTree->Nseries, parseTree->series, parseTree->data);
+    setup_equivs      ( parseTree, dSet, means );
 
     /*  Allocate memory for the data sets and then compute their contents in  */
     /* the order the mappings occur in the list.                              */
@@ -2284,12 +2284,12 @@ data_set_t  gen_dataset  ( data_file_t *dFile, map_t *map, dvect_t data,
 
     dSet.Npts = point;
 
-    /*  Deallocate memory that was not used due to segment markers in the data */
+    /* Deallocate memory that was not used due to segment markers in the data */
 
     dSet.data = (dv_t *)realloc_mem( dSet.data, dSet.Npts, sizeof( dv_t ),
                                      fn_name );
 
-    /*  Calculate the standard deviation for data sets that have outputs  */
+    /* Calculate the standard deviation for data sets that have outputs  */
 
     dSet.stdDev = (dSet.predictOnly) ? 0.0 : calc_std_dev(dSet.data,
             dFile->NoutNodes,
@@ -2426,10 +2426,10 @@ void  uninterp  ( data_file_t *dFile )
 {
     int i;
 
-    printf  ("File:      %s\n", dFile->filename );
-    printf  ("Ninputs:   %d  Noutputs:  %d\n", dFile->Ninputs, dFile->Noutputs );
-    printf  ("NinNodes:  %d  NoutNodes: %d\n", dFile->NinNodes,dFile->NoutNodes);
-    printf  ("binPos:    %4.2f  binNeg:    %4.2f\n\n", dFile->binPos,
+    printf ("File:      %s\n", dFile->filename );
+    printf ("Ninputs:   %d  Noutputs:  %d\n", dFile->Ninputs, dFile->Noutputs );
+    printf ("NinNodes:  %d  NoutNodes: %d\n", dFile->NinNodes,dFile->NoutNodes);
+    printf ("binPos:    %4.2f  binNeg:    %4.2f\n\n", dFile->binPos,
             dFile->binNeg );
 
     printf  ("Output types:  ");
