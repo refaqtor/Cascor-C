@@ -252,7 +252,7 @@ void display_parm  ( parm_t parm )
     we are eligible to modify this parameter at the present time.
     */
 
-void set_parm  ( boolean runStarted, parm_t parm, char *parmVal, char *parmVal2 )
+void set_parm ( boolean runStarted, parm_t parm, char *parmVal, char *parmVal2 )
 {
     char   val [41];
 
@@ -506,7 +506,8 @@ void test  ( char *netName, char *dFileName )
 
     /*  Locate the network  */
     if  ( (net = select_net( netName )) == NULL )  {
-        fprintf (stderr, "Network '%s' not found.  Testing aborted.\n", netName );
+        fprintf (stderr, "Network '%s' not found.  Testing aborted.\n",
+                 netName );
         return;
     } else if  ( (net->Ninputs != dFile->NinNodes) &&
             (net->Noutputs != dFile->NoutNodes ) )  {
@@ -584,7 +585,7 @@ void predict  ( char *netName, char *dFileName )
     }
     if  (dFile->predict == NULL)  {
         fprintf (stderr,
-                "No prediction data available in file '%s'.\n", dFile->filename);
+                "No prediction data available in file '%s'.\n",dFile->filename);
         fprintf (stderr, "Prediction aborted\n");
         return;
     }
@@ -616,7 +617,7 @@ void predict  ( char *netName, char *dFileName )
         /*  Compute input/output token strings  */
         intok  = ftot ( dSet->data[i].inputs, aveSig, cNet->Ninputs,
                 cNet->inputMap );
-        outtok = ftot ( cNet->outValues, aveSig, cNet->Noutputs, cNet->outputMap );
+        outtok = ftot ( cNet->outValues, aveSig,cNet->Noutputs,cNet->outputMap);
 
         /*  Display the tokens  */
         for  ( j = 0 ; j < cNet->Ninputs ; j++ )  {
@@ -672,11 +673,14 @@ void list_parms  ( char *d1, char *d2 )
                 case BOOLEAN: printf ("%s\n",btoa( ON_OFF,
                                           *(boolean *)(parmTable[i].ptr) ));
                               break;
-                case NODE:    printf ("%s\n",ntoa( *(node_t *)(parmTable[i].ptr) ));
+                case NODE:    printf ("%s\n",
+                                      ntoa( *(node_t *)(parmTable[i].ptr) ));
                               break;
-                case ALGO:    printf ("%s\n",altoa( *(algo_t *)(parmTable[i].ptr) ));
+                case ALGO:    printf ("%s\n",
+                                      altoa( *(algo_t *)(parmTable[i].ptr) ));
                               break;
-                case ERR:     printf ("%s\n",etoa( *(error_t *)(parmTable[i].ptr) ));
+                case ERR:     printf ("%s\n",
+                                      etoa( *(error_t *)(parmTable[i].ptr) ));
                               break;
             }
         }

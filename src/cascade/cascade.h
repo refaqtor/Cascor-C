@@ -196,39 +196,39 @@ typedef struct {
     This is the main structure used to contain training parameters.  All that
     is necessary for network training is contained herein.                   */
 typedef struct  {
-    int            maxNewUnits,        /*  The maximum number of units to add  */
+    int            maxNewUnits,        /*  The maximum number of units to add */
                    /* to the network being trained         */
-                   validationPatience, /*  The number of training cycles to    */
+                   validationPatience, /*  The number of training cycles to   */
                    /* perform without improvement in       */
                    /* cross-validation generalization      */
-                   Ncand;              /*  Number of candidates in the         */
+                   Ncand;              /*  Number of candidates in the        */
     /* training pool                        */
-    float          outPrimeOffset,     /*  Amount to offset the error prime    */
+    float          outPrimeOffset,     /*  Amount to offset the error prime   */
                    /* when training outputs.  See [1]      */
                    /* for details of why this helps        */
-                   weightRange,        /*  The maximum variance of random      */
+                   weightRange,        /*  The maximum variance of random     */
                    /* weights from zero                    */
-                   indexThreshold,     /*  The maximum Error Index that is     */
+                   indexThreshold,     /*  The maximum Error Index that is    */
                    /* considered a victory                 */
-                   scoreThreshold,     /*  The maximum fractional variance of  */
+                   scoreThreshold,     /*  The maximum fractional variance of */
                    /* a unit from its goal to be           */
                    /* considered correct                   */
-                   sigMax,             /*  Maximum value of VARSIGMOID units   */
-                   sigMin;             /*  Minimum value of VARSIGMOID units   */
-    boolean        overshootOK,        /*  Ok to overshoot the desired goal?   */
-                   useCache,           /*  Is value and error cache in use?    */
-                   test,               /*  Test the network after training?    */
-                   validate,           /*  Cross-validate the network during   */
+                   sigMax,             /*  Maximum value of VARSIGMOID units  */
+                   sigMin;             /*  Minimum value of VARSIGMOID units  */
+    boolean        overshootOK,        /*  Ok to overshoot the desired goal?  */
+                   useCache,           /*  Is value and error cache in use?   */
+                   test,               /*  Test the network after training?   */
+                   validate,           /*  Cross-validate the network during  */
                    /* training?                            */
-                   recurrent;          /*  Train a recurrent network?          */
-    node_t         candType;           /*  Type of candidate to comprise pool  */
-    algo_t         algorithm;          /*  Network architecture to use         */
-    error_t        errorMeasure;       /*  Measure that determines success     */
-    update_parms_t candInUpdate,       /*  Parameters for candidates inputs    */
-                   candOutUpdate,      /*  Parameters for candidates outputs   */
-                   outputUpdate;       /*  Parameters for network outputs      */
-    cycle_parms_t  candidateParm,      /*  Candidate phase parameters          */
-                   outputParm;         /*  Output phase parameters             */
+                   recurrent;          /*  Train a recurrent network?         */
+    node_t         candType;           /*  Type of candidate to comprise pool */
+    algo_t         algorithm;          /*  Network architecture to use        */
+    error_t        errorMeasure;       /*  Measure that determines success    */
+    update_parms_t candInUpdate,       /*  Parameters for candidates inputs   */
+                   candOutUpdate,      /*  Parameters for candidates outputs  */
+                   outputUpdate;       /*  Parameters for network outputs     */
+    cycle_parms_t  candidateParm,      /*  Candidate phase parameters         */
+                   outputParm;         /*  Output phase parameters            */
 }  train_parm_t;
 
 
@@ -237,33 +237,33 @@ typedef struct  {
     information about the network.  Using the information contained within this
     structure, feedforward prediction is possible.                           */
 typedef struct net_type {
-    char            *name,          /*  Name of the network                    */
-                    *filename,      /*  Filename the network is stored in      */
-                    **descript;     /*  Description of the network. Not used.  */
-    int             epochsTrained,  /*  Total number of epochs this network    */
+    char            *name,          /*  Name of the network                   */
+                    *filename,      /*  Filename the network is stored in     */
+                    **descript;     /*  Description of the network. Not used. */
+    int             epochsTrained,  /*  Total number of epochs this network   */
                     /* has been trained                        */
-                    Nunits,         /*  Number of units in the network.  This  */
+                    Nunits,         /*  Number of units in the network.  This */
                     /* includes inputs, hidden units and the   */
                     /* bias unit, but not the outputs          */
-                    Ninputs,        /*  Number of input units to the network   */
-                    Noutputs,       /*  Number of ouputs from the network      */
-                    NhiddenUnits,   /*  Current number of hidden units         */
-                    maxNewUnits;    /*  Maximum number of hidden units that    */
+                    Ninputs,        /*  Number of input units to the network  */
+                    Noutputs,       /*  Number of ouputs from the network     */
+                    NhiddenUnits,   /*  Current number of hidden units        */
+                    maxNewUnits;    /*  Maximum number of hidden units that   */
     /* have yet to be added                    */
-    float           *values,        /*  Unit activation values                 */
-                    *tempValues,    /*  Temp float vector to be used when the  */
+    float           *values,        /*  Unit activation values                */
+                    *tempValues,    /*  Temp float vector to be used when the */
                     /* cache is not in use                     */
-                    **weights,      /*  Interior weights.  Weights to outputs  */
+                    **weights,      /*  Interior weights.  Weights to outputs */
                     /* not included.                           */
-                    *outValues,     /*  Activation levels of the outputs       */
-                    **outWeights,   /*  Weights to the outputs                 */
-                    sigmoidMax,     /*  Maximum value of a VARSIGMOID          */
-                    sigmoidMin;     /*  Minimum value of a VARSIGMOID          */
-    boolean         recurrent;      /*  Is this net recurrent?                 */
-    cvrt_t          *inputMap,      /*  Map from tokens to raw inputs          */
-                    *outputMap;     /*  Maps from raw outputs to tokens        */
-    node_t          *unitTypes,     /*  Types for the interior units           */
-                    *outputTypes;   /*  Types of the outputs                   */
+                    *outValues,     /*  Activation levels of the outputs      */
+                    **outWeights,   /*  Weights to the outputs                */
+                    sigmoidMax,     /*  Maximum value of a VARSIGMOID         */
+                    sigmoidMin;     /*  Minimum value of a VARSIGMOID         */
+    boolean         recurrent;      /*  Is this net recurrent?                */
+    cvrt_t          *inputMap,      /*  Map from tokens to raw inputs         */
+                    *outputMap;     /*  Maps from raw outputs to tokens       */
+    node_t          *unitTypes,     /*  Types for the interior units          */
+                    *outputTypes;   /*  Types of the outputs                  */
     struct net_type *next;
 } net_t;
 
@@ -294,28 +294,28 @@ typedef enum { INT,      /*  Integer value                                   */
 /*  PARM_T
     This is an entry in the parameter table located in 'interface.c'.        */
 typedef struct {
-    char       *name;      /*  Display name of the parameter                   */
-    parm_var_t type;       /*  Type of parameter (see above)                   */
-    void       *ptr;       /*  Pointer to the location where the paramter is   */
+    char       *name;      /*  Display name of the parameter                  */
+    parm_var_t type;       /*  Type of parameter (see above)                  */
+    void       *ptr;       /*  Pointer to the location where the paramter is  */
     /* stored                                           */
-    boolean    modWRun;    /*  Safe to modify this parameter during a run?     */
+    boolean    modWRun;    /*  Safe to modify this parameter during a run?    */
 } parm_t;
 
 
 /*  TRIAL_RESULT_T
     This stores information on the results of training the network.          */
 typedef struct {
-    status_t endStatus;    /*  Ending status from training                     */
-    int      bits,         /*  Number of error bits during last epoch          */
-             Nepochs,      /*  Number of epochs we trained this time through   */
-             connx,        /*  Number of connection crossings                  */
-             time,         /*  Training time                                   */
-             Nvictories,   /*  Number of victories achieved                    */
-             Nunits;       /*  Number of units in the network                  */
-    float    perCorrect,   /*  Percent of training outputs correct             */
-             index,        /*  Error index after last epoch                    */
-             sumSqDiffs,   /*  Sum of the Square of the Differences            */
-             sumSqError;   /*  Sum of the Square of the Errors                 */
+    status_t endStatus;    /*  Ending status from training                    */
+    int      bits,         /*  Number of error bits during last epoch         */
+             Nepochs,      /*  Number of epochs we trained this time through  */
+             connx,        /*  Number of connection crossings                 */
+             time,         /*  Training time                                  */
+             Nvictories,   /*  Number of victories achieved                   */
+             Nunits;       /*  Number of units in the network                 */
+    float    perCorrect,   /*  Percent of training outputs correct            */
+             index,        /*  Error index after last epoch                   */
+             sumSqDiffs,   /*  Sum of the Square of the Differences           */
+             sumSqError;   /*  Sum of the Square of the Errors                */
 } trial_result_t;
 
 

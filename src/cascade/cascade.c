@@ -141,15 +141,15 @@ trial_result_t  train_net  ( net_t *net, train_parm_t *parms,
 
             /*  Train outputs  */
             status = train_outputs( );
-            display_trainout_results  ( net, error, status, parms->errorMeasure );
+            display_trainout_results ( net, error, status, parms->errorMeasure);
 
             /*  Validate and check status  */
             if  ( status == WIN ) {
                 break;
             }
             if  ( parms->validate )  {
-                valStatus = validation_epoch( &valBScore, &valBWeights, &valCLeft,
-                        &valBUnits, init );
+                valStatus = validation_epoch( &valBScore, &valBWeights,
+                                              &valCLeft,  &valBUnits, init );
                 init = FALSE;
                 if  ( valStatus != TRAINING ) {
                     break;
@@ -400,7 +400,7 @@ status_t validation_epoch  ( float *bestScore, float ***bestWeights,
     }
     valRes = test_net( cNet, cDFile->validate );
 
-    /*  If this is the first validation epoch this run, init the data structs  */
+    /*  If this is the first validation epoch this run, init the data structs */
     if  ( init )  {
         maxUnits = cNet->Nunits+cNet->maxNewUnits;
         *bestWeights = (float **)alloc_mem( cNet->Noutputs, sizeof( float * ),
@@ -412,7 +412,7 @@ status_t validation_epoch  ( float *bestScore, float ***bestWeights,
         init = FALSE;
     }
 
-    /*  Compare this result with the previous best and get the weights if this */
+    /* Compare this result with the previous best and get the weights if this */
     /* epoch had better results  */
     if  ( (valRes.sumSqError < *bestScore) || init )  {
         *bestScore  = valRes.sumSqError;
