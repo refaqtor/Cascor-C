@@ -391,7 +391,6 @@ void train  ( char *netName, char *dFileName )
     /*  Get the network name  */
     if  ( netName == NULL ) {
         if  ( interact )  {
-            w
             printf ("Network Name: ");
             scanf  ("%60s",nName);
             netName = nName;
