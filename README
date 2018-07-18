@@ -1,0 +1,4 @@
+# Cascor
+Code from the 90s for the Cascade-Correlation algorithm developed by Scott Fahlman and Christian Lebiere. This is a work-in-progress to update the code to work with modern machines.
+
+compile is a script to compile everything as-is and copy the executable to bin/cascade
