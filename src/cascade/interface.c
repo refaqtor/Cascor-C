@@ -129,7 +129,9 @@ void cli  ( boolean runStarted )
 
     do  {
         do {
-            if ( inBuffer[0] != '\n') {
+            /* conditional tests for new line, both for Linux and Windows */
+            /* this prevents a double print for the prompt */
+            if (*inBuffer != '\n' && *inBuffer != '\r') {
                 printf ( "%s ", PROMPT );
             }
         } while( strlen( fgets( inBuffer, MAX_INPUT, stdin ) ) <= 1 );

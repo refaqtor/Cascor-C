@@ -1,11 +1,6 @@
-#
-#    Automatically Generated Makefile Include
-#    Fri Jun 28 19:31:59 EDT 1996
-#
-#    Configured for FreeBSD
 INSTALL_DIR = ../resources
 CC=gcc
-MACHDEP_CFLAGS= -ansi -DFreeBSD
+MACHDEP_CFLAGS= -ansi -DFreeBSD -g
 #	CMU Learning Benchmark Archive
 #	Parse Library
 #
@@ -35,7 +30,7 @@ INC=-I
 
 
 
-CFLAGS = $(MACHDEP_CFLAGS) -O3 -I$(INSTALL_DIR)/include
+CFLAGS = $(MACHDEP_CFLAGS) -O0 -I$(INSTALL_DIR)/include
 
 libparse.a:	parse.o
 	'rm' -f libparse.a

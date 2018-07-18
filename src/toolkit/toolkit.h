@@ -52,6 +52,7 @@ boolean  prompt_yesno  ( char * );
 
 /*  string.c  */
 
+void     trim_str      ( char * );
 void     str_addch     ( char *, char );
 char     *str_or       ( char *, char * );
 char     *str_order    ( char * );

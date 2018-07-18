@@ -22,9 +22,9 @@
 
 INSTALL_DIR = ../resources
 CC=gcc
-MACHDEP_CFLAGS= -ansi -DFreeBSD
+MACHDEP_CFLAGS= -ansi -DFreeBSD -g
 
-CFLAGS= $(MACHDEP_CFLAGS) -O3 -I$(INSTALL_DIR)/include
+CFLAGS= $(MACHDEP_CFLAGS) -O0 -I$(INSTALL_DIR)/include
 OBJS= memory.o prompt.o string.o str_cvrt.o queue.o vector.o vectori.o
 
 libtoolkit.a:	$(OBJS)

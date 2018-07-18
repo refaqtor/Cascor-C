@@ -1,11 +1,6 @@
-#
-#    Automatically Generated Makefile Include
-#    Fri Jun 28 19:31:59 EDT 1996
-#
-#    Configured for FreeBSD
 INSTALL_DIR = ../resources
 CC=gcc
-MACHDEP_CFLAGS= -ansi -DFreeBSD
+MACHDEP_CFLAGS= -ansi -DFreeBSD -g
 #	CMU Cascade Neural Network Simulator (CNNS)
 #
 #	Revisions:
@@ -36,7 +31,7 @@ MACHDEP_CFLAGS= -ansi -DFreeBSD
 
 
 
-CFLAGS = $(MACHDEP_CFLAGS) -O3 -I$(INSTALL_DIR)/include
+CFLAGS = $(MACHDEP_CFLAGS) -O0 -I$(INSTALL_DIR)/include
 LFLAGS = $(MACHDEP_LFLAGS) -L$(INSTALL_DIR)/lib -lparse -ltoolkit -lm
 
 OBJS = cascade.o cascor.o cascade2.o util.o cache.o init.o \

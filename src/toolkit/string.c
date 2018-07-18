@@ -1,6 +1,36 @@
+/*
+ * String Function Library
+ *
+ * v1.1
+ * Ian Chiu (ichiu@andrew.cmu.edu)
+ * 7/17/2018
+ *
+ * Added trim_str function
+ *
+ */
+
+
 #include <ctype.h>
 #include <string.h>
 #include "toolkit.h"
+
+
+
+
+/*
+ * trim_str - trim trailing carriage returns and new line characters from the
+ *            string. Requires a properly formatted, null-terminated string
+ */
+void trim_str ( char *str )
+{
+    char *end_str = str + strlen(str) - 1;
+    while(end_str >= str && (*end_str == '\r' || *end_str == '\n')) {
+        *end_str = '\0';
+        end_str--;
+    }
+    return;
+
+}
 
 void str_addch( char *str, char newCh )
 {
