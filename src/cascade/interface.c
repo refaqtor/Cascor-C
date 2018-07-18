@@ -1,6 +1,13 @@
 /*  CMU Cascade Neural Network Simulator (CNNS)
     User Interface Code
 
+    v1.2
+    Ian Chiu (ichiu@andrew.cmu.edu)
+    7/18/2018
+
+    Added limits to how much a buffer can read in to prevent buffer
+    overflow attacks
+
     v1.1
     Ian Chiu (ichiu@andrew.cmu.edu)
     7/17/2018
@@ -384,8 +391,9 @@ void train  ( char *netName, char *dFileName )
     /*  Get the network name  */
     if  ( netName == NULL ) {
         if  ( interact )  {
+            w
             printf ("Network Name: ");
-            scanf  ("%s",nName);
+            scanf  ("%60s",nName);
             netName = nName;
         } else {
             fprintf ( stderr, "No name specified for network to train.\n");
@@ -398,7 +406,7 @@ void train  ( char *netName, char *dFileName )
     if  ( dFileName == NULL ) {
         if  ( interact )  {
             printf ( "Data file name: " );
-            scanf  ( "%s", dFName );
+            scanf  ( "%60s", dFName );
             dFileName = dFName;
         } else {
             fprintf ( stderr, "No data file specified for training.\n" );
@@ -467,7 +475,7 @@ void test  ( char *netName, char *dFileName )
     if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network Name: ");
-            scanf  ("%s",nName);
+            scanf  ("%60s",nName);
             netName = nName;
         } else {
             fprintf ( stderr, "No name specified for network to test.\n");
@@ -480,7 +488,7 @@ void test  ( char *netName, char *dFileName )
     if  ( dFileName == NULL ) {
         if  ( interact )  {
             printf ( "Data file name: " );
-            scanf  ( "%s", dFName );
+            scanf  ( "%60s", dFName );
             dFileName = dFName;
         } else {
             fprintf ( stderr, "No data file specified for testing.\n" );
@@ -553,7 +561,7 @@ void predict  ( char *netName, char *dFileName )
     if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network Name: ");
-            scanf  ("%s",nName);
+            scanf  ("%60s",nName);
             netName = nName;
         } else {
             fprintf ( stderr, "No name specified for network to test.\n");
@@ -566,7 +574,7 @@ void predict  ( char *netName, char *dFileName )
     if  ( dFileName == NULL ) {
         if  ( interact )  {
             printf ( "Data file name: " );
-            scanf  ( "%s", dFName );
+            scanf  ( "%60s", dFName );
             dFileName = dFName;
         } else {
             fprintf ( stderr, "No data file specified for predicting.\n" );
@@ -781,7 +789,7 @@ void run_trials  ( char *numTrials, char *dataFile )
     if  ( dataFile == NULL ) {
         if  ( interact )  {
             printf ("Data file for training: ");
-            scanf ("%s", dFileName);
+            scanf ("%40s", dFileName);
             dataFile = dFileName;
         } else {
             fprintf ( stderr, "Data file for training not specified.\n");
@@ -860,7 +868,7 @@ void load_script  ( char *script, char *d1 )
     if ( script == NULL ) {
         if  ( interact )  {
             printf ("Filename of script to load: ");
-            scanf  ("%s",infile);
+            scanf  ("%40s",infile);
             script = infile;
         } else {
             fprintf (stderr,"No script file specified.  Script not loaded.\n");
@@ -907,7 +915,7 @@ void save_script  ( char *script, char *d1 )
     if  ( script == NULL ) {
         if  ( interact )  {
             printf ("Filename for saved script: ");
-            scanf  ("%s",infile);
+            scanf  ("%40s",infile);
             script = infile;
         } else {
             fprintf (stderr,"No filename specified for script.");
@@ -970,7 +978,7 @@ void save_net ( char *netName, char *filename )
     if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Name of network to save: ");
-            scanf  ("%s", name );
+            scanf  ("%40s", name );
             netName = name;
         } else {
             fprintf ( stderr, "No name specified for network to save.\n");
@@ -982,7 +990,7 @@ void save_net ( char *netName, char *filename )
     if  ( filename == NULL ) {
         if  ( interact )  {
             printf ("File name to save '%s' to: ",name);
-            scanf  ("%s",outfile);
+            scanf  ("%40s",outfile);
             filename = outfile;
         } else {
             fprintf (stderr,"No filename specified for output file.");
@@ -1134,7 +1142,7 @@ void load_net ( char *fname, char *d1 )
     if  ( fname == NULL ) {
         if  ( interact )  {
             printf ("Network file to load: ");
-            scanf  ("%s",filename);
+            scanf  ("%80s",filename);
             fname = filename;
         } else {
             fprintf ( stderr, "No network file name specified.\n");
@@ -1157,7 +1165,7 @@ void load_net ( char *fname, char *d1 )
         }
         if  ( lineIn[0] != '#' && lineIn[0] != '\n' ) {
             switch ( count )  {
-                case 0:  sscanf (lineIn, "Name: %s", netName);
+                case 0:  sscanf (lineIn, "Name: %80s", netName);
                          if ( select_net( netName ) != NULL )  {
                              fprintf (stderr,"ERROR: Network '%s' "
                                              "already in memory.\n",
@@ -1194,7 +1202,7 @@ void load_net ( char *fname, char *d1 )
                          count++;
                          break;
                 case 3:  sscanf (lineIn,"sigmoidMax: %f sigmoidMin: %f "
-                                        "recurrent: %s",
+                                        "recurrent: %20s",
                                  &sigMax, &sigMin, recurrent);
                          if ( sigMax < sigMin )  {
                              fprintf ( stderr, "ERROR: sigmoidMax may not be"
@@ -1349,7 +1357,7 @@ void resize_net ( char *netName, char *newUnits )
     if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Name of network to resize: ");
-            scanf ("%s",name);
+            scanf ("%40s",name);
             netName = name;
         } else {
             fprintf ( stderr, "No network name specified.  "
@@ -1397,7 +1405,7 @@ void kill_net  ( char *netName, char *d1 )
     if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network to remove: ");
-            scanf  ("%s", name);
+            scanf  ("%60s", name);
             netName = name;
         } else {
             fprintf ( stderr, "Name of network to kill not specified.\n" );
@@ -1425,7 +1433,7 @@ void kill_data  ( char *filename, char *d1 )
     if  ( filename == NULL ) {
         if  ( interact )  {
             printf ("Data file to remove: ");
-            scanf  ("%s",fname);
+            scanf  ("%60s",fname);
             filename = fname;
         }  else  {
             fprintf ( stderr, "Name of data file to kill not specified.\n" );
@@ -1458,7 +1466,7 @@ void inspect_net ( char *netName, char *d1 )
     if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Name of network to inspect: ");
-            scanf  ("%s", name);
+            scanf  ("%40s", name);
             netName = name;
         } else {
             fprintf ( stderr, "Network to inspect not specified.\n" );
@@ -1540,7 +1548,7 @@ void inspect_data ( char *dataFile, char *d1 )
     if  ( dataFile == NULL ) {
         if  ( interact )  {
             printf ("Data file to inspect: ");
-            scanf  ("%s", dFile);
+            scanf  ("%60s", dFile);
             dataFile = dFile;
         } else {
             fprintf ( stderr, "Data file to inspect not specified.\n" );
@@ -1631,7 +1639,7 @@ void load_data ( char *filename, char *d1 )
     if  ( filename == NULL ) {
         if  ( interact )  {
             printf ("Data file to load: ");
-            scanf  ("%s",fname);
+            scanf  ("%60s",fname);
             filename = fname;
         } else {
             fprintf ( stderr, "Data file to load not specified.\n");
@@ -1666,7 +1674,7 @@ void sync_net ( char *netName, char *dFileName )
     if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Name of network to sync: ");
-            scanf  ("%s",nName);
+            scanf  ("%60s",nName);
             netName = nName;
         } else {
             fprintf ( stderr, "No network name specified.  "
@@ -1683,7 +1691,7 @@ void sync_net ( char *netName, char *dFileName )
     if  ( dFileName == NULL ) {
         if  ( interact )  {
             printf ("Name of data file to sync network to: ");
-            scanf  ("%s", dFName);
+            scanf  ("%60s", dFName);
             dFileName = dFName;
         } else {
             fprintf ( stderr, "No data file specified.  Network not synced.\n");

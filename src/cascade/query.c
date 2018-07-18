@@ -1,6 +1,13 @@
 /*  CMU Cascade Neural Network Simulator (CNNS)
     Network Query Functions
 
+
+    v1.2
+    In Chiu (ichiu@andrew.cmu.edu)
+    7/18/2018
+
+    Fixed bug where query is unable to find networks
+
     v1.1
     Ian Chiu (ichiu@andrew.cmu.edu)
     7/17/2018
@@ -58,8 +65,8 @@ void query_net ( char *netName, char *d1 )
     if  ( netName == NULL ) {
         if  ( interact )  {
             printf ("Network to query: ");
-            fgets(inLine, 81, stdin);
-            netName = strdup( inLine );
+            scanf ("%80s", inLine);
+            netName = strdup (inLine);
         } else {
             fprintf (stderr, "Network not specified.  "
                              "Entrance to query mode aborted.\n");
@@ -82,7 +89,9 @@ void query_net ( char *netName, char *d1 )
     printf ("Querying '%s'.  Type 'exit' to return to CLI.\n", netName );
 
     while ( TRUE )  {
-        printf ("Query %s> ",netName);
+        if (*inLine != '\n') {
+            printf ("Query %s> ",netName);
+        }
         fgets(inLine, 81, stdin);
 
         if  ( !strncasecmp( inLine, "exit", 4 ) ||
