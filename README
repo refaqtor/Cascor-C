@@ -2,3 +2,17 @@
 Code from the 90s for the Cascade-Correlation algorithm developed by Scott Fahlman and Christian Lebiere. This is a work-in-progress to update the code to work with modern machines.
 
 compile is a script to compile everything as-is and copy the executable to bin/cascade
+
+
+Changes that I've made:
+
+-fixed double free errors in recurrent option
+-fixed free error for non-string inputs
+-restructured code so that each line is < 80 characters
+-changed make files to compile locally, rather into the system
+
+
+Bugs that are identified and have yet to be tackled:
+
+-after the addition of some units, all outputs become nan after repeated trains.
+-Varsigmoid isn't parsed for when you're switching unit types
