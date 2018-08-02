@@ -385,9 +385,6 @@ void  free_train_data  ( train_data_t **data, net_t *net, train_parm_t *parm )
     for  ( i = 0 ; i < Ncand ; i++ )  {
         free_mem( (*data)->candCorr[i] );
         free_mem( (*data)->candPrevCorr[i] );
-        if  ( parm->recurrent ) {
-            free_mem( (*data)->candDVdW );
-        }
 
         free_mem( (*data)->candIn.weights[i] );
         free_mem( (*data)->candIn.deltas[i] );
