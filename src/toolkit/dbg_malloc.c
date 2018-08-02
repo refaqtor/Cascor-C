@@ -25,7 +25,9 @@
 void *dbg_malloc(size_t size){
     void *p = malloc(size+2 * PADDING);
     if(!p) return NULL;
-    memset(p, 0xEE, size+2 * PADDING);
+    /* memset(p, 0xEE, size+2 * PADDING); */
+    memset(p, 0xEE, PADDING);
+    memset(p+size+PADDING, 0xEE, PADDING);
     *(((size_t *) p) + 1) = size;
     return p+PADDING;
 }
@@ -53,7 +55,7 @@ void dbg_free(void *p){
     *(((size_t *)actual_p) + 1) = 0xEEEEEEEEEEEEEEEE;
     for(i = 0; i < PADDING; i++){
         if( *(((char *)actual_p) + i) != ((char)0xEE)){
-            printf("Corrupted on the first %d byte of pointer %p, at beginning\n", i, p);
+            printf("Corrupted on the first %d byte of pointer %p, at beginning\n", i, actual_p);
             raise(11);
         }
     }
