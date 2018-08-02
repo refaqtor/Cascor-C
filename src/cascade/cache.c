@@ -42,9 +42,13 @@ boolean build_cache  ( int maxUnits, int Noutputs, int Npts,
         float ***valCache, float ***errCache )
 {
     int i;
-
-    if  ( (((*valCache) = (float **)malloc(Npts*sizeof( float * ))) == NULL) ||
-          (((*errCache) = (float **)malloc(Npts*sizeof( float * ))) == NULL) ) {
+    float **a;
+    float **b;
+/* fix this later */
+    a = (float **)malloc(Npts*sizeof( float * ));
+    b = (float **)malloc(Npts*sizeof( float * ));
+    if  ( (((*valCache) = a) == NULL) ||
+          (((*errCache) = b) == NULL) ) {
         free_cache( valCache, errCache, Npts );
         printf ("ERROR: Insufficient memory for cache, shutting cache down.\n");
         return FALSE;

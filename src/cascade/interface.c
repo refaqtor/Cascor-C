@@ -124,7 +124,7 @@ void cli  ( boolean runStarted )
          *parm = NULL,
          *parmVal = NULL,
          *parmVal2 = NULL;
-
+    memset(inBuffer, 0, MAX_INPUT);
     printf ("Cascade v%s  Command Line Interface\n",VER);
     printf ("'?' for a list of parameters and commands.\n");
 
@@ -1701,8 +1701,8 @@ void sync_net ( char *netName, char *dFileName )
         }
     }
 
-    if  ( (dFile = select_data( dFName )) == NULL )  {
-        fprintf ( stderr, "ERROR: Unable to find data file %s.\n", dFName );
+    if  ( (dFile = select_data( dFileName )) == NULL )  {
+        fprintf ( stderr, "ERROR: Unable to find data file %s.\n", dFileName );
         return;
     }
 
