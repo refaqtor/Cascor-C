@@ -238,7 +238,7 @@ void display_parm  ( parm_t parm )
                         break;
         case NODE:      printf ("Type:\t\tNode ");
                         printf ("(Sigmoid, Asigmoid, Linear, Gaussian,");
-                        printf (" Varsigmoid, Varied)\n");
+                        printf (" Varied)\n");
                         printf ("Current value:\t%s",
                                 ntoa( *(node_t *)parm.ptr ));
                         break;

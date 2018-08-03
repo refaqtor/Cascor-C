@@ -10,7 +10,7 @@ Changes that I've made:
 -fixed free error for non-string inputs
 -restructured code so that each line is < 80 characters
 -changed make files to compile locally, rather into the system
-
+-removed misleading option for type "varsigmoid" that did not exist
 
 Bugs that are identified and have yet to be tackled:
 
