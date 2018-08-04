@@ -15,4 +15,10 @@ Changes that I've made:
 Bugs that are identified and have yet to be tackled:
 
 -after the addition of some units, all outputs become nan after repeated trains.
--Varsigmoid isn't parsed for when you're switching unit types
+-if you do train t two-spirals.data, on the 2nd run it becomes all NaNs???
+-segfault occurs after training a net on two-spirals.data until NaN appears, testing it, and running a train.
+
+Progress:
+
+cNet->outputTypes[i] is "uninitialized" on second run onwards. I believe this is because the author meant to use global variable cNet instead of net for several functions. Unconfirmed.
+
