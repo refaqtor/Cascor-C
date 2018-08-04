@@ -11,14 +11,21 @@ Changes that I've made:
 -restructured code so that each line is < 80 characters
 -changed make files to compile locally, rather into the system
 -removed misleading option for type "varsigmoid" that did not exist
+    (Actually apparently this exists??? I removed the prompt because I could not find an option for it; I may go back on it)
+-fixed potential buffer overflow from input by limiting length of inputs
+
 
 Bugs that are identified and have yet to be tackled:
 
 -after the addition of some units, all outputs become nan after repeated trains.
--if you do train t two-spirals.data, on the 2nd run it becomes all NaNs???
+-if you do train <net_name> two-spirals.data for any net_name, on the 2nd run it becomes all NaNs (for the first net to be trained twice with two-spirals.data)
 -segfault occurs after training a net on two-spirals.data until NaN appears, testing it, and running a train.
 
 Progress:
 
 cNet->outputTypes[i] is "uninitialized" on second run onwards. I believe this is because the author meant to use global variable cNet instead of net for several functions. Unconfirmed.
+
+
+
+
 
